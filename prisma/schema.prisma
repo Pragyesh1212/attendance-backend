@@ -1,0 +1,392 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  EMPLOYEE
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum ShiftStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AttendanceStatus {
+  PRESENT
+  LATE
+  HALF_DAY
+  ABSENT
+  ON_LEAVE
+}
+
+enum AttendanceApprovalStatus {
+  NOT_REQUIRED
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum AttendanceCorrectionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum WorkLocationType {
+  OFFICE
+  REMOTE
+  MEETING
+  FIELD
+}
+
+enum NotificationType {
+  ATTENDANCE_APPROVAL
+  ATTENDANCE_CORRECTION
+  SYSTEM
+}
+
+enum WorkLocationStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model User {
+  id               String     @id @default(uuid()) @db.Uuid
+  email            String     @unique @db.VarChar(255)
+  passwordHash     String     @db.VarChar(255)
+  role             UserRole   @default(EMPLOYEE)
+  status           UserStatus @default(ACTIVE)
+  emailVerifiedAt  DateTime?
+  lastLoginAt      DateTime?
+  refreshTokenHash String?
+
+  employeeProfile EmployeeProfile?
+  adminProfile    AdminProfile?
+
+  notifications Notification[]
+  auditLogs     AuditLog[]     @relation("AuditLogActor")
+
+  createdLocationAssignments LocationAssignment[] @relation("LocationAssignmentCreator")
+  reviewedAttendanceSessions AttendanceSession[]  @relation("AttendanceSessionReviewer")
+
+  requestedAttendanceCorrections AttendanceCorrectionRequest[] @relation("CorrectionRequester")
+  reviewedAttendanceCorrections  AttendanceCorrectionRequest[] @relation("CorrectionReviewer")
+
+  organizationId String?       @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([role])
+  @@index([status])
+  @@map("users")
+}
+
+model EmployeeProfile {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String    @unique @db.Uuid
+  employeeCode String    @unique @db.VarChar(50)
+  firstName    String    @db.VarChar(100)
+  lastName     String    @db.VarChar(100)
+  phone        String?   @unique @db.VarChar(20)
+  designation  String?   @db.VarChar(100)
+  joiningDate  DateTime?
+  avatarUrl    String?
+
+  departmentId   String? @db.Uuid
+  shiftId        String? @db.Uuid
+  workLocationId String? @db.Uuid
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  shift      Shift?      @relation(fields: [shiftId], references: [id], onDelete: SetNull)
+
+  workLocation WorkLocation? @relation("PermanentEmployeeLocation", fields: [workLocationId], references: [id], onDelete: SetNull)
+
+  attendanceRecords            AttendanceRecord[]
+  temporaryLocationAssignments LocationAssignment[]
+
+  attendanceCorrectionRequests AttendanceCorrectionRequest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([departmentId])
+  @@index([shiftId])
+  @@index([workLocationId])
+  @@map("employee_profiles")
+}
+
+model AdminProfile {
+  id          String  @id @default(uuid()) @db.Uuid
+  userId      String  @unique @db.Uuid
+  firstName   String  @db.VarChar(100)
+  lastName    String  @db.VarChar(100)
+  phone       String? @unique @db.VarChar(20)
+  designation String? @db.VarChar(100)
+  avatarUrl   String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admin_profiles")
+}
+
+model Department {
+  id          String  @id @default(uuid()) @db.Uuid
+  name           String  @db.VarChar(100)
+  description    String?
+  organizationId String? @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+
+  employees EmployeeProfile[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("departments")
+}
+
+model Shift {
+  id             String @id @default(uuid()) @db.Uuid
+  name           String @db.VarChar(100)
+  organizationId String? @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  startTime      String @db.VarChar(5)
+  endTime   String @db.VarChar(5)
+
+  gracePeriodMinutes           Int  @default(10)
+  lateReasonAfterMinutes       Int?
+  approvalRequiredAfterMinutes Int?
+
+  status ShiftStatus @default(ACTIVE)
+
+  employees EmployeeProfile[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("shifts")
+}
+
+model AttendanceRecord {
+  id                String           @id @default(uuid()) @db.Uuid
+  employeeProfileId String           @db.Uuid
+  workDate          DateTime         @db.Date
+  status            AttendanceStatus @default(PRESENT)
+  totalWorkMinutes  Int              @default(0)
+  notes             String?
+
+  employeeProfile EmployeeProfile     @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+  sessions        AttendanceSession[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([employeeProfileId, workDate])
+  @@index([workDate])
+  @@index([status])
+  @@map("attendance_records")
+}
+
+model AttendanceSession {
+  id                 String @id @default(uuid()) @db.Uuid
+  attendanceRecordId String @db.Uuid
+
+  punchInAt  DateTime  @default(now())
+  punchOutAt DateTime?
+
+  punchInLatitude  Float?
+  punchInLongitude Float?
+  punchInAccuracy  Float?
+
+  punchOutLatitude  Float?
+  punchOutLongitude Float?
+  punchOutAccuracy  Float?
+
+  approvalStatus AttendanceApprovalStatus @default(NOT_REQUIRED)
+
+  correctionRequests AttendanceCorrectionRequest[]
+
+  lateMinutes Int     @default(0)
+  lateReason  String?
+
+  reviewedByUserId String?   @db.Uuid
+  reviewedAt       DateTime?
+  rejectionReason  String?
+
+  attendanceRecord AttendanceRecord @relation(fields: [attendanceRecordId], references: [id], onDelete: Cascade)
+  reviewedBy       User?            @relation("AttendanceSessionReviewer", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([attendanceRecordId])
+  @@index([approvalStatus])
+  @@index([reviewedByUserId])
+  @@map("attendance_sessions")
+}
+
+model WorkLocation {
+  id           String             @id @default(uuid()) @db.Uuid
+  name         String             @db.VarChar(150)
+  type         WorkLocationType
+  address      String?
+  latitude     Float
+  longitude    Float
+  radiusMeters Int                @default(100)
+  status       WorkLocationStatus @default(ACTIVE)
+  organizationId String? @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+
+  permanentEmployees   EmployeeProfile[]    @relation("PermanentEmployeeLocation")
+  temporaryAssignments LocationAssignment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([organizationId])
+  @@map("work_locations")
+}
+
+model LocationAssignment {
+  id                String @id @default(uuid()) @db.Uuid
+  employeeProfileId String @db.Uuid
+  workLocationId    String @db.Uuid
+  createdByUserId   String @db.Uuid
+
+  startAt DateTime
+  endAt   DateTime
+  reason  String?
+
+  employeeProfile EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+  workLocation    WorkLocation    @relation(fields: [workLocationId], references: [id], onDelete: Restrict)
+  createdBy       User            @relation("LocationAssignmentCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+
+  @@index([employeeProfileId, startAt, endAt])
+  @@index([workLocationId])
+  @@map("location_assignments")
+}
+
+model AttendanceCorrectionRequest {
+  id                  String  @id @default(uuid()) @db.Uuid
+  employeeProfileId   String  @db.Uuid
+  attendanceSessionId String  @db.Uuid
+  requestedByUserId   String  @db.Uuid
+  reviewedByUserId    String? @db.Uuid
+
+  // Original attendance times
+  originalPunchInAt  DateTime
+  originalPunchOutAt DateTime?
+
+  // Requested corrected times
+  requestedPunchInAt  DateTime
+  requestedPunchOutAt DateTime?
+
+  reason String @db.VarChar(500)
+
+  status AttendanceCorrectionStatus @default(PENDING)
+
+  reviewedAt      DateTime?
+  rejectionReason String?
+
+  employeeProfile   EmployeeProfile   @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+  attendanceSession AttendanceSession @relation(fields: [attendanceSessionId], references: [id], onDelete: Cascade)
+
+  requestedBy User  @relation("CorrectionRequester", fields: [requestedByUserId], references: [id])
+  reviewedBy  User? @relation("CorrectionReviewer", fields: [reviewedByUserId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([employeeProfileId])
+  @@index([attendanceSessionId])
+  @@index([status])
+  @@map("attendance_correction_requests")
+}
+
+model Notification {
+  id      String           @id @default(uuid()) @db.Uuid
+  userId  String           @db.Uuid
+  title   String           @db.VarChar(150)
+  message String           @db.VarChar(500)
+  type    NotificationType @default(SYSTEM)
+  isRead  Boolean          @default(false)
+  readAt  DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead, createdAt])
+  @@map("notifications")
+}
+
+model AuditLog {
+  id          String  @id @default(uuid()) @db.Uuid
+  actorUserId String? @db.Uuid
+
+  action      String  @db.VarChar(100)
+  entityType  String  @db.VarChar(100)
+  entityId    String? @db.VarChar(100)
+  description String  @db.VarChar(500)
+
+  metadata  Json?
+  ipAddress String? @db.VarChar(45)
+  userAgent String? @db.VarChar(500)
+
+  actor     User?    @relation("AuditLogActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+
+  @@index([actorUserId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Organization {
+  id     String             @id @default(uuid()) @db.Uuid
+  name   String             @unique @db.VarChar(150)
+  status OrganizationStatus @default(ACTIVE)
+
+  users User[]
+  departments Department[]
+  shifts Shift[]
+  workLocations WorkLocation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@map("organizations")
+}
