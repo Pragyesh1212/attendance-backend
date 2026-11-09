@@ -48,7 +48,7 @@ async punchIn(
   return this.attendanceService.punchIn(
     user.sub,
     dto,
-    request.ip ?? '',
+    request.ip ?? request.socket.remoteAddress ?? ''
   );
 }
 
@@ -63,9 +63,16 @@ async punchOut(
   return this.attendanceService.punchOut(
     user.sub,
     dto,
-    request.ip ?? '',
+    request.ip ?? request.socket.remoteAddress ?? ''
   );
 }
+  // EMPLOYEE: Read shift cutoff for the Punch In button (server verified).
+  @Get('my/punch-in-policy')
+  @Roles('EMPLOYEE')
+  async getMyPunchInPolicy(@CurrentUser() user: { sub: string }) {
+    return this.attendanceService.getMyPunchInPolicy(user.sub);
+  }
+
   // EMPLOYEE: OWN ATTENDANCE
   @Get('my')
   @Roles('EMPLOYEE')

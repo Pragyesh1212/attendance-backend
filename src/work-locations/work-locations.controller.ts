@@ -8,6 +8,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 
 import { WorkLocationsService } from './work-locations.service';
@@ -54,6 +55,28 @@ export class WorkLocationsController {
     @CurrentUser() user: { sub: string },
   ) {
     return this.workLocationsService.update(id, dto, user.sub);
+  }
+
+  // Update allowed public IPs for an existing location
+  @Patch(':id/wifi-ips')
+  @Roles('SUPER_ADMIN', 'ADMIN')
+  async updateWifiIps(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: { allowedPublicIps: string[] },
+    @CurrentUser() user: { sub: string },
+  ) {
+    return this.workLocationsService.updateWifiIps(id, body.allowedPublicIps, user.sub);
+  }
+
+  // Reactivate a previously deactivated work location
+  @Patch(':id/activate')
+  @Roles('SUPER_ADMIN', 'ADMIN')
+  async activate(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: { allowedPublicIps?: string[] },
+    @CurrentUser() user: { sub: string },
+  ) {
+    return this.workLocationsService.activate(id, body?.allowedPublicIps, user.sub);
   }
 
   // Soft delete (deactivate) work location

@@ -74,6 +74,7 @@ export type WorkLocationCountAggregateOutputType = {
   latitude: number
   longitude: number
   radiusMeters: number
+  allowedPublicIps: number
   status: number
   organizationId: number
   createdAt: number
@@ -130,6 +131,7 @@ export type WorkLocationCountAggregateInputType = {
   latitude?: true
   longitude?: true
   radiusMeters?: true
+  allowedPublicIps?: true
   status?: true
   organizationId?: true
   createdAt?: true
@@ -231,6 +233,7 @@ export type WorkLocationGroupByOutputType = {
   latitude: number
   longitude: number
   radiusMeters: number
+  allowedPublicIps: string[]
   status: $Enums.WorkLocationStatus
   organizationId: string | null
   createdAt: Date
@@ -268,6 +271,7 @@ export type WorkLocationWhereInput = {
   latitude?: Prisma.FloatFilter<"WorkLocation"> | number
   longitude?: Prisma.FloatFilter<"WorkLocation"> | number
   radiusMeters?: Prisma.IntFilter<"WorkLocation"> | number
+  allowedPublicIps?: Prisma.StringNullableListFilter<"WorkLocation">
   status?: Prisma.EnumWorkLocationStatusFilter<"WorkLocation"> | $Enums.WorkLocationStatus
   organizationId?: Prisma.UuidNullableFilter<"WorkLocation"> | string | null
   createdAt?: Prisma.DateTimeFilter<"WorkLocation"> | Date | string
@@ -285,6 +289,7 @@ export type WorkLocationOrderByWithRelationInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radiusMeters?: Prisma.SortOrder
+  allowedPublicIps?: Prisma.SortOrder
   status?: Prisma.SortOrder
   organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -305,6 +310,7 @@ export type WorkLocationWhereUniqueInput = Prisma.AtLeast<{
   latitude?: Prisma.FloatFilter<"WorkLocation"> | number
   longitude?: Prisma.FloatFilter<"WorkLocation"> | number
   radiusMeters?: Prisma.IntFilter<"WorkLocation"> | number
+  allowedPublicIps?: Prisma.StringNullableListFilter<"WorkLocation">
   status?: Prisma.EnumWorkLocationStatusFilter<"WorkLocation"> | $Enums.WorkLocationStatus
   organizationId?: Prisma.UuidNullableFilter<"WorkLocation"> | string | null
   createdAt?: Prisma.DateTimeFilter<"WorkLocation"> | Date | string
@@ -322,6 +328,7 @@ export type WorkLocationOrderByWithAggregationInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radiusMeters?: Prisma.SortOrder
+  allowedPublicIps?: Prisma.SortOrder
   status?: Prisma.SortOrder
   organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -344,6 +351,7 @@ export type WorkLocationScalarWhereWithAggregatesInput = {
   latitude?: Prisma.FloatWithAggregatesFilter<"WorkLocation"> | number
   longitude?: Prisma.FloatWithAggregatesFilter<"WorkLocation"> | number
   radiusMeters?: Prisma.IntWithAggregatesFilter<"WorkLocation"> | number
+  allowedPublicIps?: Prisma.StringNullableListFilter<"WorkLocation">
   status?: Prisma.EnumWorkLocationStatusWithAggregatesFilter<"WorkLocation"> | $Enums.WorkLocationStatus
   organizationId?: Prisma.UuidNullableWithAggregatesFilter<"WorkLocation"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WorkLocation"> | Date | string
@@ -358,6 +366,7 @@ export type WorkLocationCreateInput = {
   latitude: number
   longitude: number
   radiusMeters?: number
+  allowedPublicIps?: Prisma.WorkLocationCreateallowedPublicIpsInput | string[]
   status?: $Enums.WorkLocationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -374,6 +383,7 @@ export type WorkLocationUncheckedCreateInput = {
   latitude: number
   longitude: number
   radiusMeters?: number
+  allowedPublicIps?: Prisma.WorkLocationCreateallowedPublicIpsInput | string[]
   status?: $Enums.WorkLocationStatus
   organizationId?: string | null
   createdAt?: Date | string
@@ -390,6 +400,7 @@ export type WorkLocationUpdateInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  allowedPublicIps?: Prisma.WorkLocationUpdateallowedPublicIpsInput | string[]
   status?: Prisma.EnumWorkLocationStatusFieldUpdateOperationsInput | $Enums.WorkLocationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -406,6 +417,7 @@ export type WorkLocationUncheckedUpdateInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  allowedPublicIps?: Prisma.WorkLocationUpdateallowedPublicIpsInput | string[]
   status?: Prisma.EnumWorkLocationStatusFieldUpdateOperationsInput | $Enums.WorkLocationStatus
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -422,6 +434,7 @@ export type WorkLocationCreateManyInput = {
   latitude: number
   longitude: number
   radiusMeters?: number
+  allowedPublicIps?: Prisma.WorkLocationCreateallowedPublicIpsInput | string[]
   status?: $Enums.WorkLocationStatus
   organizationId?: string | null
   createdAt?: Date | string
@@ -436,6 +449,7 @@ export type WorkLocationUpdateManyMutationInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  allowedPublicIps?: Prisma.WorkLocationUpdateallowedPublicIpsInput | string[]
   status?: Prisma.EnumWorkLocationStatusFieldUpdateOperationsInput | $Enums.WorkLocationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -449,6 +463,7 @@ export type WorkLocationUncheckedUpdateManyInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  allowedPublicIps?: Prisma.WorkLocationUpdateallowedPublicIpsInput | string[]
   status?: Prisma.EnumWorkLocationStatusFieldUpdateOperationsInput | $Enums.WorkLocationStatus
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -460,6 +475,14 @@ export type WorkLocationNullableScalarRelationFilter = {
   isNot?: Prisma.WorkLocationWhereInput | null
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type WorkLocationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -468,6 +491,7 @@ export type WorkLocationCountOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radiusMeters?: Prisma.SortOrder
+  allowedPublicIps?: Prisma.SortOrder
   status?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -545,6 +569,10 @@ export type WorkLocationUpdateOneWithoutPermanentEmployeesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkLocationUpdateToOneWithWhereWithoutPermanentEmployeesInput, Prisma.WorkLocationUpdateWithoutPermanentEmployeesInput>, Prisma.WorkLocationUncheckedUpdateWithoutPermanentEmployeesInput>
 }
 
+export type WorkLocationCreateallowedPublicIpsInput = {
+  set: string[]
+}
+
 export type EnumWorkLocationTypeFieldUpdateOperationsInput = {
   set?: $Enums.WorkLocationType
 }
@@ -555,6 +583,11 @@ export type FloatFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type WorkLocationUpdateallowedPublicIpsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type EnumWorkLocationStatusFieldUpdateOperationsInput = {
@@ -625,6 +658,7 @@ export type WorkLocationCreateWithoutPermanentEmployeesInput = {
   latitude: number
   longitude: number
   radiusMeters?: number
+  allowedPublicIps?: Prisma.WorkLocationCreateallowedPublicIpsInput | string[]
   status?: $Enums.WorkLocationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -640,6 +674,7 @@ export type WorkLocationUncheckedCreateWithoutPermanentEmployeesInput = {
   latitude: number
   longitude: number
   radiusMeters?: number
+  allowedPublicIps?: Prisma.WorkLocationCreateallowedPublicIpsInput | string[]
   status?: $Enums.WorkLocationStatus
   organizationId?: string | null
   createdAt?: Date | string
@@ -671,6 +706,7 @@ export type WorkLocationUpdateWithoutPermanentEmployeesInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  allowedPublicIps?: Prisma.WorkLocationUpdateallowedPublicIpsInput | string[]
   status?: Prisma.EnumWorkLocationStatusFieldUpdateOperationsInput | $Enums.WorkLocationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -686,6 +722,7 @@ export type WorkLocationUncheckedUpdateWithoutPermanentEmployeesInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  allowedPublicIps?: Prisma.WorkLocationUpdateallowedPublicIpsInput | string[]
   status?: Prisma.EnumWorkLocationStatusFieldUpdateOperationsInput | $Enums.WorkLocationStatus
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -701,6 +738,7 @@ export type WorkLocationCreateWithoutTemporaryAssignmentsInput = {
   latitude: number
   longitude: number
   radiusMeters?: number
+  allowedPublicIps?: Prisma.WorkLocationCreateallowedPublicIpsInput | string[]
   status?: $Enums.WorkLocationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -716,6 +754,7 @@ export type WorkLocationUncheckedCreateWithoutTemporaryAssignmentsInput = {
   latitude: number
   longitude: number
   radiusMeters?: number
+  allowedPublicIps?: Prisma.WorkLocationCreateallowedPublicIpsInput | string[]
   status?: $Enums.WorkLocationStatus
   organizationId?: string | null
   createdAt?: Date | string
@@ -747,6 +786,7 @@ export type WorkLocationUpdateWithoutTemporaryAssignmentsInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  allowedPublicIps?: Prisma.WorkLocationUpdateallowedPublicIpsInput | string[]
   status?: Prisma.EnumWorkLocationStatusFieldUpdateOperationsInput | $Enums.WorkLocationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -762,6 +802,7 @@ export type WorkLocationUncheckedUpdateWithoutTemporaryAssignmentsInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  allowedPublicIps?: Prisma.WorkLocationUpdateallowedPublicIpsInput | string[]
   status?: Prisma.EnumWorkLocationStatusFieldUpdateOperationsInput | $Enums.WorkLocationStatus
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -777,6 +818,7 @@ export type WorkLocationCreateWithoutOrganizationInput = {
   latitude: number
   longitude: number
   radiusMeters?: number
+  allowedPublicIps?: Prisma.WorkLocationCreateallowedPublicIpsInput | string[]
   status?: $Enums.WorkLocationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -792,6 +834,7 @@ export type WorkLocationUncheckedCreateWithoutOrganizationInput = {
   latitude: number
   longitude: number
   radiusMeters?: number
+  allowedPublicIps?: Prisma.WorkLocationCreateallowedPublicIpsInput | string[]
   status?: $Enums.WorkLocationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -836,6 +879,7 @@ export type WorkLocationScalarWhereInput = {
   latitude?: Prisma.FloatFilter<"WorkLocation"> | number
   longitude?: Prisma.FloatFilter<"WorkLocation"> | number
   radiusMeters?: Prisma.IntFilter<"WorkLocation"> | number
+  allowedPublicIps?: Prisma.StringNullableListFilter<"WorkLocation">
   status?: Prisma.EnumWorkLocationStatusFilter<"WorkLocation"> | $Enums.WorkLocationStatus
   organizationId?: Prisma.UuidNullableFilter<"WorkLocation"> | string | null
   createdAt?: Prisma.DateTimeFilter<"WorkLocation"> | Date | string
@@ -850,6 +894,7 @@ export type WorkLocationCreateManyOrganizationInput = {
   latitude: number
   longitude: number
   radiusMeters?: number
+  allowedPublicIps?: Prisma.WorkLocationCreateallowedPublicIpsInput | string[]
   status?: $Enums.WorkLocationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -863,6 +908,7 @@ export type WorkLocationUpdateWithoutOrganizationInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  allowedPublicIps?: Prisma.WorkLocationUpdateallowedPublicIpsInput | string[]
   status?: Prisma.EnumWorkLocationStatusFieldUpdateOperationsInput | $Enums.WorkLocationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -878,6 +924,7 @@ export type WorkLocationUncheckedUpdateWithoutOrganizationInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  allowedPublicIps?: Prisma.WorkLocationUpdateallowedPublicIpsInput | string[]
   status?: Prisma.EnumWorkLocationStatusFieldUpdateOperationsInput | $Enums.WorkLocationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -893,6 +940,7 @@ export type WorkLocationUncheckedUpdateManyWithoutOrganizationInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  allowedPublicIps?: Prisma.WorkLocationUpdateallowedPublicIpsInput | string[]
   status?: Prisma.EnumWorkLocationStatusFieldUpdateOperationsInput | $Enums.WorkLocationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -946,6 +994,7 @@ export type WorkLocationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   latitude?: boolean
   longitude?: boolean
   radiusMeters?: boolean
+  allowedPublicIps?: boolean
   status?: boolean
   organizationId?: boolean
   createdAt?: boolean
@@ -964,6 +1013,7 @@ export type WorkLocationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   latitude?: boolean
   longitude?: boolean
   radiusMeters?: boolean
+  allowedPublicIps?: boolean
   status?: boolean
   organizationId?: boolean
   createdAt?: boolean
@@ -979,6 +1029,7 @@ export type WorkLocationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   latitude?: boolean
   longitude?: boolean
   radiusMeters?: boolean
+  allowedPublicIps?: boolean
   status?: boolean
   organizationId?: boolean
   createdAt?: boolean
@@ -994,13 +1045,14 @@ export type WorkLocationSelectScalar = {
   latitude?: boolean
   longitude?: boolean
   radiusMeters?: boolean
+  allowedPublicIps?: boolean
   status?: boolean
   organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type WorkLocationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "address" | "latitude" | "longitude" | "radiusMeters" | "status" | "organizationId" | "createdAt" | "updatedAt", ExtArgs["result"]["workLocation"]>
+export type WorkLocationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "address" | "latitude" | "longitude" | "radiusMeters" | "allowedPublicIps" | "status" | "organizationId" | "createdAt" | "updatedAt", ExtArgs["result"]["workLocation"]>
 export type WorkLocationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.WorkLocation$organizationArgs<ExtArgs>
   permanentEmployees?: boolean | Prisma.WorkLocation$permanentEmployeesArgs<ExtArgs>
@@ -1029,6 +1081,7 @@ export type $WorkLocationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     latitude: number
     longitude: number
     radiusMeters: number
+    allowedPublicIps: string[]
     status: $Enums.WorkLocationStatus
     organizationId: string | null
     createdAt: Date
@@ -1466,6 +1519,7 @@ export interface WorkLocationFieldRefs {
   readonly latitude: Prisma.FieldRef<"WorkLocation", 'Float'>
   readonly longitude: Prisma.FieldRef<"WorkLocation", 'Float'>
   readonly radiusMeters: Prisma.FieldRef<"WorkLocation", 'Int'>
+  readonly allowedPublicIps: Prisma.FieldRef<"WorkLocation", 'String[]'>
   readonly status: Prisma.FieldRef<"WorkLocation", 'WorkLocationStatus'>
   readonly organizationId: Prisma.FieldRef<"WorkLocation", 'String'>
   readonly createdAt: Prisma.FieldRef<"WorkLocation", 'DateTime'>

@@ -209,6 +209,7 @@ export const WorkLocationScalarFieldEnum = {
   latitude: 'latitude',
   longitude: 'longitude',
   radiusMeters: 'radiusMeters',
+  allowedPublicIps: 'allowedPublicIps',
   status: 'status',
   organizationId: 'organizationId',
   createdAt: 'createdAt',

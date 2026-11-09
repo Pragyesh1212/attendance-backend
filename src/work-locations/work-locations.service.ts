@@ -113,6 +113,31 @@ export class WorkLocationsService {
     };
   }
 
+  // Manage per-location public IP allowlist. Empty list disables IP-based attendance.
+  async updateWifiIps(id: string, allowedPublicIps: string[], actorUserId: string) {
+    const existing = await this.prisma.workLocation.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException('Work location not found');
+    if (existing.status !== 'ACTIVE') throw new BadRequestException('Cannot edit an inactive location');
+    const { isIP } = await import('node:net');
+    if (!Array.isArray(allowedPublicIps) || allowedPublicIps.length > 20 ||
+        allowedPublicIps.some(ip => typeof ip !== 'string' || !isIP(ip.trim()))) {
+      throw new BadRequestException('Provide up to 20 valid IPv4 or IPv6 addresses');
+    }
+    const ips = [...new Set(allowedPublicIps.map(ip => ip.trim()))];
+    if (existing.type === 'OFFICE' && ips.length === 0) {
+      throw new BadRequestException('Office locations require at least one allowed public IP address');
+    }
+    const location = await this.prisma.workLocation.update({
+      where: { id }, data: { allowedPublicIps: ips },
+    });
+    await this.auditLogsService.createLog({
+      actorUserId, action: 'WORK_LOCATION_UPDATED', entityType: 'WORK_LOCATION',
+      entityId: id, description: `Allowed network IPs updated for "${location.name}"`,
+      metadata: { updatedFields: ['allowedPublicIps'] },
+    });
+    return { message: 'Office network IPs updated successfully', location };
+  }
+
   // Soft delete / deactivate work location
   async deactivate(id: string, actorUserId: string) {
     const existingLocation =
@@ -149,6 +174,37 @@ export class WorkLocationsService {
       message: 'Work location deactivated successfully',
       location,
     };
+  }
+
+  // Reactivate a location, ensuring Office locations have a valid IP allowlist.
+  async activate(id: string, suppliedIps: string[] | undefined, actorUserId: string) {
+    const existing = await this.prisma.workLocation.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException('Work location not found');
+    if (existing.status === 'ACTIVE') throw new BadRequestException('Work location is already active');
+
+    const { isIP } = await import('node:net');
+    if (suppliedIps !== undefined &&
+        (!Array.isArray(suppliedIps) || suppliedIps.length > 20 ||
+         suppliedIps.some(ip => typeof ip !== 'string' || !isIP(ip.trim())))) {
+      throw new BadRequestException('Provide up to 20 valid IP addresses');
+    }
+    const ips = suppliedIps === undefined
+      ? existing.allowedPublicIps
+      : [...new Set(suppliedIps.map(ip => ip.trim()))];
+    if (existing.type === 'OFFICE' && ips.length === 0) {
+      throw new BadRequestException('Office locations require an allowed public IP before activation');
+    }
+
+    const location = await this.prisma.workLocation.update({
+      where: { id },
+      data: { status: 'ACTIVE', allowedPublicIps: ips },
+    });
+    await this.auditLogsService.createLog({
+      actorUserId, action: 'WORK_LOCATION_UPDATED', entityType: 'WORK_LOCATION',
+      entityId: location.id, description: `Work location "${location.name}" was reactivated`,
+      metadata: { updatedFields: ['status', 'allowedPublicIps'] },
+    });
+    return { message: 'Work location activated successfully', location };
   }
 
   // Assign permanent work location to an employee

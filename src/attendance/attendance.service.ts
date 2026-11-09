@@ -7,6 +7,7 @@ import {
     InternalServerErrorException,
 } from '@nestjs/common';
 
+import { isIP } from 'node:net';
 import { PrismaService } from '../prisma/prisma.service';
 import {
     UserStatus,
@@ -32,34 +33,34 @@ export class AttendanceService {
     ) { }
 
     // Verify that the request comes from an authorized office public IP.
-    private validateOfficeNetwork(clientIp: string): void {
-        const allowedIps = (process.env.OFFICE_PUBLIC_IPS ?? '')
-            .split(',')
-            .map((ip) => ip.trim())
-            .filter(Boolean);
-        console.log('Allowed office IPs:', allowedIps);
-        console.log('Client IP:', clientIp);
-        console.log(process.env.OFFICE_PUBLIC_IPS);
-        if (allowedIps.length === 0) {
-            throw new InternalServerErrorException(
-                'Office network configuration is missing',
-            );
-        }
+    // private validateOfficeNetwork(clientIp: string): void {
+    //     const allowedIps = (process.env.OFFICE_PUBLIC_IPS ?? '')
+    //         .split(',')
+    //         .map((ip) => ip.trim())
+    //         .filter(Boolean);
+    //     console.log('Allowed office IPs:', allowedIps);
+    //     console.log('Client IP:', clientIp);
+    //     console.log(process.env.OFFICE_PUBLIC_IPS);
+    //     if (allowedIps.length === 0) {
+    //         throw new InternalServerErrorException(
+    //             'Office network configuration is missing',
+    //         );
+    //     }
 
-        const normalizeIp = (ip: string) =>
-            ip.trim().replace(/^::ffff:/i, '');
+    //     const normalizeIp = (ip: string) =>
+    //         ip.trim().replace(/^::ffff:/i, '');
 
-        const normalizedClientIp = normalizeIp(clientIp);
-        const isAuthorized = allowedIps.some(
-            (ip) => normalizeIp(ip) === normalizedClientIp,
-        );
+    //     const normalizedClientIp = normalizeIp(clientIp);
+    //     const isAuthorized = allowedIps.some(
+    //         (ip) => normalizeIp(ip) === normalizedClientIp,
+    //     );
 
-        if (!normalizedClientIp || !isAuthorized) {
-            throw new ForbiddenException(
-                'You must connect to the authorized office network to mark attendance.',
-            );
-        }
-    }
+    //     if (!normalizedClientIp || !isAuthorized) {
+    //         throw new ForbiddenException(
+    //             'You must connect to the authorized office network to mark attendance.',
+    //         );
+    //     }
+    // }
 
     // Calculate distance between two GPS coordinates using Haversine formula
     private calculateDistance(
@@ -92,6 +93,7 @@ export class AttendanceService {
         employeeProfileId: string,
         latitude: number,
         longitude: number,
+        clientIp?: string,
     ) {
         const effectiveLocation =
             await this.workLocationsService.getEffectiveLocation(
@@ -99,6 +101,20 @@ export class AttendanceService {
             );
 
         const location = effectiveLocation.location;
+
+        // Enforce the assigned location's IP allowlist when configured.
+        // Never use a client-supplied body field as the source of clientIp.
+        const allowedIps: string[] = location.allowedPublicIps ?? [];
+        if (location.type === 'OFFICE' && allowedIps.length === 0) {
+            throw new ForbiddenException('Office network IP is not configured for your assigned location. Contact your administrator.');
+        }
+        if (allowedIps.length) {
+            const normalize = (ip: string) => ip.trim().replace(/^::ffff:/i, '');
+            const actualIp = normalize(clientIp ?? '');
+            if (!isIP(actualIp) || !allowedIps.some(ip => normalize(ip) === actualIp)) {
+                throw new ForbiddenException('Connect to the authorized network for your assigned work location.');
+            }
+        }
 
         const distance = this.calculateDistance(
             latitude,
@@ -253,9 +269,115 @@ export class AttendanceService {
         return record;
     }
 
+    // Determine the final punch-in deadline in minutes from midnight (IST).
+    // For ordinary same-day shifts, never allow punch-in at/after shift end.
+    // An earlier administrator-configured cutoff takes precedence.
+    // Overnight shifts retain their prior configured-cutoff behavior and need
+    // a separate date-aware schedule policy before extending that behavior.
+    private getPunchInDeadlineMinutes(shift: {
+        startTime: string;
+        endTime: string;
+        approvalRequiredAfterMinutes: number | null;
+    }): number | null {
+        const [startHour, startMinute] = shift.startTime.split(':').map(Number);
+        const [endHour, endMinute] = shift.endTime.split(':').map(Number);
+        if (![startHour, startMinute, endHour, endMinute].every(Number.isFinite)) {
+            throw new InternalServerErrorException('The assigned shift has an invalid time configuration.');
+        }
+        const start = startHour * 60 + startMinute;
+        const end = endHour * 60 + endMinute;
+        const offset = shift.approvalRequiredAfterMinutes;
+        const adminCutoff = offset == null ? null : start + offset;
+        if (end > start) {
+            return adminCutoff == null ? end : Math.min(end, adminCutoff);
+        }
+        return adminCutoff;
+    }
+
+    // EMPLOYEE: Punch-in cutoff preflight for the Angular button state.
+    // Uses the same two existing Shift columns as punchIn(), avoiding a migration.
+    // The server-side punchIn() method ALWAYS enforces the cutoff again.
+    async getMyPunchInPolicy(userId: string) {
+        const employee = await this.prisma.employeeProfile.findUnique({
+            where: { userId },
+            include: { shift: true },
+        });
+
+        if (!employee) {
+            throw new NotFoundException('Employee profile not found');
+        }
+
+        const shift = employee.shift;
+        if (!shift || shift.status !== ShiftStatus.ACTIVE) {
+            return {
+                status: 'CLOSED' as const,
+                cutoffReached: true,
+                opensAt: null,
+                cutoffAt: null,
+                message: 'No active shift is assigned to you. Please contact your Admin.',
+            };
+        }
+
+        const deadlineMinutes = this.getPunchInDeadlineMinutes(shift);
+        if (deadlineMinutes === null) {
+            // Overnight shifts without a configured cutoff must be explicitly
+            // supported rather than silently assuming the next-day end time.
+            return {
+                status: 'CLOSED' as const,
+                cutoffReached: true,
+                opensAt: null,
+                cutoffAt: null,
+                message: 'Unable to determine punch-in closing time. Please contact your Admin.',
+            };
+        }
+
+        const now = new Date();
+        const parts = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Asia/Kolkata',
+            year: 'numeric', month: '2-digit', day: '2-digit',
+        }).formatToParts(now);
+        const v = Object.fromEntries(parts.map(p => [p.type, p.value]));
+
+        // ISO with an explicit IST offset ensures every employee sees the
+        // same server deadline independent of the browser's local timezone.
+        const midnightIst = Date.parse(`${v.year}-${v.month}-${v.day}T00:00:00+05:30`);
+        const [startHour, startMinute] = shift.startTime.split(':').map(Number);
+        const startMinutes = startHour * 60 + startMinute;
+        const opensAt = new Date(midnightIst + startMinutes * 60000);
+        const cutoffAt = new Date(midnightIst + deadlineMinutes * 60000);
+
+        // Both boundaries must be enforced. At 1 AM, a 9 AM shift
+        // has not begun even though its cutoff is still in the future.
+        const status: 'NOT_STARTED' | 'OPEN' | 'CLOSED' =
+            now.getTime() < opensAt.getTime()
+                ? 'NOT_STARTED'
+                : now.getTime() >= cutoffAt.getTime()
+                    ? 'CLOSED'
+                    : 'OPEN';
+
+        const startLabel = opensAt.toLocaleTimeString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+        });
+
+        return {
+            status,
+            cutoffReached: status === 'CLOSED',
+            opensAt: opensAt.toISOString(),
+            cutoffAt: cutoffAt.toISOString(),
+            message: status === 'NOT_STARTED'
+                ? `Your shift starts at ${startLabel}. Punch In will be available at shift start.`
+                : status === 'CLOSED'
+                    ? 'Punch In is closed for your shift. Please contact your Admin.'
+                    : null,
+        };
+    }
+
     // PUNCH IN
-    async punchIn(userId: string, dto: PunchInDto, clientIp: string) {
-        this.validateOfficeNetwork(clientIp);
+    async punchIn(userId: string, dto: PunchInDto, clientIp?: string) {
+        // this.validateOfficeNetwork(clientIp);
         // 1. Find employee and assigned shift
         const employee = await this.prisma.employeeProfile.findUnique({
             where: { userId },
@@ -277,13 +399,6 @@ export class AttendanceService {
             throw new ForbiddenException('No active shift assigned to you');
         }
         const assignedShift = employee.shift;
-
-        // 2. Validate assigned GPS location
-        const locationValidation = await this.validateEmployeeLocation(
-            employee.id,
-            dto.latitude,
-            dto.longitude,
-        );
 
         // 3. Get current date and time in India
         const now = new Date();
@@ -314,109 +429,142 @@ export class AttendanceService {
             .map(Number);
 
         const shiftStartMinutes = shiftHour * 60 + shiftMinute;
+
+        // Reject early punch-in on the server as well as in the Angular UI.
+        // Example: for a 09:00 shift, 00:59 is NOT an allowed punch-in time.
+        if (currentMinutes < shiftStartMinutes) {
+            const startLabel = new Date(
+                Date.UTC(2020, 0, 1, shiftHour, shiftMinute),
+            ).toLocaleTimeString('en-IN', {
+                timeZone: 'UTC',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+            });
+            throw new ForbiddenException(
+                `Your shift starts at ${startLabel}. Punch In will be available at shift start.`,
+            );
+        }
+
         const rawMinutesLate = currentMinutes - shiftStartMinutes;
 
         const minutesLate = Math.max(0, rawMinutesLate);
 
-        // These three settings are independent:
-        // - gracePeriodMinutes controls the LATE attendance classification.
-        // - lateReasonAfterMinutes controls whether a reason is mandatory.
-        // - approvalRequiredAfterMinutes controls whether admin approval is mandatory.
-        // Both thresholds are measured from shift start, not from the end of grace.
+        // The frontend labels reuse the two existing Shift DB fields:
+        // lateReasonAfterMinutes -> Admin approval required after X minutes.
+        // approvalRequiredAfterMinutes -> Punch In DISABLED after X minutes.
+        // Both count from shift start, not the end of the grace period.
         const gracePeriodMinutes = assignedShift.gracePeriodMinutes ?? 0;
-        const lateReasonAfterMinutes =
+        const adminApprovalAfterMinutes =
             assignedShift.lateReasonAfterMinutes ?? null;
-        const approvalRequiredAfterMinutes =
-            assignedShift.approvalRequiredAfterMinutes ?? null;
 
-        const isLate = minutesLate > gracePeriodMinutes;
-
-        const lateReasonRequired =
-            lateReasonAfterMinutes !== null &&
-            minutesLate >= lateReasonAfterMinutes;
-
-        const approvalRequired =
-            isLate &&
-            approvalRequiredAfterMinutes !== null &&
-            minutesLate >= approvalRequiredAfterMinutes;
-
-        // A reason is mandatory either when the late-reason threshold is
-        // reached OR when Admin approval is required. This guarantees that
-        // every approval request includes an employee explanation.
-        const reasonRequired = lateReasonRequired || approvalRequired;
-
-        if (reasonRequired && !dto.lateReason?.trim()) {
-            throw new ConflictException(
-                approvalRequired
-                    ? `You are ${minutesLate} minutes late and Admin approval is required. Please provide a reason for your late arrival.`
-                    : `You are ${minutesLate} minutes late. Please provide a reason for your late arrival.`,
+        // The backend is authoritative; the end of a same-day shift is an
+        // automatic hard cutoff, even when an Admin left the earlier cutoff blank.
+        const deadlineMinutes = this.getPunchInDeadlineMinutes(assignedShift);
+        if (deadlineMinutes === null || currentMinutes >= deadlineMinutes) {
+            throw new ForbiddenException(
+                'Punch In is closed for your shift. Please contact your Admin.',
             );
         }
+
+        const isLate = minutesLate > gracePeriodMinutes;
+        const approvalRequired =
+            isLate &&
+            adminApprovalAfterMinutes !== null &&
+            minutesLate >= adminApprovalAfterMinutes;
+
+        // An Admin approval request must include a reason.
+        const reasonRequired = approvalRequired;
 
         const approvalStatus = approvalRequired
             ? 'PENDING'
             : 'NOT_REQUIRED';
 
+        // Continue existing GPS and assigned-network validation only if the
+        // shift allows punch-in at the current India-local time.
+        const locationValidation = await this.validateEmployeeLocation(
+            employee.id,
+            dto.latitude,
+            dto.longitude,
+            clientIp,
+        );
+
         const attendanceStatus = isLate
             ? AttendanceStatus.LATE
             : AttendanceStatus.PRESENT;
 
-        // 5. Create or retrieve today's attendance record
+        // 5. One attendance session per employee per India workday.
+        // The unique employeeProfileId_workDate key ensures one parent record.
+        // A row lock serializes concurrent punch-in and punch-out requests.
         const result = await this.prisma.$transaction(async (tx) => {
-            let record = await tx.attendanceRecord.findUnique({
+            let record = await tx.attendanceRecord.upsert({
                 where: {
                     employeeProfileId_workDate: {
                         employeeProfileId: employee.id,
                         workDate,
                     },
                 },
+                create: {
+                    employeeProfileId: employee.id,
+                    workDate,
+                    status: attendanceStatus,
+                },
+                update: {},
             });
 
-            if (!record) {
-                record = await tx.attendanceRecord.create({
-                    data: {
-                        employeeProfileId: employee.id,
-                        workDate,
-                        status: attendanceStatus,
-                    },
-                });
-            } else if (
-                record.status === AttendanceStatus.PRESENT &&
-                isLate
-            ) {
+            // Lock today's parent record BEFORE inspecting sessions.
+            // This prevents parallel API requests from both creating a session.
+            await tx.$queryRaw`
+                SELECT "id" FROM "attendance_records"
+                WHERE "id" = ${record.id}::uuid
+                FOR UPDATE
+            `;
+
+            // Any session (open, completed, pending, or rejected) consumes
+            // the employee's single punch-in opportunity for today.
+            const existingSession = await tx.attendanceSession.findFirst({
+                where: { attendanceRecordId: record.id },
+                orderBy: { punchInAt: 'desc' },
+            });
+
+            if (existingSession?.approvalStatus === 'PENDING') {
+                throw new ForbiddenException(
+                    'Your late arrival request is awaiting Admin approval. You cannot punch in again today.',
+                );
+            }
+
+            if (existingSession?.approvalStatus === 'REJECTED') {
+                throw new ForbiddenException(
+                    'Your late arrival request was rejected. Please contact Admin.',
+                );
+            }
+
+            if (existingSession?.punchOutAt) {
+                throw new ConflictException(
+                    'You have already punched in and out today. Attendance is allowed only once per day.',
+                );
+            }
+
+            if (existingSession) {
+                throw new ConflictException(
+                    'You have already punched in today. Please punch out when your workday ends.',
+                );
+            }
+
+            // Keep existing shift late-reason and approval rules intact.
+            if (reasonRequired && !dto.lateReason?.trim()) {
+                throw new ConflictException(
+                    approvalRequired
+                        ? `You are ${minutesLate} minutes late and Admin approval is required. Please provide a reason for your late arrival.`
+                        : `You are ${minutesLate} minutes late. Please provide a reason for your late arrival.`,
+                );
+            }
+
+            if (record.status === AttendanceStatus.PRESENT && isLate) {
                 record = await tx.attendanceRecord.update({
                     where: { id: record.id },
                     data: { status: AttendanceStatus.LATE },
                 });
-            }
-
-            // 6. Prevent duplicate open punch-in
-            const openSession = await tx.attendanceSession.findFirst({
-                where: {
-                    attendanceRecordId: record.id,
-                    punchOutAt: null,
-                },
-                orderBy: {
-                    punchInAt: 'desc',
-                },
-            });
-
-            if (openSession?.approvalStatus === 'PENDING') {
-                throw new ForbiddenException(
-                    'Your late arrival request is awaiting Admin approval. You cannot punch in again until it is reviewed.',
-                );
-            }
-
-            if (openSession?.approvalStatus === 'REJECTED') {
-                throw new ForbiddenException(
-                    'Your late arrival request was rejected. Please contact Admin before continuing.',
-                );
-            }
-
-            if (openSession) {
-                throw new ConflictException(
-                    'You are already punched in. Please punch out first.',
-                );
             }
 
             // 7. Save punch-in and GPS information
@@ -453,8 +601,12 @@ export class AttendanceService {
                 shiftPolicy: {
                     shiftStartTime: assignedShift.startTime,
                     gracePeriodMinutes,
-                    lateReasonAfterMinutes,
-                    approvalRequiredAfterMinutes,
+                    // Keep legacy API keys for compatibility, while adding
+                    // explicit names that describe their current behavior.
+                    lateReasonAfterMinutes: assignedShift.lateReasonAfterMinutes,
+                    approvalRequiredAfterMinutes: assignedShift.approvalRequiredAfterMinutes,
+                    adminApprovalAfterMinutes,
+                    punchInDisabledAfterMinutes: assignedShift.approvalRequiredAfterMinutes ?? null,
                 },
 
                 assignedLocation: locationValidation.location.name,
@@ -483,8 +635,8 @@ export class AttendanceService {
     }
 
     // PUNCH OUT
-    async punchOut(userId: string, dto: PunchOutDto, clientIp: string) {
-        this.validateOfficeNetwork(clientIp);
+    async punchOut(userId: string, dto: PunchOutDto, clientIp?: string) {
+        // this.validateOfficeNetwork(clientIp);
         // 1. Find employee
         const employee = await this.prisma.employeeProfile.findUnique({
             where: { userId },
@@ -506,6 +658,7 @@ export class AttendanceService {
             employee.id,
             dto.latitude,
             dto.longitude,
+            clientIp,
         );
 
         const now = new Date();
@@ -534,6 +687,27 @@ export class AttendanceService {
             if (!record) {
                 throw new NotFoundException(
                     'No attendance record found for today',
+                );
+            }
+
+            // Serialize concurrent punch-out requests for this workday.
+            await tx.$queryRaw`
+                SELECT "id" FROM "attendance_records"
+                WHERE "id" = ${record.id}::uuid
+                FOR UPDATE
+            `;
+
+            // Do not allow another punch-out when any session already ended today.
+            const completedSession = await tx.attendanceSession.findFirst({
+                where: {
+                    attendanceRecordId: record.id,
+                    punchOutAt: { not: null },
+                },
+                select: { id: true },
+            });
+            if (completedSession) {
+                throw new ConflictException(
+                    'You have already punched out today. You can punch in again tomorrow.',
                 );
             }
 

@@ -256,6 +256,7 @@ model WorkLocation {
   latitude     Float
   longitude    Float
   radiusMeters Int                @default(100)
+  allowedPublicIps String[] @default([])
   status       WorkLocationStatus @default(ACTIVE)
   organizationId String? @db.Uuid
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Restrict)
