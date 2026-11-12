@@ -5,6 +5,9 @@ import {
     ForbiddenException,
     ConflictException,
     InternalServerErrorException,
+    Logger,
+    OnModuleInit,
+    OnModuleDestroy,
 } from '@nestjs/common';
 
 import { isIP } from 'node:net';
@@ -25,12 +28,187 @@ import { CreateAttendanceCorrectionDto } from './dto/create-attendance-correctio
 import { ReviewAttendanceCorrectionDto } from './dto/review-attendance-correction.dto';
 
 @Injectable()
-export class AttendanceService {
+export class AttendanceService implements OnModuleInit, OnModuleDestroy {
     constructor(
         private readonly prisma: PrismaService,
         private readonly workLocationsService: WorkLocationsService,
         private readonly auditLogsService: AuditLogsService,
     ) { }
+
+    // Automatic absence is intentionally opt-in: there is no workday/holiday
+    // calendar in the current Prisma schema, so enabling it without explicit
+    // dates would create false absences on weekends and holidays.
+    private readonly absenceLogger = new Logger('AttendanceAutoAbsent');
+    private absenceTimer: ReturnType<typeof setInterval> | null = null;
+    private absenceRunning = false;
+    private eligibleWorkdays: Set<number> | null = null;
+    private holidays = new Set<string>();
+
+    onModuleInit(): void {
+        if (process.env.ATTENDANCE_AUTO_ABSENT_ENABLED !== 'true') {
+            return;
+        }
+
+        const rawWorkdays = process.env.ATTENDANCE_WORKDAYS?.trim() ?? '';
+        const values = rawWorkdays.split(',').map((day) => day.trim());
+        if (!rawWorkdays || values.some((day) => !/^[1-7]$/.test(day))) {
+            this.absenceLogger.error(
+                'Auto-ABSENT is disabled: ATTENDANCE_WORKDAYS must contain ISO weekdays 1-7 (example: 1,2,3,4,5).',
+            );
+            return;
+        }
+
+        const holidayValues = (process.env.ATTENDANCE_HOLIDAYS ?? '')
+            .split(',').map((day) => day.trim()).filter(Boolean);
+        if (holidayValues.some((day) => !/^\d{4}-\d{2}-\d{2}$/.test(day) ||
+            Number.isNaN(Date.parse(`${day}T00:00:00.000Z`)))) {
+            this.absenceLogger.error(
+                'Auto-ABSENT is disabled: ATTENDANCE_HOLIDAYS must be comma-separated YYYY-MM-DD dates.',
+            );
+            return;
+        }
+
+        this.eligibleWorkdays = new Set(values.map(Number));
+        this.holidays = new Set(holidayValues);
+
+        this.absenceLogger.log('Automatic absence marking enabled for configured workdays.');
+        void this.markMissingPunchInsAbsent();
+        this.absenceTimer = setInterval(() => {
+            void this.markMissingPunchInsAbsent();
+        }, 5 * 60 * 1000);
+        // The scheduler should not keep a CLI/test process alive by itself.
+        this.absenceTimer.unref?.();
+    }
+
+    onModuleDestroy(): void {
+        if (this.absenceTimer) {
+            clearInterval(this.absenceTimer);
+            this.absenceTimer = null;
+        }
+    }
+
+    private getIndiaDateKey(date: Date): string {
+        const parts = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Asia/Kolkata',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        }).formatToParts(date);
+        const map = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+        return `${map.year}-${map.month}-${map.day}`;
+    }
+
+    private getAbsenceCutoffMinutes(shift: {
+        startTime: string;
+        endTime: string;
+        approvalRequiredAfterMinutes: number | null;
+    }): number | null {
+        const timeToMinutes = (value: string): number | null => {
+            if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value)) return null;
+            const [hours, minutes] = value.split(':').map(Number);
+            return hours * 60 + minutes;
+        };
+        const start = timeToMinutes(shift.startTime);
+        const end = timeToMinutes(shift.endTime);
+        // Current punch-in policy does not reliably support overnight shifts.
+        if (start === null || end === null || end <= start) return null;
+        const offset = shift.approvalRequiredAfterMinutes;
+        if (offset === null) return end;
+        if (!Number.isInteger(offset) || offset < 0) return null;
+        return Math.min(end, start + offset);
+    }
+
+    // Called on startup and every five minutes. Optional one-day lookback
+    // can be enabled explicitly. Existing attendance (including ON_LEAVE
+    // and pending approval requests) is never overwritten.
+    private async markMissingPunchInsAbsent(now: Date = new Date()): Promise<void> {
+        const eligibleWorkdays = this.eligibleWorkdays;
+        if (this.absenceRunning || !eligibleWorkdays) return;
+        this.absenceRunning = true;
+        try {
+            const today = this.getIndiaDateKey(now);
+            const yesterday = new Date(Date.parse(`${today}T00:00:00.000Z`) - 86_400_000)
+                .toISOString().slice(0, 10);
+            // Disabled by default to avoid retrospective changes following a
+            // shift reassignment. Enable only after reviewing historical policy.
+            const dateKeys = process.env.ATTENDANCE_ABSENCE_BACKFILL_YESTERDAY === 'true'
+                ? [yesterday, today]
+                : [today];
+
+            const employees = await this.prisma.employeeProfile.findMany({
+                where: {
+                    user: { is: { role: 'EMPLOYEE', status: UserStatus.ACTIVE } },
+                    shift: { is: { status: ShiftStatus.ACTIVE } },
+                },
+                select: {
+                    id: true,
+                    createdAt: true,
+                    joiningDate: true,
+                    user: { select: { createdAt: true, organizationId: true } },
+                    shift: {
+                        select: {
+                            startTime: true,
+                            endTime: true,
+                            approvalRequiredAfterMinutes: true,
+                            organizationId: true,
+                        },
+                    },
+                },
+            });
+
+            for (const dateKey of dateKeys) {
+                const workDate = new Date(`${dateKey}T00:00:00.000Z`);
+                const isoWeekday = workDate.getUTCDay() || 7;
+                if (!eligibleWorkdays.has(isoWeekday) || this.holidays.has(dateKey)) {
+                    continue;
+                }
+
+                const candidates: { employeeProfileId: string; workDate: Date; status: AttendanceStatus }[] = [];
+                for (const employee of employees) {
+                    if (!employee.shift || !employee.user.organizationId) continue;
+                    if (employee.shift.organizationId &&
+                        employee.shift.organizationId !== employee.user.organizationId) continue;
+
+                    const cutoffMinutes = this.getAbsenceCutoffMinutes(employee.shift);
+                    if (cutoffMinutes === null) continue;
+
+                    const cutoffAt = Date.parse(`${dateKey}T00:00:00+05:30`) + cutoffMinutes * 60_000;
+                    if (now.getTime() < cutoffAt ||
+                        employee.user.createdAt.getTime() > cutoffAt ||
+                        employee.createdAt.getTime() > cutoffAt) continue;
+
+                    if (employee.joiningDate && this.getIndiaDateKey(employee.joiningDate) > dateKey) {
+                        continue;
+                    }
+                    candidates.push({
+                        employeeProfileId: employee.id,
+                        workDate,
+                        status: AttendanceStatus.ABSENT,
+                    });
+                }
+
+                if (!candidates.length) continue;
+                // The existing @@unique([employeeProfileId, workDate]) makes this
+                // idempotent across restarts and multiple app replicas.
+                const result = await this.prisma.attendanceRecord.createMany({
+                    data: candidates,
+                    skipDuplicates: true,
+                });
+                if (result.count > 0) {
+                    this.absenceLogger.log(
+                        `Marked ${result.count} missing Punch In(s) ABSENT for ${dateKey}.`,
+                    );
+                }
+            }
+        } catch (error) {
+            this.absenceLogger.error(
+                'Auto-ABSENT check failed; it will be retried on the next run.',
+                error instanceof Error ? error.stack : String(error),
+            );
+        } finally {
+            this.absenceRunning = false;
+        }
+    }
 
     /**
      * For ADMIN/SUPER_ADMIN read & review routes. The trusted user ID comes
@@ -942,6 +1120,22 @@ export class AttendanceService {
                 throw new ConflictException(
                     'This attendance request has already been reviewed',
                 );
+            }
+
+            if (dto.action === 'REJECT') {
+                // Preserve the reviewed session and rejection reason as an
+                // audit trail. Only change an attended day to ABSENT; never
+                // override an explicitly recorded ON_LEAVE status.
+                await tx.attendanceRecord.updateMany({
+                    where: {
+                        id: session.attendanceRecordId,
+                        status: { in: [AttendanceStatus.LATE, AttendanceStatus.PRESENT] },
+                    },
+                    data: {
+                        status: AttendanceStatus.ABSENT,
+                        totalWorkMinutes: 0,
+                    },
+                });
             }
 
             await tx.notification.create({
