@@ -32,6 +32,26 @@ export class AttendanceService {
         private readonly auditLogsService: AuditLogsService,
     ) { }
 
+    /**
+     * For ADMIN/SUPER_ADMIN read & review routes. The trusted user ID comes
+     * from JWT authentication, but organization membership is read fresh from DB.
+     * null means SUPER_ADMIN's company-wide access only.
+     */
+    private async getAdminOrganizationId(actorUserId: string): Promise<string | null> {
+        const user = await this.prisma.user.findUnique({
+            where: { id: actorUserId },
+            select: { role: true, status: true, organizationId: true },
+        });
+        if (!user || user.status !== 'ACTIVE') {
+            throw new ForbiddenException('Account is not authorized');
+        }
+        if (user.role === 'SUPER_ADMIN') return null;
+        if (user.role !== 'ADMIN' || !user.organizationId) {
+            throw new ForbiddenException('Admin account is not assigned to an organization');
+        }
+        return user.organizationId;
+    }
+
     // Verify that the request comes from an authorized office public IP.
     // private validateOfficeNetwork(clientIp: string): void {
     //     const allowedIps = (process.env.OFFICE_PUBLIC_IPS ?? '')
@@ -150,10 +170,12 @@ export class AttendanceService {
     }
 
     // ADMIN / SUPER ADMIN: GET ALL ATTENDANCE
-    async getAllAttendance(query: GetAttendanceDto) {
+    async getAllAttendance(query: GetAttendanceDto, actorUserId: string) {
+        const organizationId = await this.getAdminOrganizationId(actorUserId);
         return this.getAttendanceRecords(
             query.employeeProfileId,
             query,
+            organizationId,
         );
     }
 
@@ -161,6 +183,7 @@ export class AttendanceService {
     private async getAttendanceRecords(
         employeeProfileId: string | undefined,
         query: GetAttendanceDto,
+        organizationId?: string | null,
     ) {
         const {
             page = 1,
@@ -174,6 +197,7 @@ export class AttendanceService {
 
         const where = {
             ...(employeeProfileId ? { employeeProfileId } : {}),
+            ...(organizationId ? { employeeProfile: { user: { organizationId } } } : {}),
             ...(status ? { status } : {}),
             ...(startDate || endDate
                 ? {
@@ -237,9 +261,10 @@ export class AttendanceService {
     }
 
     // ADMIN / SUPER ADMIN: GET ATTENDANCE DETAILS
-    async getAttendanceById(id: string) {
-        const record = await this.prisma.attendanceRecord.findUnique({
-            where: { id },
+    async getAttendanceById(id: string, actorUserId: string) {
+        const organizationId = await this.getAdminOrganizationId(actorUserId);
+        const record = await this.prisma.attendanceRecord.findFirst({
+            where: { id, ...(organizationId ? { employeeProfile: { user: { organizationId } } } : {}) },
             include: {
                 employeeProfile: {
                     include: {
@@ -823,10 +848,12 @@ export class AttendanceService {
 
         return result;
     }
-    async getPendingApprovals() {
+    async getPendingApprovals(actorUserId: string) {
+        const organizationId = await this.getAdminOrganizationId(actorUserId);
         return this.prisma.attendanceSession.findMany({
             where: {
                 approvalStatus: 'PENDING',
+                ...(organizationId ? { attendanceRecord: { employeeProfile: { user: { organizationId } } } } : {}),
             },
             include: {
                 attendanceRecord: {
@@ -857,6 +884,7 @@ export class AttendanceService {
         reviewerUserId: string,
         dto: ReviewAttendanceDto,
     ) {
+        const organizationId = await this.getAdminOrganizationId(reviewerUserId);
         const result = await this.prisma.$transaction(async (tx) => {
             const session = await tx.attendanceSession.findUnique({
                 where: { id: sessionId },
@@ -866,6 +894,7 @@ export class AttendanceService {
                             employeeProfile: {
                                 select: {
                                     userId: true,
+                                    user: { select: { organizationId: true } },
                                 },
                             },
                         },
@@ -873,10 +902,8 @@ export class AttendanceService {
                 },
             });
 
-            if (!session) {
-                throw new NotFoundException(
-                    'Attendance session not found',
-                );
+            if (!session || (organizationId && session.attendanceRecord.employeeProfile.user.organizationId !== organizationId)) {
+                throw new NotFoundException('Attendance session not found');
             }
 
             if (session.approvalStatus !== 'PENDING') {
@@ -959,7 +986,8 @@ export class AttendanceService {
 
         return result;
     }
-    async getMissingPunchOuts() {
+    async getMissingPunchOuts(actorUserId: string) {
+        const organizationId = await this.getAdminOrganizationId(actorUserId);
         const today = new Intl.DateTimeFormat('en-CA', {
             timeZone: 'Asia/Kolkata',
         }).format(new Date());
@@ -974,6 +1002,7 @@ export class AttendanceService {
                 },
                 attendanceRecord: {
                     workDate: { lt: todayDate },
+                    ...(organizationId ? { employeeProfile: { user: { organizationId } } } : {}),
                 },
             },
             include: {
@@ -1128,10 +1157,12 @@ export class AttendanceService {
             },
         });
     }
-    async getPendingAttendanceCorrections() {
+    async getPendingAttendanceCorrections(actorUserId: string) {
+        const organizationId = await this.getAdminOrganizationId(actorUserId);
         return this.prisma.attendanceCorrectionRequest.findMany({
             where: {
                 status: 'PENDING',
+                ...(organizationId ? { employeeProfile: { user: { organizationId } } } : {}),
             },
             include: {
                 employeeProfile: {
@@ -1164,6 +1195,7 @@ export class AttendanceService {
         reviewerUserId: string,
         dto: ReviewAttendanceCorrectionDto,
     ) {
+        const organizationId = await this.getAdminOrganizationId(reviewerUserId);
         const result = await this.prisma.$transaction(async (tx) => {
             const request =
                 await tx.attendanceCorrectionRequest.findUnique({
@@ -1173,15 +1205,14 @@ export class AttendanceService {
                         employeeProfile: {
                             select: {
                                 userId: true,
+                                user: { select: { organizationId: true } },
                             },
                         },
                     },
                 });
 
-            if (!request) {
-                throw new NotFoundException(
-                    'Correction request not found',
-                );
+            if (!request || (organizationId && request.employeeProfile.user.organizationId !== organizationId)) {
+                throw new NotFoundException('Correction request not found');
             }
 
             if (request.status !== 'PENDING') {

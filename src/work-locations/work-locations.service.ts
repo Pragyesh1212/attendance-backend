@@ -4,6 +4,7 @@ import {
   NotFoundException,
   BadRequestException,
   ConflictException,
+  ForbiddenException,
 } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
@@ -20,8 +21,30 @@ export class WorkLocationsService {
     private readonly auditLogsService: AuditLogsService,
   ) {}
 
+  /**
+   * null is reserved for SUPER_ADMIN (all organizations).
+   * ADMIN is always scoped to the organization currently stored in PostgreSQL.
+   * Never trust an organizationId supplied in the HTTP request body.
+   */
+  private async getActorOrganizationId(actorUserId: string): Promise<string | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: actorUserId },
+      select: { role: true, status: true, organizationId: true },
+    });
+
+    if (!user || user.status !== 'ACTIVE') {
+      throw new ForbiddenException('Account is not authorized');
+    }
+    if (user.role === 'SUPER_ADMIN') return null;
+    if (user.role !== 'ADMIN' || !user.organizationId) {
+      throw new ForbiddenException('Admin account is not assigned to an organization');
+    }
+    return user.organizationId;
+  }
+
   // Create a work location
-  async create(dto: CreateWorkLocationDto, actorUserId?: string) {
+  async create(dto: CreateWorkLocationDto, actorUserId: string) {
+    const organizationId = await this.getActorOrganizationId(actorUserId);
     const location = await this.prisma.workLocation.create({
       data: {
         name: dto.name,
@@ -30,6 +53,8 @@ export class WorkLocationsService {
         latitude: dto.latitude,
         longitude: dto.longitude,
         radiusMeters: dto.radiusMeters ?? 100,
+        // SUPER_ADMIN can still create a legacy/global location; ADMIN cannot.
+        ...(organizationId ? { organizationId } : {}),
       },
     });
 
@@ -50,8 +75,10 @@ export class WorkLocationsService {
   }
 
   // Get all work locations
-  async findAll() {
+  async findAll(actorUserId: string) {
+    const organizationId = await this.getActorOrganizationId(actorUserId);
     const locations = await this.prisma.workLocation.findMany({
+      where: organizationId ? { organizationId } : {},
       orderBy: {
         createdAt: 'desc',
       },
@@ -70,9 +97,10 @@ export class WorkLocationsService {
     dto: UpdateWorkLocationDto,
     actorUserId: string,
   ) {
+    const organizationId = await this.getActorOrganizationId(actorUserId);
     const existingLocation =
-      await this.prisma.workLocation.findUnique({
-        where: { id },
+      await this.prisma.workLocation.findFirst({
+        where: { id, ...(organizationId ? { organizationId } : {}) },
       });
 
     if (!existingLocation) {
@@ -93,6 +121,8 @@ export class WorkLocationsService {
       where: { id },
       data: {
         ...dto,
+        // Prevent the API from moving a location to another organization.
+        organizationId: existingLocation.organizationId,
       },
     });
 
@@ -115,7 +145,10 @@ export class WorkLocationsService {
 
   // Manage per-location public IP allowlist. Empty list disables IP-based attendance.
   async updateWifiIps(id: string, allowedPublicIps: string[], actorUserId: string) {
-    const existing = await this.prisma.workLocation.findUnique({ where: { id } });
+    const organizationId = await this.getActorOrganizationId(actorUserId);
+    const existing = await this.prisma.workLocation.findFirst({
+      where: { id, ...(organizationId ? { organizationId } : {}) },
+    });
     if (!existing) throw new NotFoundException('Work location not found');
     if (existing.status !== 'ACTIVE') throw new BadRequestException('Cannot edit an inactive location');
     const { isIP } = await import('node:net');
@@ -140,9 +173,10 @@ export class WorkLocationsService {
 
   // Soft delete / deactivate work location
   async deactivate(id: string, actorUserId: string) {
+    const organizationId = await this.getActorOrganizationId(actorUserId);
     const existingLocation =
-      await this.prisma.workLocation.findUnique({
-        where: { id },
+      await this.prisma.workLocation.findFirst({
+        where: { id, ...(organizationId ? { organizationId } : {}) },
       });
 
     if (!existingLocation) {
@@ -176,56 +210,29 @@ export class WorkLocationsService {
     };
   }
 
-  // Reactivate a location, ensuring Office locations have a valid IP allowlist.
-  async activate(id: string, suppliedIps: string[] | undefined, actorUserId: string) {
-    const existing = await this.prisma.workLocation.findUnique({ where: { id } });
-    if (!existing) throw new NotFoundException('Work location not found');
-    if (existing.status === 'ACTIVE') throw new BadRequestException('Work location is already active');
-
-    const { isIP } = await import('node:net');
-    if (suppliedIps !== undefined &&
-        (!Array.isArray(suppliedIps) || suppliedIps.length > 20 ||
-         suppliedIps.some(ip => typeof ip !== 'string' || !isIP(ip.trim())))) {
-      throw new BadRequestException('Provide up to 20 valid IP addresses');
-    }
-    const ips = suppliedIps === undefined
-      ? existing.allowedPublicIps
-      : [...new Set(suppliedIps.map(ip => ip.trim()))];
-    if (existing.type === 'OFFICE' && ips.length === 0) {
-      throw new BadRequestException('Office locations require an allowed public IP before activation');
-    }
-
-    const location = await this.prisma.workLocation.update({
-      where: { id },
-      data: { status: 'ACTIVE', allowedPublicIps: ips },
-    });
-    await this.auditLogsService.createLog({
-      actorUserId, action: 'WORK_LOCATION_UPDATED', entityType: 'WORK_LOCATION',
-      entityId: location.id, description: `Work location "${location.name}" was reactivated`,
-      metadata: { updatedFields: ['status', 'allowedPublicIps'] },
-    });
-    return { message: 'Work location activated successfully', location };
-  }
-
   // Assign permanent work location to an employee
   async assignPermanentLocation(
     employeeProfileId: string,
     workLocationId: string,
-    actorUserId?: string,
+    actorUserId: string,
   ) {
-    const employee = await this.prisma.employeeProfile.findUnique({
+    const organizationId = await this.getActorOrganizationId(actorUserId);
+    const employee = await this.prisma.employeeProfile.findFirst({
       where: {
         id: employeeProfileId,
+        ...(organizationId ? { user: { organizationId } } : {}),
       },
+      include: { user: { select: { organizationId: true } } },
     });
 
     if (!employee) {
       throw new NotFoundException('Employee not found');
     }
 
-    const location = await this.prisma.workLocation.findUnique({
+    const location = await this.prisma.workLocation.findFirst({
       where: {
         id: workLocationId,
+        ...(organizationId ? { organizationId } : {}),
       },
     });
 
@@ -237,6 +244,9 @@ export class WorkLocationsService {
       throw new BadRequestException(
         'Cannot assign an inactive work location',
       );
+    }
+    if (location.organizationId && location.organizationId !== employee.user.organizationId) {
+      throw new ForbiddenException('Employee and work location belong to different organizations');
     }
 
     const updatedEmployee = await this.prisma.employeeProfile.update({
@@ -283,6 +293,7 @@ export class WorkLocationsService {
     dto: AssignTemporaryLocationDto,
     createdByUserId: string,
   ) {
+    const organizationId = await this.getActorOrganizationId(createdByUserId);
     const startAt = new Date(dto.startAt);
     const endAt = new Date(dto.endAt);
 
@@ -298,8 +309,9 @@ export class WorkLocationsService {
     }
 
     // Check employee
-    const employee = await this.prisma.employeeProfile.findUnique({
-      where: { id: employeeProfileId },
+    const employee = await this.prisma.employeeProfile.findFirst({
+      where: { id: employeeProfileId, ...(organizationId ? { user: { organizationId } } : {}) },
+      include: { user: { select: { organizationId: true } } },
     });
 
     if (!employee) {
@@ -307,8 +319,8 @@ export class WorkLocationsService {
     }
 
     // Check work location
-    const location = await this.prisma.workLocation.findUnique({
-      where: { id: dto.workLocationId },
+    const location = await this.prisma.workLocation.findFirst({
+      where: { id: dto.workLocationId, ...(organizationId ? { organizationId } : {}) },
     });
 
     if (!location) {
@@ -319,6 +331,9 @@ export class WorkLocationsService {
       throw new BadRequestException(
         'Cannot assign an inactive work location',
       );
+    }
+    if (location.organizationId && location.organizationId !== employee.user.organizationId) {
+      throw new ForbiddenException('Employee and work location belong to different organizations');
     }
 
     // Prevent overlapping temporary assignments

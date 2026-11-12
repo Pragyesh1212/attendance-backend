@@ -113,15 +113,15 @@ async punchOut(
   // ADMIN / SUPER ADMIN: MISSING PUNCH-OUTS
   @Get('missing-punch-outs')
   @Roles('ADMIN', 'SUPER_ADMIN')
-  async getMissingPunchOuts() {
-    return this.attendanceService.getMissingPunchOuts();
+  async getMissingPunchOuts(@CurrentUser() user: { sub: string }) {
+    return this.attendanceService.getMissingPunchOuts(user.sub);
   }
 
   // ADMIN / SUPER ADMIN: PENDING CORRECTION REQUESTS
   @Get('corrections/pending')
   @Roles('ADMIN', 'SUPER_ADMIN')
-  async getPendingAttendanceCorrections() {
-    return this.attendanceService.getPendingAttendanceCorrections();
+  async getPendingAttendanceCorrections(@CurrentUser() user: { sub: string }) {
+    return this.attendanceService.getPendingAttendanceCorrections(user.sub);
   }
 
   // ADMIN / SUPER ADMIN: REVIEW CORRECTION REQUEST
@@ -142,8 +142,8 @@ async punchOut(
   // ADMIN / SUPER ADMIN: PENDING LATE ARRIVAL APPROVALS
   @Get('approvals/pending')
   @Roles('ADMIN', 'SUPER_ADMIN')
-  async getPendingApprovals() {
-    return this.attendanceService.getPendingApprovals();
+  async getPendingApprovals(@CurrentUser() user: { sub: string }) {
+    return this.attendanceService.getPendingApprovals(user.sub);
   }
 
   // ADMIN / SUPER ADMIN: REVIEW LATE ARRIVAL
@@ -166,8 +166,9 @@ async punchOut(
   @Roles('ADMIN', 'SUPER_ADMIN')
   async getAllAttendance(
     @Query() query: GetAttendanceDto,
+    @CurrentUser() user: { sub: string },
   ) {
-    return this.attendanceService.getAllAttendance(query);
+    return this.attendanceService.getAllAttendance(query, user.sub);
   }
 
   // ADMIN / SUPER ADMIN: GET ATTENDANCE DETAILS
@@ -175,7 +176,8 @@ async punchOut(
   @Roles('ADMIN', 'SUPER_ADMIN')
   async getAttendanceById(
     @Param('id') id: string,
+    @CurrentUser() user: { sub: string },
   ) {
-    return this.attendanceService.getAttendanceById(id);
+    return this.attendanceService.getAttendanceById(id, user.sub);
   }
 }

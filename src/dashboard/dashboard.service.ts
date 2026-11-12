@@ -6,9 +6,42 @@ import {
 
 import { PrismaService } from '../prisma/prisma.service';
 
+interface DashboardActor {
+  sub: string;
+  role: string;
+}
+
 @Injectable()
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
+
+  // Resolve the current organization from the database, not a query parameter
+  // or a potentially stale organizationId in the JWT.
+  // null means company-wide access and is allowed ONLY for SUPER_ADMIN.
+  private async getDashboardOrganizationId(actor: DashboardActor): Promise<string | null> {
+    const currentUser = await this.prisma.user.findUnique({
+      where: { id: actor.sub },
+      select: { role: true, status: true, organizationId: true },
+    });
+
+    if (
+      !currentUser ||
+      currentUser.status !== 'ACTIVE' ||
+      currentUser.role !== actor.role
+    ) {
+      throw new ForbiddenException('You are not authorized to view this dashboard');
+    }
+
+    if (currentUser.role === 'SUPER_ADMIN') {
+      return null;
+    }
+
+    if (currentUser.role !== 'ADMIN' || !currentUser.organizationId) {
+      throw new ForbiddenException('Admin account is not assigned to an organization');
+    }
+
+    return currentUser.organizationId;
+  }
 
   // India calendar date boundaries
   private getIndiaDateRange(date = new Date()) {
@@ -31,7 +64,8 @@ export class DashboardService {
   }
 
   // Dashboard overview for Admin and Super Admin
-  async getOverview() {
+  async getOverview(actor: DashboardActor) {
+    const organizationId = await this.getDashboardOrganizationId(actor);
     const { start, end } = this.getIndiaDateRange();
 
     const [
@@ -43,7 +77,10 @@ export class DashboardService {
     ] = await Promise.all([
       this.prisma.employeeProfile.count({
         where: {
-          user: { status: 'ACTIVE' },
+          user: {
+            status: 'ACTIVE',
+            ...(organizationId ? { organizationId } : {}),
+          },
         },
       }),
 
@@ -51,12 +88,16 @@ export class DashboardService {
         where: {
           role: 'ADMIN',
           status: 'ACTIVE',
+          ...(organizationId ? { organizationId } : {}),
         },
       }),
 
       this.prisma.attendanceRecord.findMany({
         where: {
           workDate: { gte: start, lt: end },
+          ...(organizationId
+            ? { employeeProfile: { user: { organizationId } } }
+            : {}),
         },
         select: {
           status: true,
@@ -66,12 +107,18 @@ export class DashboardService {
       this.prisma.attendanceSession.count({
         where: {
           approvalStatus: 'PENDING',
+          ...(organizationId
+            ? { attendanceRecord: { employeeProfile: { user: { organizationId } } } }
+            : {}),
         },
       }),
 
       this.prisma.attendanceCorrectionRequest.count({
         where: {
           status: 'PENDING',
+          ...(organizationId
+            ? { employeeProfile: { user: { organizationId } } }
+            : {}),
         },
       }),
     ]);
@@ -124,7 +171,8 @@ export class DashboardService {
   }
 
   // Monthly attendance trend
-  async getAttendanceTrend(month?: number, year?: number) {
+  async getAttendanceTrend(month: number | undefined, year: number | undefined, actor: DashboardActor) {
+    const organizationId = await this.getDashboardOrganizationId(actor);
     const now = new Date();
 
     const selectedMonth = month ?? now.getMonth() + 1;
@@ -155,6 +203,9 @@ export class DashboardService {
           gte: start,
           lt: end,
         },
+        ...(organizationId
+          ? { employeeProfile: { user: { organizationId } } }
+          : {}),
       },
       select: {
         workDate: true,
@@ -220,14 +271,19 @@ export class DashboardService {
   }
 
   // Department-wise attendance statistics
-  async getDepartmentStats() {
+  async getDepartmentStats(actor: DashboardActor) {
+    const organizationId = await this.getDashboardOrganizationId(actor);
     const { start, end } = this.getIndiaDateRange();
 
     const departments = await this.prisma.department.findMany({
+      where: organizationId ? { organizationId } : {},
       include: {
         employees: {
           where: {
-            user: { status: 'ACTIVE' },
+            user: {
+              status: 'ACTIVE',
+              ...(organizationId ? { organizationId } : {}),
+            },
           },
           include: {
             attendanceRecords: {

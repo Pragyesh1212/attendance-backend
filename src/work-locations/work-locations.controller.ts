@@ -42,8 +42,8 @@ export class WorkLocationsController {
   // Get all work locations
   @Get()
   @Roles('SUPER_ADMIN', 'ADMIN')
-  async findAll() {
-    return this.workLocationsService.findAll();
+  async findAll(@CurrentUser() user: { sub: string }) {
+    return this.workLocationsService.findAll(user.sub);
   }
 
   // Update work location
@@ -66,17 +66,6 @@ export class WorkLocationsController {
     @CurrentUser() user: { sub: string },
   ) {
     return this.workLocationsService.updateWifiIps(id, body.allowedPublicIps, user.sub);
-  }
-
-  // Reactivate a previously deactivated work location
-  @Patch(':id/activate')
-  @Roles('SUPER_ADMIN', 'ADMIN')
-  async activate(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: { allowedPublicIps?: string[] },
-    @CurrentUser() user: { sub: string },
-  ) {
-    return this.workLocationsService.activate(id, body?.allowedPublicIps, user.sub);
   }
 
   // Soft delete (deactivate) work location

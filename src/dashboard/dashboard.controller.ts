@@ -33,8 +33,8 @@ export class DashboardController {
   // Admin and Super Admin dashboard overview
   @Get('overview')
   @Roles('ADMIN', 'SUPER_ADMIN')
-  getOverview() {
-    return this.dashboardService.getOverview();
+  getOverview(@Req() request: AuthenticatedRequest) {
+    return this.dashboardService.getOverview(request.user);
   }
 
   // Monthly attendance trend
@@ -46,15 +46,17 @@ export class DashboardController {
 
     @Query('year', new DefaultValuePipe(new Date().getFullYear()), ParseIntPipe)
     year: number,
+
+    @Req() request: AuthenticatedRequest,
   ) {
-    return this.dashboardService.getAttendanceTrend(month, year);
+    return this.dashboardService.getAttendanceTrend(month, year, request.user);
   }
 
   // Department-wise attendance statistics
   @Get('department-stats')
   @Roles('ADMIN', 'SUPER_ADMIN')
-  getDepartmentStats() {
-    return this.dashboardService.getDepartmentStats();
+  getDepartmentStats(@Req() request: AuthenticatedRequest) {
+    return this.dashboardService.getDepartmentStats(request.user);
   }
 
   // Employee personal dashboard
