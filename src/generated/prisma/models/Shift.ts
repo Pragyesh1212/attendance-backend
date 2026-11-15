@@ -274,6 +274,8 @@ export type ShiftWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Shift"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   employees?: Prisma.EmployeeProfileListRelationFilter
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentListRelationFilter
+  attendanceSessions?: Prisma.AttendanceSessionListRelationFilter
 }
 
 export type ShiftOrderByWithRelationInput = {
@@ -290,6 +292,8 @@ export type ShiftOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
   employees?: Prisma.EmployeeProfileOrderByRelationAggregateInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentOrderByRelationAggregateInput
+  attendanceSessions?: Prisma.AttendanceSessionOrderByRelationAggregateInput
 }
 
 export type ShiftWhereUniqueInput = Prisma.AtLeast<{
@@ -310,6 +314,8 @@ export type ShiftWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Shift"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   employees?: Prisma.EmployeeProfileListRelationFilter
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentListRelationFilter
+  attendanceSessions?: Prisma.AttendanceSessionListRelationFilter
 }, "id" | "organizationId_name">
 
 export type ShiftOrderByWithAggregationInput = {
@@ -361,6 +367,8 @@ export type ShiftCreateInput = {
   updatedAt?: Date | string
   organization?: Prisma.OrganizationCreateNestedOneWithoutShiftsInput
   employees?: Prisma.EmployeeProfileCreateNestedManyWithoutShiftInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutShiftInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutShiftInput
 }
 
 export type ShiftUncheckedCreateInput = {
@@ -376,6 +384,8 @@ export type ShiftUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employees?: Prisma.EmployeeProfileUncheckedCreateNestedManyWithoutShiftInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutShiftInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutShiftInput
 }
 
 export type ShiftUpdateInput = {
@@ -391,6 +401,8 @@ export type ShiftUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneWithoutShiftsNestedInput
   employees?: Prisma.EmployeeProfileUpdateManyWithoutShiftNestedInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutShiftNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftUncheckedUpdateInput = {
@@ -406,6 +418,8 @@ export type ShiftUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employees?: Prisma.EmployeeProfileUncheckedUpdateManyWithoutShiftNestedInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutShiftNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftCreateManyInput = {
@@ -523,6 +537,11 @@ export type ShiftOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type ShiftScalarRelationFilter = {
+  is?: Prisma.ShiftWhereInput
+  isNot?: Prisma.ShiftWhereInput
+}
+
 export type ShiftCreateNestedOneWithoutEmployeesInput = {
   create?: Prisma.XOR<Prisma.ShiftCreateWithoutEmployeesInput, Prisma.ShiftUncheckedCreateWithoutEmployeesInput>
   connectOrCreate?: Prisma.ShiftCreateOrConnectWithoutEmployeesInput
@@ -557,6 +576,22 @@ export type NullableIntFieldUpdateOperationsInput = {
 
 export type EnumShiftStatusFieldUpdateOperationsInput = {
   set?: $Enums.ShiftStatus
+}
+
+export type ShiftCreateNestedOneWithoutAttendanceSessionsInput = {
+  create?: Prisma.XOR<Prisma.ShiftCreateWithoutAttendanceSessionsInput, Prisma.ShiftUncheckedCreateWithoutAttendanceSessionsInput>
+  connectOrCreate?: Prisma.ShiftCreateOrConnectWithoutAttendanceSessionsInput
+  connect?: Prisma.ShiftWhereUniqueInput
+}
+
+export type ShiftUpdateOneWithoutAttendanceSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ShiftCreateWithoutAttendanceSessionsInput, Prisma.ShiftUncheckedCreateWithoutAttendanceSessionsInput>
+  connectOrCreate?: Prisma.ShiftCreateOrConnectWithoutAttendanceSessionsInput
+  upsert?: Prisma.ShiftUpsertWithoutAttendanceSessionsInput
+  disconnect?: Prisma.ShiftWhereInput | boolean
+  delete?: Prisma.ShiftWhereInput | boolean
+  connect?: Prisma.ShiftWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ShiftUpdateToOneWithWhereWithoutAttendanceSessionsInput, Prisma.ShiftUpdateWithoutAttendanceSessionsInput>, Prisma.ShiftUncheckedUpdateWithoutAttendanceSessionsInput>
 }
 
 export type ShiftCreateNestedManyWithoutOrganizationInput = {
@@ -601,6 +636,20 @@ export type ShiftUncheckedUpdateManyWithoutOrganizationNestedInput = {
   deleteMany?: Prisma.ShiftScalarWhereInput | Prisma.ShiftScalarWhereInput[]
 }
 
+export type ShiftCreateNestedOneWithoutEmployeeShiftAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.ShiftCreateWithoutEmployeeShiftAssignmentsInput, Prisma.ShiftUncheckedCreateWithoutEmployeeShiftAssignmentsInput>
+  connectOrCreate?: Prisma.ShiftCreateOrConnectWithoutEmployeeShiftAssignmentsInput
+  connect?: Prisma.ShiftWhereUniqueInput
+}
+
+export type ShiftUpdateOneRequiredWithoutEmployeeShiftAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ShiftCreateWithoutEmployeeShiftAssignmentsInput, Prisma.ShiftUncheckedCreateWithoutEmployeeShiftAssignmentsInput>
+  connectOrCreate?: Prisma.ShiftCreateOrConnectWithoutEmployeeShiftAssignmentsInput
+  upsert?: Prisma.ShiftUpsertWithoutEmployeeShiftAssignmentsInput
+  connect?: Prisma.ShiftWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ShiftUpdateToOneWithWhereWithoutEmployeeShiftAssignmentsInput, Prisma.ShiftUpdateWithoutEmployeeShiftAssignmentsInput>, Prisma.ShiftUncheckedUpdateWithoutEmployeeShiftAssignmentsInput>
+}
+
 export type ShiftCreateWithoutEmployeesInput = {
   id?: string
   name: string
@@ -613,6 +662,8 @@ export type ShiftCreateWithoutEmployeesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization?: Prisma.OrganizationCreateNestedOneWithoutShiftsInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutShiftInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutShiftInput
 }
 
 export type ShiftUncheckedCreateWithoutEmployeesInput = {
@@ -627,6 +678,8 @@ export type ShiftUncheckedCreateWithoutEmployeesInput = {
   status?: $Enums.ShiftStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutShiftInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutShiftInput
 }
 
 export type ShiftCreateOrConnectWithoutEmployeesInput = {
@@ -657,6 +710,8 @@ export type ShiftUpdateWithoutEmployeesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneWithoutShiftsNestedInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutShiftNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftUncheckedUpdateWithoutEmployeesInput = {
@@ -671,6 +726,88 @@ export type ShiftUncheckedUpdateWithoutEmployeesInput = {
   status?: Prisma.EnumShiftStatusFieldUpdateOperationsInput | $Enums.ShiftStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutShiftNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutShiftNestedInput
+}
+
+export type ShiftCreateWithoutAttendanceSessionsInput = {
+  id?: string
+  name: string
+  startTime: string
+  endTime: string
+  gracePeriodMinutes?: number
+  lateReasonAfterMinutes?: number | null
+  approvalRequiredAfterMinutes?: number | null
+  status?: $Enums.ShiftStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization?: Prisma.OrganizationCreateNestedOneWithoutShiftsInput
+  employees?: Prisma.EmployeeProfileCreateNestedManyWithoutShiftInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutShiftInput
+}
+
+export type ShiftUncheckedCreateWithoutAttendanceSessionsInput = {
+  id?: string
+  name: string
+  organizationId?: string | null
+  startTime: string
+  endTime: string
+  gracePeriodMinutes?: number
+  lateReasonAfterMinutes?: number | null
+  approvalRequiredAfterMinutes?: number | null
+  status?: $Enums.ShiftStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employees?: Prisma.EmployeeProfileUncheckedCreateNestedManyWithoutShiftInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutShiftInput
+}
+
+export type ShiftCreateOrConnectWithoutAttendanceSessionsInput = {
+  where: Prisma.ShiftWhereUniqueInput
+  create: Prisma.XOR<Prisma.ShiftCreateWithoutAttendanceSessionsInput, Prisma.ShiftUncheckedCreateWithoutAttendanceSessionsInput>
+}
+
+export type ShiftUpsertWithoutAttendanceSessionsInput = {
+  update: Prisma.XOR<Prisma.ShiftUpdateWithoutAttendanceSessionsInput, Prisma.ShiftUncheckedUpdateWithoutAttendanceSessionsInput>
+  create: Prisma.XOR<Prisma.ShiftCreateWithoutAttendanceSessionsInput, Prisma.ShiftUncheckedCreateWithoutAttendanceSessionsInput>
+  where?: Prisma.ShiftWhereInput
+}
+
+export type ShiftUpdateToOneWithWhereWithoutAttendanceSessionsInput = {
+  where?: Prisma.ShiftWhereInput
+  data: Prisma.XOR<Prisma.ShiftUpdateWithoutAttendanceSessionsInput, Prisma.ShiftUncheckedUpdateWithoutAttendanceSessionsInput>
+}
+
+export type ShiftUpdateWithoutAttendanceSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  startTime?: Prisma.StringFieldUpdateOperationsInput | string
+  endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  gracePeriodMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  lateReasonAfterMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvalRequiredAfterMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumShiftStatusFieldUpdateOperationsInput | $Enums.ShiftStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneWithoutShiftsNestedInput
+  employees?: Prisma.EmployeeProfileUpdateManyWithoutShiftNestedInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutShiftNestedInput
+}
+
+export type ShiftUncheckedUpdateWithoutAttendanceSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.StringFieldUpdateOperationsInput | string
+  endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  gracePeriodMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  lateReasonAfterMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvalRequiredAfterMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumShiftStatusFieldUpdateOperationsInput | $Enums.ShiftStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employees?: Prisma.EmployeeProfileUncheckedUpdateManyWithoutShiftNestedInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftCreateWithoutOrganizationInput = {
@@ -685,6 +822,8 @@ export type ShiftCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employees?: Prisma.EmployeeProfileCreateNestedManyWithoutShiftInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutShiftInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutShiftInput
 }
 
 export type ShiftUncheckedCreateWithoutOrganizationInput = {
@@ -699,6 +838,8 @@ export type ShiftUncheckedCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employees?: Prisma.EmployeeProfileUncheckedCreateNestedManyWithoutShiftInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutShiftInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutShiftInput
 }
 
 export type ShiftCreateOrConnectWithoutOrganizationInput = {
@@ -744,6 +885,86 @@ export type ShiftScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Shift"> | Date | string
 }
 
+export type ShiftCreateWithoutEmployeeShiftAssignmentsInput = {
+  id?: string
+  name: string
+  startTime: string
+  endTime: string
+  gracePeriodMinutes?: number
+  lateReasonAfterMinutes?: number | null
+  approvalRequiredAfterMinutes?: number | null
+  status?: $Enums.ShiftStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization?: Prisma.OrganizationCreateNestedOneWithoutShiftsInput
+  employees?: Prisma.EmployeeProfileCreateNestedManyWithoutShiftInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutShiftInput
+}
+
+export type ShiftUncheckedCreateWithoutEmployeeShiftAssignmentsInput = {
+  id?: string
+  name: string
+  organizationId?: string | null
+  startTime: string
+  endTime: string
+  gracePeriodMinutes?: number
+  lateReasonAfterMinutes?: number | null
+  approvalRequiredAfterMinutes?: number | null
+  status?: $Enums.ShiftStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employees?: Prisma.EmployeeProfileUncheckedCreateNestedManyWithoutShiftInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutShiftInput
+}
+
+export type ShiftCreateOrConnectWithoutEmployeeShiftAssignmentsInput = {
+  where: Prisma.ShiftWhereUniqueInput
+  create: Prisma.XOR<Prisma.ShiftCreateWithoutEmployeeShiftAssignmentsInput, Prisma.ShiftUncheckedCreateWithoutEmployeeShiftAssignmentsInput>
+}
+
+export type ShiftUpsertWithoutEmployeeShiftAssignmentsInput = {
+  update: Prisma.XOR<Prisma.ShiftUpdateWithoutEmployeeShiftAssignmentsInput, Prisma.ShiftUncheckedUpdateWithoutEmployeeShiftAssignmentsInput>
+  create: Prisma.XOR<Prisma.ShiftCreateWithoutEmployeeShiftAssignmentsInput, Prisma.ShiftUncheckedCreateWithoutEmployeeShiftAssignmentsInput>
+  where?: Prisma.ShiftWhereInput
+}
+
+export type ShiftUpdateToOneWithWhereWithoutEmployeeShiftAssignmentsInput = {
+  where?: Prisma.ShiftWhereInput
+  data: Prisma.XOR<Prisma.ShiftUpdateWithoutEmployeeShiftAssignmentsInput, Prisma.ShiftUncheckedUpdateWithoutEmployeeShiftAssignmentsInput>
+}
+
+export type ShiftUpdateWithoutEmployeeShiftAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  startTime?: Prisma.StringFieldUpdateOperationsInput | string
+  endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  gracePeriodMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  lateReasonAfterMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvalRequiredAfterMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumShiftStatusFieldUpdateOperationsInput | $Enums.ShiftStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneWithoutShiftsNestedInput
+  employees?: Prisma.EmployeeProfileUpdateManyWithoutShiftNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutShiftNestedInput
+}
+
+export type ShiftUncheckedUpdateWithoutEmployeeShiftAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.StringFieldUpdateOperationsInput | string
+  endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  gracePeriodMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  lateReasonAfterMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvalRequiredAfterMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumShiftStatusFieldUpdateOperationsInput | $Enums.ShiftStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employees?: Prisma.EmployeeProfileUncheckedUpdateManyWithoutShiftNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutShiftNestedInput
+}
+
 export type ShiftCreateManyOrganizationInput = {
   id?: string
   name: string
@@ -769,6 +990,8 @@ export type ShiftUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employees?: Prisma.EmployeeProfileUpdateManyWithoutShiftNestedInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutShiftNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftUncheckedUpdateWithoutOrganizationInput = {
@@ -783,6 +1006,8 @@ export type ShiftUncheckedUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employees?: Prisma.EmployeeProfileUncheckedUpdateManyWithoutShiftNestedInput
+  employeeShiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutShiftNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftUncheckedUpdateManyWithoutOrganizationInput = {
@@ -805,10 +1030,14 @@ export type ShiftUncheckedUpdateManyWithoutOrganizationInput = {
 
 export type ShiftCountOutputType = {
   employees: number
+  employeeShiftAssignments: number
+  attendanceSessions: number
 }
 
 export type ShiftCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employees?: boolean | ShiftCountOutputTypeCountEmployeesArgs
+  employeeShiftAssignments?: boolean | ShiftCountOutputTypeCountEmployeeShiftAssignmentsArgs
+  attendanceSessions?: boolean | ShiftCountOutputTypeCountAttendanceSessionsArgs
 }
 
 /**
@@ -828,6 +1057,20 @@ export type ShiftCountOutputTypeCountEmployeesArgs<ExtArgs extends runtime.Types
   where?: Prisma.EmployeeProfileWhereInput
 }
 
+/**
+ * ShiftCountOutputType without action
+ */
+export type ShiftCountOutputTypeCountEmployeeShiftAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeShiftAssignmentWhereInput
+}
+
+/**
+ * ShiftCountOutputType without action
+ */
+export type ShiftCountOutputTypeCountAttendanceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttendanceSessionWhereInput
+}
+
 
 export type ShiftSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -843,6 +1086,8 @@ export type ShiftSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   updatedAt?: boolean
   organization?: boolean | Prisma.Shift$organizationArgs<ExtArgs>
   employees?: boolean | Prisma.Shift$employeesArgs<ExtArgs>
+  employeeShiftAssignments?: boolean | Prisma.Shift$employeeShiftAssignmentsArgs<ExtArgs>
+  attendanceSessions?: boolean | Prisma.Shift$attendanceSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.ShiftCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["shift"]>
 
@@ -894,6 +1139,8 @@ export type ShiftOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
 export type ShiftInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.Shift$organizationArgs<ExtArgs>
   employees?: boolean | Prisma.Shift$employeesArgs<ExtArgs>
+  employeeShiftAssignments?: boolean | Prisma.Shift$employeeShiftAssignmentsArgs<ExtArgs>
+  attendanceSessions?: boolean | Prisma.Shift$attendanceSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.ShiftCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ShiftIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -908,6 +1155,8 @@ export type $ShiftPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     organization: Prisma.$OrganizationPayload<ExtArgs> | null
     employees: Prisma.$EmployeeProfilePayload<ExtArgs>[]
+    employeeShiftAssignments: Prisma.$EmployeeShiftAssignmentPayload<ExtArgs>[]
+    attendanceSessions: Prisma.$AttendanceSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1317,6 +1566,8 @@ export interface Prisma__ShiftClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   organization<T extends Prisma.Shift$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Shift$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   employees<T extends Prisma.Shift$employeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Shift$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  employeeShiftAssignments<T extends Prisma.Shift$employeeShiftAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Shift$employeeShiftAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeShiftAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attendanceSessions<T extends Prisma.Shift$attendanceSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Shift$attendanceSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1798,6 +2049,54 @@ export type Shift$employeesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.EmployeeProfileScalarFieldEnum | Prisma.EmployeeProfileScalarFieldEnum[]
+}
+
+/**
+ * Shift.employeeShiftAssignments
+ */
+export type Shift$employeeShiftAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeShiftAssignment
+   */
+  select?: Prisma.EmployeeShiftAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeShiftAssignment
+   */
+  omit?: Prisma.EmployeeShiftAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeShiftAssignmentInclude<ExtArgs> | null
+  where?: Prisma.EmployeeShiftAssignmentWhereInput
+  orderBy?: Prisma.EmployeeShiftAssignmentOrderByWithRelationInput | Prisma.EmployeeShiftAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeShiftAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeShiftAssignmentScalarFieldEnum | Prisma.EmployeeShiftAssignmentScalarFieldEnum[]
+}
+
+/**
+ * Shift.attendanceSessions
+ */
+export type Shift$attendanceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttendanceSession
+   */
+  select?: Prisma.AttendanceSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AttendanceSession
+   */
+  omit?: Prisma.AttendanceSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttendanceSessionInclude<ExtArgs> | null
+  where?: Prisma.AttendanceSessionWhereInput
+  orderBy?: Prisma.AttendanceSessionOrderByWithRelationInput | Prisma.AttendanceSessionOrderByWithRelationInput[]
+  cursor?: Prisma.AttendanceSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttendanceSessionScalarFieldEnum | Prisma.AttendanceSessionScalarFieldEnum[]
 }
 
 /**

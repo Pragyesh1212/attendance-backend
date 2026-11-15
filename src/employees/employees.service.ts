@@ -4,6 +4,7 @@ import {
   ConflictException,
   NotFoundException,
   ForbiddenException,
+  BadRequestException, Logger,
 } from '@nestjs/common';
 
 import * as argon2 from 'argon2';
@@ -21,6 +22,7 @@ import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { AssignEmployeeShiftDto } from './dto/assign-employee-shift.dto';
 
 import { AuditLogsService } from '../audit-logs/audit-logs.service';
+import { EmployeeS3AvatarStorageService } from './employee-s3-avatar-storage.service';
 
 interface EmployeeActor {
   sub: string;
@@ -31,9 +33,12 @@ interface EmployeeActor {
 
 @Injectable()
 export class EmployeesService {
+  private readonly logger = new Logger(EmployeesService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly auditLogsService: AuditLogsService,
+    private readonly employeeAvatarStorage: EmployeeS3AvatarStorageService,
   ) {}
 
   // Ensure the ADMIN belongs to an organization
@@ -51,6 +56,164 @@ export class EmployeesService {
     }
 
     return actor.organizationId;
+  }
+
+  // Same-day, non-overlapping shifts only. Historical sessions keep their
+  // own snapshot so later schedule edits do not rewrite an old attendance day.
+  private async validateShiftIds(shiftIds: string[] | undefined, organizationId: string) {
+    if (shiftIds === undefined) return [];
+    if (!Array.isArray(shiftIds) || shiftIds.length < 1 || shiftIds.length > 24 ||
+        new Set(shiftIds).size !== shiftIds.length) {
+      throw new BadRequestException('Choose between 1 and 24 different shifts');
+    }
+    const shifts = await this.prisma.shift.findMany({
+      where: { id: { in: shiftIds }, organizationId, status: ShiftStatus.ACTIVE },
+    });
+    if (shifts.length !== shiftIds.length) {
+      throw new BadRequestException('All shifts must be active and belong to your organization');
+    }
+    const ranges = shiftIds.map(id => {
+      const shift = shifts.find(item => item.id === id)!;
+      const toMinutes = (time: string) => {
+        if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return NaN;
+        const [h, m] = time.split(':').map(Number);
+        return h * 60 + m;
+      };
+      const start = toMinutes(shift.startTime);
+      const end = toMinutes(shift.endTime);
+      if (!Number.isFinite(start) || !Number.isFinite(end) ||
+          (shiftIds.length > 1 && end <= start)) {
+        throw new BadRequestException('Multiple shifts must have valid same-day start/end times; overnight shifts are not supported yet');
+      }
+      return { id, start, end, name: shift.name };
+    });
+    for (let i = 0; i < ranges.length; i++) {
+      if (i > 0 && ranges[i].start < ranges[i - 1].end) {
+        throw new BadRequestException('Shifts must be selected in chronological order and must not overlap');
+      }
+    }
+    return ranges;
+  }
+
+  private getTodayIndiaWorkDate(): Date {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(new Date());
+    const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+    return new Date(`${values.year}-${values.month}-${values.day}T00:00:00.000Z`);
+  }
+
+  private async updateShiftAssignments(employeeProfileId: string, shiftIds: string[]) {
+    // A transaction makes removal/reassignment of the whole ordered list atomic.
+    await this.prisma.$transaction(async tx => {
+      const active = await tx.attendanceSession.findFirst({
+        where: { attendanceRecord: { employeeProfileId }, punchOutAt: null,
+          approvalStatus: { in: ['PENDING', 'APPROVED', 'NOT_REQUIRED'] } },
+        select: { id: true },
+      });
+      if (active) throw new ConflictException('Finish or review the open attendance session before changing shifts');
+      const attendanceToday = await tx.attendanceRecord.findUnique({
+        where: { employeeProfileId_workDate: { employeeProfileId, workDate: this.getTodayIndiaWorkDate() } },
+        include: { sessions: { select: { id: true }, take: 1 } },
+      });
+      if (attendanceToday?.sessions.length) {
+        throw new ConflictException('Cannot change assigned shifts after attendance has started today. Try on a future workday.');
+      }
+      await tx.employeeShiftAssignment.deleteMany({ where: { employeeProfileId } });
+      await tx.employeeShiftAssignment.createMany({
+        data: shiftIds.map((shiftId, index) => ({ employeeProfileId, shiftId, sequence: index + 1 })),
+      });
+      await tx.employeeProfile.update({
+        where: { id: employeeProfileId }, data: { shiftId: shiftIds[0] },
+      });
+    });
+  }
+
+  private validateAvatarFile(file: { buffer: Buffer; size: number; mimetype: string } | undefined) {
+    if (!file || !file.buffer || file.size < 1 || file.size > 1024 * 1024) {
+      throw new BadRequestException('Choose an image up to 1 MB');
+    }
+    const data = file.buffer;
+    const jpeg = data.length >= 3 && data[0] === 0xff && data[1] === 0xd8 && data[2] === 0xff;
+    const png = data.length >= 8 && data.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10]));
+    const webp = data.length >= 12 && data.subarray(0, 4).toString() === 'RIFF' && data.subarray(8, 12).toString() === 'WEBP';
+    const mimeType = jpeg ? 'image/jpeg' : png ? 'image/png' : webp ? 'image/webp' : null;
+    if (!mimeType || mimeType !== file.mimetype) {
+      throw new BadRequestException('Only valid JPEG, PNG or WebP images can be uploaded');
+    }
+    return mimeType;
+  }
+
+  private async requireEmployeeForAvatar(id: string, actor: EmployeeActor) {
+    if (!['ADMIN', 'SUPER_ADMIN'].includes(actor.role)) throw new ForbiddenException('Not authorized');
+    const employee = await this.prisma.user.findFirst({
+      where: { id, role: UserRole.EMPLOYEE,
+        ...(actor.role === 'ADMIN' ? { organizationId: this.getAdminOrganizationId(actor) } : {}) },
+      select: { employeeProfile: { select: { id: true } } },
+    });
+    if (!employee?.employeeProfile) throw new NotFoundException('Employee not found');
+    return employee.employeeProfile.id;
+  }
+
+  async uploadEmployeeAvatar(id: string, actor: EmployeeActor, file: {buffer: Buffer; size: number; mimetype: string}) {
+    const mimeType = this.validateAvatarFile(file);
+    // Verify the admin's organization ownership *before* writing to S3.
+    const employeeProfileId = await this.requireEmployeeForAvatar(id, actor);
+    const profile = await this.prisma.employeeProfile.findUniqueOrThrow({
+      where: { id: employeeProfileId }, select: { avatarUrl: true },
+    });
+
+    const uploadedUrl = await this.employeeAvatarStorage.upload(id, file.buffer, mimeType);
+    try {
+      // Keep the URL update and removal of legacy DB bytes atomic.
+      await this.prisma.$transaction([
+        this.prisma.employeeProfile.update({
+          where: { id: employeeProfileId }, data: { avatarUrl: uploadedUrl },
+        }),
+        this.prisma.employeeAvatar.deleteMany({ where: { employeeProfileId } }),
+      ]);
+    } catch (error) {
+      // Do not leave an S3 object if the PostgreSQL update failed.
+      try { await this.employeeAvatarStorage.deleteManaged(uploadedUrl); }
+      catch (cleanupError) { this.logger.warn(`S3 upload rollback failed: ${String(cleanupError)}`); }
+      throw error;
+    }
+
+    // Delete the superseded image only *after* PostgreSQL points to the new one.
+    if (profile.avatarUrl && profile.avatarUrl !== uploadedUrl) {
+      try { await this.employeeAvatarStorage.deleteManaged(profile.avatarUrl); }
+      catch (error) { this.logger.warn(`Old S3 employee photo cleanup failed: ${String(error)}`); }
+    }
+    return { message: 'Profile image uploaded successfully', avatarUrl: uploadedUrl };
+  }
+
+  // Employee self-service: read only the photo linked to the authenticated user.
+  async getOwnAvatar(actor: EmployeeActor) {
+    if (actor.role !== 'EMPLOYEE') throw new ForbiddenException('Not authorized');
+    const profile = await this.prisma.employeeProfile.findFirst({
+      where: { userId: actor.sub },
+      select: { id: true },
+    });
+    if (!profile) throw new NotFoundException('Employee profile not found');
+    return this.readAvatarByProfileId(profile.id);
+  }
+
+  async getEmployeeAvatar(id: string, actor: EmployeeActor) {
+    const employeeProfileId = await this.requireEmployeeForAvatar(id, actor);
+    return this.readAvatarByProfileId(employeeProfileId);
+  }
+
+  private async readAvatarByProfileId(employeeProfileId: string) {
+    const profile = await this.prisma.employeeProfile.findUnique({
+      where: { id: employeeProfileId }, select: { avatarUrl: true },
+    });
+    if (profile?.avatarUrl && this.employeeAvatarStorage.isManagedUrl(profile.avatarUrl)) {
+      return this.employeeAvatarStorage.read(profile.avatarUrl);
+    }
+    // Preserve access to any photos still stored in the legacy DB table.
+    const legacy = await this.prisma.employeeAvatar.findUnique({ where: { employeeProfileId } });
+    if (!legacy) throw new NotFoundException('No uploaded image for this employee');
+    return { content: Buffer.from(legacy.content), mimeType: legacy.mimeType };
   }
 
   // Create employee
@@ -110,6 +273,8 @@ export class EmployeesService {
       }
     }
 
+    await this.validateShiftIds(dto.shiftIds, organizationId);
+
     const passwordHash = await argon2.hash(dto.password);
 
     const employee = await this.prisma.user.create({
@@ -131,7 +296,12 @@ export class EmployeesService {
             joiningDate: dto.joiningDate
               ? new Date(dto.joiningDate)
               : undefined,
-            avatarUrl: dto.avatarUrl,
+            ...(dto.shiftIds?.length ? {
+              shiftId: dto.shiftIds[0],
+              shiftAssignments: {
+                create: dto.shiftIds.map((shiftId, index) => ({ shiftId, sequence: index + 1 })),
+              },
+            } : {}),
           },
         },
       },
@@ -153,6 +323,7 @@ export class EmployeesService {
             joiningDate: true,
             avatarUrl: true,
             departmentId: true,
+            shiftAssignments: { orderBy: { sequence: 'asc' }, include: { shift: true } },
           },
         },
       },
@@ -276,6 +447,8 @@ export class EmployeesService {
               designation: true,
               joiningDate: true,
               avatarUrl: true,
+              avatar: { select: { employeeProfileId: true } },
+              shiftAssignments: { orderBy: { sequence: 'asc' }, include: { shift: true } },
               shiftId: true,
 
               department: {
@@ -390,6 +563,8 @@ export class EmployeesService {
             designation: true,
             joiningDate: true,
             avatarUrl: true,
+            avatar: { select: { employeeProfileId: true } },
+            shiftAssignments: { orderBy: { sequence: 'asc' }, include: { shift: true } },
             shiftId: true,
 
             department: {
@@ -482,6 +657,10 @@ export class EmployeesService {
       }
     }
 
+    if (dto.shiftIds !== undefined) {
+      await this.validateShiftIds(dto.shiftIds, organizationId);
+    }
+
     const {
       email,
       departmentId,
@@ -490,10 +669,35 @@ export class EmployeesService {
       lastName,
       phone,
       designation,
-      avatarUrl,
     } = dto;
 
-    const employee = await this.prisma.user.update({
+    const employee = await this.prisma.$transaction(async tx => {
+      if (dto.shiftIds !== undefined) {
+        const open = await tx.attendanceSession.findFirst({
+          where: { attendanceRecord: { employeeProfileId: existingEmployee.employeeProfile!.id },
+            punchOutAt: null, approvalStatus: { in: ['PENDING', 'NOT_REQUIRED', 'APPROVED'] } },
+          select: { id: true },
+        });
+        if (open) throw new ConflictException('Finish or review the open attendance session before changing shifts');
+        const attendanceToday = await tx.attendanceRecord.findUnique({
+          where: { employeeProfileId_workDate: {
+            employeeProfileId: existingEmployee.employeeProfile!.id, workDate: this.getTodayIndiaWorkDate(),
+          } }, include: { sessions: { select: { id: true }, take: 1 } },
+        });
+        if (attendanceToday?.sessions.length) throw new ConflictException(
+          'Cannot change assigned shifts after attendance has started today. Try on a future workday.');
+        await tx.employeeShiftAssignment.deleteMany({ where: { employeeProfileId: existingEmployee.employeeProfile!.id } });
+        await tx.employeeShiftAssignment.createMany({
+          data: dto.shiftIds.map((shiftId, index) => ({
+            employeeProfileId: existingEmployee.employeeProfile!.id,
+            shiftId, sequence: index + 1,
+          })),
+        });
+        await tx.employeeProfile.update({
+          where: { id: existingEmployee.employeeProfile!.id }, data: { shiftId: dto.shiftIds[0] },
+        });
+      }
+      return tx.user.update({
       where: {
         id,
       },
@@ -508,7 +712,6 @@ export class EmployeesService {
             ...(lastName !== undefined && { lastName }),
             ...(phone !== undefined && { phone }),
             ...(designation !== undefined && { designation }),
-            ...(avatarUrl !== undefined && { avatarUrl }),
 
             ...(joiningDate !== undefined && {
               joiningDate: new Date(joiningDate),
@@ -549,6 +752,7 @@ export class EmployeesService {
           },
         },
       },
+    });
     });
 
     await this.auditLogsService.createLog({
@@ -721,12 +925,11 @@ export class EmployeesService {
       );
     }
 
-    const updatedEmployee = await this.prisma.employeeProfile.update({
+    await this.validateShiftIds([dto.shiftId], organizationId);
+    await this.updateShiftAssignments(employee.employeeProfile.id, [dto.shiftId]);
+    const updatedEmployee = await this.prisma.employeeProfile.findUnique({
       where: {
         userId: id,
-      },
-      data: {
-        shiftId: dto.shiftId,
       },
       include: {
         user: {

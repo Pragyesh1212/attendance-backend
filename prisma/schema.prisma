@@ -64,7 +64,7 @@ enum WorkLocationStatus {
 }
 
 model User {
-  id               String     @id @default(uuid()) @db.Uuid
+  id               String     @id @default(uuid()) @map("userId") @db.Uuid
   email            String     @unique @db.VarChar(255)
   passwordHash     String     @db.VarChar(255)
   role             UserRole   @default(EMPLOYEE)
@@ -74,6 +74,10 @@ model User {
   refreshTokenHash String?
 
   employeeProfile EmployeeProfile?
+  registeredDevices EmployeeDevice[] @relation("EmployeeDeviceOwner")
+  approvedDevices EmployeeDevice[] @relation("EmployeeDeviceApprover")
+  deviceChallenges EmployeeDeviceChallenge[]
+  updatedDayOverrides EmployeeDayOverride[] @relation("DayOverrideEditor")
   adminProfile    AdminProfile?
 
   notifications Notification[]
@@ -98,7 +102,7 @@ model User {
 }
 
 model EmployeeProfile {
-  id           String    @id @default(uuid()) @db.Uuid
+  id           String    @id @default(uuid()) @map("employeeProfileId") @db.Uuid
   userId       String    @unique @db.Uuid
   employeeCode String    @unique @db.VarChar(50)
   firstName    String    @db.VarChar(100)
@@ -122,6 +126,9 @@ model EmployeeProfile {
   temporaryLocationAssignments LocationAssignment[]
 
   attendanceCorrectionRequests AttendanceCorrectionRequest[]
+  dayOverrides EmployeeDayOverride[]
+  shiftAssignments EmployeeShiftAssignment[]
+  avatar EmployeeAvatar?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -133,7 +140,7 @@ model EmployeeProfile {
 }
 
 model AdminProfile {
-  id          String  @id @default(uuid()) @db.Uuid
+  id          String  @id @default(uuid()) @map("adminProfileId") @db.Uuid
   userId      String  @unique @db.Uuid
   firstName   String  @db.VarChar(100)
   lastName    String  @db.VarChar(100)
@@ -150,7 +157,7 @@ model AdminProfile {
 }
 
 model Department {
-  id          String  @id @default(uuid()) @db.Uuid
+  id          String  @id @default(uuid()) @map("departmentId") @db.Uuid
   name           String  @db.VarChar(100)
   description    String?
   organizationId String? @db.Uuid
@@ -167,7 +174,7 @@ model Department {
 }
 
 model Shift {
-  id             String @id @default(uuid()) @db.Uuid
+  id             String @id @default(uuid()) @map("shiftId") @db.Uuid
   name           String @db.VarChar(100)
   organizationId String? @db.Uuid
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Restrict)
@@ -181,6 +188,8 @@ model Shift {
   status ShiftStatus @default(ACTIVE)
 
   employees EmployeeProfile[]
+  employeeShiftAssignments EmployeeShiftAssignment[]
+  attendanceSessions AttendanceSession[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -191,11 +200,12 @@ model Shift {
 }
 
 model AttendanceRecord {
-  id                String           @id @default(uuid()) @db.Uuid
+  id                String           @id @default(uuid()) @map("attendanceRecordId") @db.Uuid
   employeeProfileId String           @db.Uuid
   workDate          DateTime         @db.Date
   status            AttendanceStatus @default(PRESENT)
   totalWorkMinutes  Int              @default(0)
+  assignedShiftCount Int             @default(1)
   notes             String?
 
   employeeProfile EmployeeProfile     @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
@@ -211,7 +221,7 @@ model AttendanceRecord {
 }
 
 model AttendanceSession {
-  id                 String @id @default(uuid()) @db.Uuid
+  id                 String @id @default(uuid()) @map("attendanceSessionId") @db.Uuid
   attendanceRecordId String @db.Uuid
 
   punchInAt  DateTime  @default(now())
@@ -225,9 +235,20 @@ model AttendanceSession {
   punchOutLongitude Float?
   punchOutAccuracy  Float?
 
+  // Stored on the session so historical exports survive future assignment edits.
+  shiftOrder Int?
+  shiftId String? @db.Uuid
+  shiftName String? @db.VarChar(100)
+  shiftStartTime String? @db.VarChar(5)
+  shiftEndTime String? @db.VarChar(5)
+
   approvalStatus AttendanceApprovalStatus @default(NOT_REQUIRED)
 
   correctionRequests AttendanceCorrectionRequest[]
+  punchInDeviceId String? @db.Uuid
+  punchOutDeviceId String? @db.Uuid
+  punchInDevice EmployeeDevice? @relation("PunchInDevice", fields: [punchInDeviceId], references: [id], onDelete: SetNull)
+  punchOutDevice EmployeeDevice? @relation("PunchOutDevice", fields: [punchOutDeviceId], references: [id], onDelete: SetNull)
 
   lateMinutes Int     @default(0)
   lateReason  String?
@@ -237,19 +258,24 @@ model AttendanceSession {
   rejectionReason  String?
 
   attendanceRecord AttendanceRecord @relation(fields: [attendanceRecordId], references: [id], onDelete: Cascade)
+  shift Shift? @relation(fields: [shiftId], references: [id], onDelete: SetNull)
   reviewedBy       User?            @relation("AttendanceSessionReviewer", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([attendanceRecordId])
+  @@unique([attendanceRecordId, shiftOrder])
+  @@index([shiftId])
   @@index([approvalStatus])
   @@index([reviewedByUserId])
+  @@index([punchInDeviceId])
+  @@index([punchOutDeviceId])
   @@map("attendance_sessions")
 }
 
 model WorkLocation {
-  id           String             @id @default(uuid()) @db.Uuid
+  id           String             @id @default(uuid()) @map("workLocationId") @db.Uuid
   name         String             @db.VarChar(150)
   type         WorkLocationType
   address      String?
@@ -273,7 +299,7 @@ model WorkLocation {
 }
 
 model LocationAssignment {
-  id                String @id @default(uuid()) @db.Uuid
+  id                String @id @default(uuid()) @map("locationAssignmentId") @db.Uuid
   employeeProfileId String @db.Uuid
   workLocationId    String @db.Uuid
   createdByUserId   String @db.Uuid
@@ -294,7 +320,7 @@ model LocationAssignment {
 }
 
 model AttendanceCorrectionRequest {
-  id                  String  @id @default(uuid()) @db.Uuid
+  id                  String  @id @default(uuid()) @map("attendanceCorrectionRequestId") @db.Uuid
   employeeProfileId   String  @db.Uuid
   attendanceSessionId String  @db.Uuid
   requestedByUserId   String  @db.Uuid
@@ -331,7 +357,7 @@ model AttendanceCorrectionRequest {
 }
 
 model Notification {
-  id      String           @id @default(uuid()) @db.Uuid
+  id      String           @id @default(uuid()) @map("notificationId") @db.Uuid
   userId  String           @db.Uuid
   title   String           @db.VarChar(150)
   message String           @db.VarChar(500)
@@ -348,7 +374,7 @@ model Notification {
 }
 
 model AuditLog {
-  id          String  @id @default(uuid()) @db.Uuid
+  id          String  @id @default(uuid()) @map("auditLogId") @db.Uuid
   actorUserId String? @db.Uuid
 
   action      String  @db.VarChar(100)
@@ -376,7 +402,7 @@ enum OrganizationStatus {
 }
 
 model Organization {
-  id     String             @id @default(uuid()) @db.Uuid
+  id     String             @id @default(uuid()) @map("organizationId") @db.Uuid
   name   String             @unique @db.VarChar(150)
   status OrganizationStatus @default(ACTIVE)
 
@@ -390,4 +416,113 @@ model Organization {
 
   @@index([status])
   @@map("organizations")
+}
+
+
+// Ordered assignments make any practical number of daily shifts possible.
+// EmployeeProfile.shiftId stays as a compatibility reference to Shift 1.
+model EmployeeShiftAssignment {
+  id                String @id @default(uuid()) @db.Uuid
+  employeeProfileId String @db.Uuid
+  shiftId           String @db.Uuid
+  sequence          Int
+
+  employeeProfile EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+  shift Shift @relation(fields: [shiftId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([employeeProfileId, sequence])
+  @@unique([employeeProfileId, shiftId])
+  @@index([shiftId])
+  @@map("employee_shift_assignments")
+}
+
+// Avatar contents are kept apart from employee profile/list queries.
+// A dedicated authorized endpoint reads the file; never return bytes in JSON.
+model EmployeeAvatar {
+  employeeProfileId String @id @db.Uuid
+  content Bytes @db.ByteA
+  mimeType String @db.VarChar(30)
+  updatedAt DateTime @updatedAt
+  employeeProfile EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  @@map("employee_avatars")
+}
+
+// Employee-specific approved day classification. No default weekends are inferred:
+// Admin explicitly marks days so different organizations can use different calendars.
+enum EmployeeDayType {
+  WEEKEND
+  HOLIDAY
+}
+
+model EmployeeDayOverride {
+  id                String @id @default(uuid()) @map("employeeDayOverrideId") @db.Uuid
+  employeeProfileId String @db.Uuid
+  workDate          DateTime @db.Date
+  dayType           EmployeeDayType
+  note              String? @db.VarChar(500)
+  updatedByUserId   String @db.Uuid
+  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+  updatedBy         User @relation("DayOverrideEditor", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([employeeProfileId, workDate])
+  @@index([workDate])
+  @@map("employee_day_overrides")
+}
+
+// Browser-held, non-exportable signing key. This is a browser-profile credential, not a hardware ID.
+enum EmployeeDeviceStatus {
+  PENDING
+  APPROVED
+  REVOKED
+}
+
+model EmployeeDevice {
+  id String @id @default(uuid()) @map("employeeDeviceId") @db.Uuid
+  userId String @db.Uuid
+  keyFingerprint String @unique @db.VarChar(64)
+  publicKeySpki String @db.Text
+  label String @db.VarChar(120)
+  deviceType String? @db.VarChar(32)
+  operatingSystem String? @db.VarChar(100)
+  browser String? @db.VarChar(100)
+  userAgent String? @db.VarChar(500)
+  status EmployeeDeviceStatus @default(PENDING)
+  approvedByUserId String? @db.Uuid
+  approvedAt DateTime?
+  revokedAt DateTime?
+  lastSeenAt DateTime?
+  lastIp String? @db.VarChar(45)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation("EmployeeDeviceOwner", fields: [userId], references: [id], onDelete: Cascade)
+  approvedBy User? @relation("EmployeeDeviceApprover", fields: [approvedByUserId], references: [id], onDelete: SetNull)
+  challenges EmployeeDeviceChallenge[]
+  punchInSessions AttendanceSession[] @relation("PunchInDevice")
+  punchOutSessions AttendanceSession[] @relation("PunchOutDevice")
+
+  @@index([userId, status])
+  @@map("employee_devices")
+}
+
+model EmployeeDeviceChallenge {
+  id String @id @default(uuid()) @map("employeeDeviceChallengeId") @db.Uuid
+  userId String @db.Uuid
+  deviceId String? @db.Uuid
+  purpose String @db.VarChar(20)
+  challenge String @db.VarChar(128)
+  expiresAt DateTime
+  usedAt DateTime?
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device EmployeeDevice? @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@map("employee_device_challenges")
 }

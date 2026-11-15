@@ -261,6 +261,9 @@ export type EmployeeProfileWhereInput = {
   attendanceRecords?: Prisma.AttendanceRecordListRelationFilter
   temporaryLocationAssignments?: Prisma.LocationAssignmentListRelationFilter
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestListRelationFilter
+  dayOverrides?: Prisma.EmployeeDayOverrideListRelationFilter
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentListRelationFilter
+  avatar?: Prisma.XOR<Prisma.EmployeeAvatarNullableScalarRelationFilter, Prisma.EmployeeAvatarWhereInput> | null
 }
 
 export type EmployeeProfileOrderByWithRelationInput = {
@@ -285,6 +288,9 @@ export type EmployeeProfileOrderByWithRelationInput = {
   attendanceRecords?: Prisma.AttendanceRecordOrderByRelationAggregateInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentOrderByRelationAggregateInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestOrderByRelationAggregateInput
+  dayOverrides?: Prisma.EmployeeDayOverrideOrderByRelationAggregateInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentOrderByRelationAggregateInput
+  avatar?: Prisma.EmployeeAvatarOrderByWithRelationInput
 }
 
 export type EmployeeProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -312,6 +318,9 @@ export type EmployeeProfileWhereUniqueInput = Prisma.AtLeast<{
   attendanceRecords?: Prisma.AttendanceRecordListRelationFilter
   temporaryLocationAssignments?: Prisma.LocationAssignmentListRelationFilter
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestListRelationFilter
+  dayOverrides?: Prisma.EmployeeDayOverrideListRelationFilter
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentListRelationFilter
+  avatar?: Prisma.XOR<Prisma.EmployeeAvatarNullableScalarRelationFilter, Prisma.EmployeeAvatarWhereInput> | null
 }, "id" | "userId" | "employeeCode" | "phone">
 
 export type EmployeeProfileOrderByWithAggregationInput = {
@@ -372,6 +381,9 @@ export type EmployeeProfileCreateInput = {
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileUncheckedCreateInput = {
@@ -392,6 +404,9 @@ export type EmployeeProfileUncheckedCreateInput = {
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarUncheckedCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileUpdateInput = {
@@ -412,6 +427,9 @@ export type EmployeeProfileUpdateInput = {
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileUncheckedUpdateInput = {
@@ -432,6 +450,9 @@ export type EmployeeProfileUncheckedUpdateInput = {
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUncheckedUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileCreateManyInput = {
@@ -752,6 +773,48 @@ export type EmployeeProfileUpdateOneRequiredWithoutAttendanceCorrectionRequestsN
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeProfileUpdateToOneWithWhereWithoutAttendanceCorrectionRequestsInput, Prisma.EmployeeProfileUpdateWithoutAttendanceCorrectionRequestsInput>, Prisma.EmployeeProfileUncheckedUpdateWithoutAttendanceCorrectionRequestsInput>
 }
 
+export type EmployeeProfileCreateNestedOneWithoutShiftAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutShiftAssignmentsInput, Prisma.EmployeeProfileUncheckedCreateWithoutShiftAssignmentsInput>
+  connectOrCreate?: Prisma.EmployeeProfileCreateOrConnectWithoutShiftAssignmentsInput
+  connect?: Prisma.EmployeeProfileWhereUniqueInput
+}
+
+export type EmployeeProfileUpdateOneRequiredWithoutShiftAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutShiftAssignmentsInput, Prisma.EmployeeProfileUncheckedCreateWithoutShiftAssignmentsInput>
+  connectOrCreate?: Prisma.EmployeeProfileCreateOrConnectWithoutShiftAssignmentsInput
+  upsert?: Prisma.EmployeeProfileUpsertWithoutShiftAssignmentsInput
+  connect?: Prisma.EmployeeProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeProfileUpdateToOneWithWhereWithoutShiftAssignmentsInput, Prisma.EmployeeProfileUpdateWithoutShiftAssignmentsInput>, Prisma.EmployeeProfileUncheckedUpdateWithoutShiftAssignmentsInput>
+}
+
+export type EmployeeProfileCreateNestedOneWithoutAvatarInput = {
+  create?: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutAvatarInput, Prisma.EmployeeProfileUncheckedCreateWithoutAvatarInput>
+  connectOrCreate?: Prisma.EmployeeProfileCreateOrConnectWithoutAvatarInput
+  connect?: Prisma.EmployeeProfileWhereUniqueInput
+}
+
+export type EmployeeProfileUpdateOneRequiredWithoutAvatarNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutAvatarInput, Prisma.EmployeeProfileUncheckedCreateWithoutAvatarInput>
+  connectOrCreate?: Prisma.EmployeeProfileCreateOrConnectWithoutAvatarInput
+  upsert?: Prisma.EmployeeProfileUpsertWithoutAvatarInput
+  connect?: Prisma.EmployeeProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeProfileUpdateToOneWithWhereWithoutAvatarInput, Prisma.EmployeeProfileUpdateWithoutAvatarInput>, Prisma.EmployeeProfileUncheckedUpdateWithoutAvatarInput>
+}
+
+export type EmployeeProfileCreateNestedOneWithoutDayOverridesInput = {
+  create?: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutDayOverridesInput, Prisma.EmployeeProfileUncheckedCreateWithoutDayOverridesInput>
+  connectOrCreate?: Prisma.EmployeeProfileCreateOrConnectWithoutDayOverridesInput
+  connect?: Prisma.EmployeeProfileWhereUniqueInput
+}
+
+export type EmployeeProfileUpdateOneRequiredWithoutDayOverridesNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutDayOverridesInput, Prisma.EmployeeProfileUncheckedCreateWithoutDayOverridesInput>
+  connectOrCreate?: Prisma.EmployeeProfileCreateOrConnectWithoutDayOverridesInput
+  upsert?: Prisma.EmployeeProfileUpsertWithoutDayOverridesInput
+  connect?: Prisma.EmployeeProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeProfileUpdateToOneWithWhereWithoutDayOverridesInput, Prisma.EmployeeProfileUpdateWithoutDayOverridesInput>, Prisma.EmployeeProfileUncheckedUpdateWithoutDayOverridesInput>
+}
+
 export type EmployeeProfileCreateWithoutUserInput = {
   id?: string
   employeeCode: string
@@ -769,6 +832,9 @@ export type EmployeeProfileCreateWithoutUserInput = {
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileUncheckedCreateWithoutUserInput = {
@@ -788,6 +854,9 @@ export type EmployeeProfileUncheckedCreateWithoutUserInput = {
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarUncheckedCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileCreateOrConnectWithoutUserInput = {
@@ -823,6 +892,9 @@ export type EmployeeProfileUpdateWithoutUserInput = {
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileUncheckedUpdateWithoutUserInput = {
@@ -842,6 +914,9 @@ export type EmployeeProfileUncheckedUpdateWithoutUserInput = {
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUncheckedUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileCreateWithoutDepartmentInput = {
@@ -861,6 +936,9 @@ export type EmployeeProfileCreateWithoutDepartmentInput = {
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileUncheckedCreateWithoutDepartmentInput = {
@@ -880,6 +958,9 @@ export type EmployeeProfileUncheckedCreateWithoutDepartmentInput = {
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarUncheckedCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileCreateOrConnectWithoutDepartmentInput = {
@@ -945,6 +1026,9 @@ export type EmployeeProfileCreateWithoutShiftInput = {
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileUncheckedCreateWithoutShiftInput = {
@@ -964,6 +1048,9 @@ export type EmployeeProfileUncheckedCreateWithoutShiftInput = {
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarUncheckedCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileCreateOrConnectWithoutShiftInput = {
@@ -1009,6 +1096,9 @@ export type EmployeeProfileCreateWithoutAttendanceRecordsInput = {
   workLocation?: Prisma.WorkLocationCreateNestedOneWithoutPermanentEmployeesInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileUncheckedCreateWithoutAttendanceRecordsInput = {
@@ -1028,6 +1118,9 @@ export type EmployeeProfileUncheckedCreateWithoutAttendanceRecordsInput = {
   updatedAt?: Date | string
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarUncheckedCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileCreateOrConnectWithoutAttendanceRecordsInput = {
@@ -1063,6 +1156,9 @@ export type EmployeeProfileUpdateWithoutAttendanceRecordsInput = {
   workLocation?: Prisma.WorkLocationUpdateOneWithoutPermanentEmployeesNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileUncheckedUpdateWithoutAttendanceRecordsInput = {
@@ -1082,6 +1178,9 @@ export type EmployeeProfileUncheckedUpdateWithoutAttendanceRecordsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUncheckedUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileCreateWithoutWorkLocationInput = {
@@ -1101,6 +1200,9 @@ export type EmployeeProfileCreateWithoutWorkLocationInput = {
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileUncheckedCreateWithoutWorkLocationInput = {
@@ -1120,6 +1222,9 @@ export type EmployeeProfileUncheckedCreateWithoutWorkLocationInput = {
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarUncheckedCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileCreateOrConnectWithoutWorkLocationInput = {
@@ -1165,6 +1270,9 @@ export type EmployeeProfileCreateWithoutTemporaryLocationAssignmentsInput = {
   workLocation?: Prisma.WorkLocationCreateNestedOneWithoutPermanentEmployeesInput
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileUncheckedCreateWithoutTemporaryLocationAssignmentsInput = {
@@ -1184,6 +1292,9 @@ export type EmployeeProfileUncheckedCreateWithoutTemporaryLocationAssignmentsInp
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutEmployeeProfileInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarUncheckedCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileCreateOrConnectWithoutTemporaryLocationAssignmentsInput = {
@@ -1219,6 +1330,9 @@ export type EmployeeProfileUpdateWithoutTemporaryLocationAssignmentsInput = {
   workLocation?: Prisma.WorkLocationUpdateOneWithoutPermanentEmployeesNestedInput
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileUncheckedUpdateWithoutTemporaryLocationAssignmentsInput = {
@@ -1238,6 +1352,9 @@ export type EmployeeProfileUncheckedUpdateWithoutTemporaryLocationAssignmentsInp
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUncheckedUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileCreateWithoutAttendanceCorrectionRequestsInput = {
@@ -1257,6 +1374,9 @@ export type EmployeeProfileCreateWithoutAttendanceCorrectionRequestsInput = {
   workLocation?: Prisma.WorkLocationCreateNestedOneWithoutPermanentEmployeesInput
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileUncheckedCreateWithoutAttendanceCorrectionRequestsInput = {
@@ -1276,6 +1396,9 @@ export type EmployeeProfileUncheckedCreateWithoutAttendanceCorrectionRequestsInp
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutEmployeeProfileInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarUncheckedCreateNestedOneWithoutEmployeeProfileInput
 }
 
 export type EmployeeProfileCreateOrConnectWithoutAttendanceCorrectionRequestsInput = {
@@ -1311,6 +1434,9 @@ export type EmployeeProfileUpdateWithoutAttendanceCorrectionRequestsInput = {
   workLocation?: Prisma.WorkLocationUpdateOneWithoutPermanentEmployeesNestedInput
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileUncheckedUpdateWithoutAttendanceCorrectionRequestsInput = {
@@ -1330,6 +1456,321 @@ export type EmployeeProfileUncheckedUpdateWithoutAttendanceCorrectionRequestsInp
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUncheckedUpdateOneWithoutEmployeeProfileNestedInput
+}
+
+export type EmployeeProfileCreateWithoutShiftAssignmentsInput = {
+  id?: string
+  employeeCode: string
+  firstName: string
+  lastName: string
+  phone?: string | null
+  designation?: string | null
+  joiningDate?: Date | string | null
+  avatarUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeProfileInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  shift?: Prisma.ShiftCreateNestedOneWithoutEmployeesInput
+  workLocation?: Prisma.WorkLocationCreateNestedOneWithoutPermanentEmployeesInput
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutEmployeeProfileInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarCreateNestedOneWithoutEmployeeProfileInput
+}
+
+export type EmployeeProfileUncheckedCreateWithoutShiftAssignmentsInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  firstName: string
+  lastName: string
+  phone?: string | null
+  designation?: string | null
+  joiningDate?: Date | string | null
+  avatarUrl?: string | null
+  departmentId?: string | null
+  shiftId?: string | null
+  workLocationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarUncheckedCreateNestedOneWithoutEmployeeProfileInput
+}
+
+export type EmployeeProfileCreateOrConnectWithoutShiftAssignmentsInput = {
+  where: Prisma.EmployeeProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutShiftAssignmentsInput, Prisma.EmployeeProfileUncheckedCreateWithoutShiftAssignmentsInput>
+}
+
+export type EmployeeProfileUpsertWithoutShiftAssignmentsInput = {
+  update: Prisma.XOR<Prisma.EmployeeProfileUpdateWithoutShiftAssignmentsInput, Prisma.EmployeeProfileUncheckedUpdateWithoutShiftAssignmentsInput>
+  create: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutShiftAssignmentsInput, Prisma.EmployeeProfileUncheckedCreateWithoutShiftAssignmentsInput>
+  where?: Prisma.EmployeeProfileWhereInput
+}
+
+export type EmployeeProfileUpdateToOneWithWhereWithoutShiftAssignmentsInput = {
+  where?: Prisma.EmployeeProfileWhereInput
+  data: Prisma.XOR<Prisma.EmployeeProfileUpdateWithoutShiftAssignmentsInput, Prisma.EmployeeProfileUncheckedUpdateWithoutShiftAssignmentsInput>
+}
+
+export type EmployeeProfileUpdateWithoutShiftAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  joiningDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeProfileNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  shift?: Prisma.ShiftUpdateOneWithoutEmployeesNestedInput
+  workLocation?: Prisma.WorkLocationUpdateOneWithoutPermanentEmployeesNestedInput
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutEmployeeProfileNestedInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUpdateOneWithoutEmployeeProfileNestedInput
+}
+
+export type EmployeeProfileUncheckedUpdateWithoutShiftAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  joiningDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUncheckedUpdateOneWithoutEmployeeProfileNestedInput
+}
+
+export type EmployeeProfileCreateWithoutAvatarInput = {
+  id?: string
+  employeeCode: string
+  firstName: string
+  lastName: string
+  phone?: string | null
+  designation?: string | null
+  joiningDate?: Date | string | null
+  avatarUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeProfileInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  shift?: Prisma.ShiftCreateNestedOneWithoutEmployeesInput
+  workLocation?: Prisma.WorkLocationCreateNestedOneWithoutPermanentEmployeesInput
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutEmployeeProfileInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutEmployeeProfileInput
+}
+
+export type EmployeeProfileUncheckedCreateWithoutAvatarInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  firstName: string
+  lastName: string
+  phone?: string | null
+  designation?: string | null
+  joiningDate?: Date | string | null
+  avatarUrl?: string | null
+  departmentId?: string | null
+  shiftId?: string | null
+  workLocationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+}
+
+export type EmployeeProfileCreateOrConnectWithoutAvatarInput = {
+  where: Prisma.EmployeeProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutAvatarInput, Prisma.EmployeeProfileUncheckedCreateWithoutAvatarInput>
+}
+
+export type EmployeeProfileUpsertWithoutAvatarInput = {
+  update: Prisma.XOR<Prisma.EmployeeProfileUpdateWithoutAvatarInput, Prisma.EmployeeProfileUncheckedUpdateWithoutAvatarInput>
+  create: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutAvatarInput, Prisma.EmployeeProfileUncheckedCreateWithoutAvatarInput>
+  where?: Prisma.EmployeeProfileWhereInput
+}
+
+export type EmployeeProfileUpdateToOneWithWhereWithoutAvatarInput = {
+  where?: Prisma.EmployeeProfileWhereInput
+  data: Prisma.XOR<Prisma.EmployeeProfileUpdateWithoutAvatarInput, Prisma.EmployeeProfileUncheckedUpdateWithoutAvatarInput>
+}
+
+export type EmployeeProfileUpdateWithoutAvatarInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  joiningDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeProfileNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  shift?: Prisma.ShiftUpdateOneWithoutEmployeesNestedInput
+  workLocation?: Prisma.WorkLocationUpdateOneWithoutPermanentEmployeesNestedInput
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutEmployeeProfileNestedInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+}
+
+export type EmployeeProfileUncheckedUpdateWithoutAvatarInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  joiningDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+}
+
+export type EmployeeProfileCreateWithoutDayOverridesInput = {
+  id?: string
+  employeeCode: string
+  firstName: string
+  lastName: string
+  phone?: string | null
+  designation?: string | null
+  joiningDate?: Date | string | null
+  avatarUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeProfileInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  shift?: Prisma.ShiftCreateNestedOneWithoutEmployeesInput
+  workLocation?: Prisma.WorkLocationCreateNestedOneWithoutPermanentEmployeesInput
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutEmployeeProfileInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarCreateNestedOneWithoutEmployeeProfileInput
+}
+
+export type EmployeeProfileUncheckedCreateWithoutDayOverridesInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  firstName: string
+  lastName: string
+  phone?: string | null
+  designation?: string | null
+  joiningDate?: Date | string | null
+  avatarUrl?: string | null
+  departmentId?: string | null
+  shiftId?: string | null
+  workLocationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedCreateNestedManyWithoutEmployeeProfileInput
+  avatar?: Prisma.EmployeeAvatarUncheckedCreateNestedOneWithoutEmployeeProfileInput
+}
+
+export type EmployeeProfileCreateOrConnectWithoutDayOverridesInput = {
+  where: Prisma.EmployeeProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutDayOverridesInput, Prisma.EmployeeProfileUncheckedCreateWithoutDayOverridesInput>
+}
+
+export type EmployeeProfileUpsertWithoutDayOverridesInput = {
+  update: Prisma.XOR<Prisma.EmployeeProfileUpdateWithoutDayOverridesInput, Prisma.EmployeeProfileUncheckedUpdateWithoutDayOverridesInput>
+  create: Prisma.XOR<Prisma.EmployeeProfileCreateWithoutDayOverridesInput, Prisma.EmployeeProfileUncheckedCreateWithoutDayOverridesInput>
+  where?: Prisma.EmployeeProfileWhereInput
+}
+
+export type EmployeeProfileUpdateToOneWithWhereWithoutDayOverridesInput = {
+  where?: Prisma.EmployeeProfileWhereInput
+  data: Prisma.XOR<Prisma.EmployeeProfileUpdateWithoutDayOverridesInput, Prisma.EmployeeProfileUncheckedUpdateWithoutDayOverridesInput>
+}
+
+export type EmployeeProfileUpdateWithoutDayOverridesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  joiningDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeProfileNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  shift?: Prisma.ShiftUpdateOneWithoutEmployeesNestedInput
+  workLocation?: Prisma.WorkLocationUpdateOneWithoutPermanentEmployeesNestedInput
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutEmployeeProfileNestedInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUpdateOneWithoutEmployeeProfileNestedInput
+}
+
+export type EmployeeProfileUncheckedUpdateWithoutDayOverridesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  joiningDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUncheckedUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileCreateManyDepartmentInput = {
@@ -1365,6 +1806,9 @@ export type EmployeeProfileUpdateWithoutDepartmentInput = {
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileUncheckedUpdateWithoutDepartmentInput = {
@@ -1384,6 +1828,9 @@ export type EmployeeProfileUncheckedUpdateWithoutDepartmentInput = {
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUncheckedUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileUncheckedUpdateManyWithoutDepartmentInput = {
@@ -1435,6 +1882,9 @@ export type EmployeeProfileUpdateWithoutShiftInput = {
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileUncheckedUpdateWithoutShiftInput = {
@@ -1454,6 +1904,9 @@ export type EmployeeProfileUncheckedUpdateWithoutShiftInput = {
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUncheckedUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileUncheckedUpdateManyWithoutShiftInput = {
@@ -1505,6 +1958,9 @@ export type EmployeeProfileUpdateWithoutWorkLocationInput = {
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileUncheckedUpdateWithoutWorkLocationInput = {
@@ -1524,6 +1980,9 @@ export type EmployeeProfileUncheckedUpdateWithoutWorkLocationInput = {
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   temporaryLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
   attendanceCorrectionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  dayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  shiftAssignments?: Prisma.EmployeeShiftAssignmentUncheckedUpdateManyWithoutEmployeeProfileNestedInput
+  avatar?: Prisma.EmployeeAvatarUncheckedUpdateOneWithoutEmployeeProfileNestedInput
 }
 
 export type EmployeeProfileUncheckedUpdateManyWithoutWorkLocationInput = {
@@ -1551,12 +2010,16 @@ export type EmployeeProfileCountOutputType = {
   attendanceRecords: number
   temporaryLocationAssignments: number
   attendanceCorrectionRequests: number
+  dayOverrides: number
+  shiftAssignments: number
 }
 
 export type EmployeeProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attendanceRecords?: boolean | EmployeeProfileCountOutputTypeCountAttendanceRecordsArgs
   temporaryLocationAssignments?: boolean | EmployeeProfileCountOutputTypeCountTemporaryLocationAssignmentsArgs
   attendanceCorrectionRequests?: boolean | EmployeeProfileCountOutputTypeCountAttendanceCorrectionRequestsArgs
+  dayOverrides?: boolean | EmployeeProfileCountOutputTypeCountDayOverridesArgs
+  shiftAssignments?: boolean | EmployeeProfileCountOutputTypeCountShiftAssignmentsArgs
 }
 
 /**
@@ -1590,6 +2053,20 @@ export type EmployeeProfileCountOutputTypeCountAttendanceCorrectionRequestsArgs<
   where?: Prisma.AttendanceCorrectionRequestWhereInput
 }
 
+/**
+ * EmployeeProfileCountOutputType without action
+ */
+export type EmployeeProfileCountOutputTypeCountDayOverridesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeDayOverrideWhereInput
+}
+
+/**
+ * EmployeeProfileCountOutputType without action
+ */
+export type EmployeeProfileCountOutputTypeCountShiftAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeShiftAssignmentWhereInput
+}
+
 
 export type EmployeeProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1613,6 +2090,9 @@ export type EmployeeProfileSelect<ExtArgs extends runtime.Types.Extensions.Inter
   attendanceRecords?: boolean | Prisma.EmployeeProfile$attendanceRecordsArgs<ExtArgs>
   temporaryLocationAssignments?: boolean | Prisma.EmployeeProfile$temporaryLocationAssignmentsArgs<ExtArgs>
   attendanceCorrectionRequests?: boolean | Prisma.EmployeeProfile$attendanceCorrectionRequestsArgs<ExtArgs>
+  dayOverrides?: boolean | Prisma.EmployeeProfile$dayOverridesArgs<ExtArgs>
+  shiftAssignments?: boolean | Prisma.EmployeeProfile$shiftAssignmentsArgs<ExtArgs>
+  avatar?: boolean | Prisma.EmployeeProfile$avatarArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employeeProfile"]>
 
@@ -1684,6 +2164,9 @@ export type EmployeeProfileInclude<ExtArgs extends runtime.Types.Extensions.Inte
   attendanceRecords?: boolean | Prisma.EmployeeProfile$attendanceRecordsArgs<ExtArgs>
   temporaryLocationAssignments?: boolean | Prisma.EmployeeProfile$temporaryLocationAssignmentsArgs<ExtArgs>
   attendanceCorrectionRequests?: boolean | Prisma.EmployeeProfile$attendanceCorrectionRequestsArgs<ExtArgs>
+  dayOverrides?: boolean | Prisma.EmployeeProfile$dayOverridesArgs<ExtArgs>
+  shiftAssignments?: boolean | Prisma.EmployeeProfile$shiftAssignmentsArgs<ExtArgs>
+  avatar?: boolean | Prisma.EmployeeProfile$avatarArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmployeeProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1709,6 +2192,9 @@ export type $EmployeeProfilePayload<ExtArgs extends runtime.Types.Extensions.Int
     attendanceRecords: Prisma.$AttendanceRecordPayload<ExtArgs>[]
     temporaryLocationAssignments: Prisma.$LocationAssignmentPayload<ExtArgs>[]
     attendanceCorrectionRequests: Prisma.$AttendanceCorrectionRequestPayload<ExtArgs>[]
+    dayOverrides: Prisma.$EmployeeDayOverridePayload<ExtArgs>[]
+    shiftAssignments: Prisma.$EmployeeShiftAssignmentPayload<ExtArgs>[]
+    avatar: Prisma.$EmployeeAvatarPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2126,6 +2612,9 @@ export interface Prisma__EmployeeProfileClient<T, Null = never, ExtArgs extends 
   attendanceRecords<T extends Prisma.EmployeeProfile$attendanceRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeProfile$attendanceRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   temporaryLocationAssignments<T extends Prisma.EmployeeProfile$temporaryLocationAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeProfile$temporaryLocationAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LocationAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attendanceCorrectionRequests<T extends Prisma.EmployeeProfile$attendanceCorrectionRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeProfile$attendanceCorrectionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceCorrectionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dayOverrides<T extends Prisma.EmployeeProfile$dayOverridesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeProfile$dayOverridesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeDayOverridePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  shiftAssignments<T extends Prisma.EmployeeProfile$shiftAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeProfile$shiftAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeShiftAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  avatar<T extends Prisma.EmployeeProfile$avatarArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeProfile$avatarArgs<ExtArgs>>): Prisma.Prisma__EmployeeAvatarClient<runtime.Types.Result.GetResult<Prisma.$EmployeeAvatarPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2696,6 +3185,73 @@ export type EmployeeProfile$attendanceCorrectionRequestsArgs<ExtArgs extends run
   take?: number
   skip?: number
   distinct?: Prisma.AttendanceCorrectionRequestScalarFieldEnum | Prisma.AttendanceCorrectionRequestScalarFieldEnum[]
+}
+
+/**
+ * EmployeeProfile.dayOverrides
+ */
+export type EmployeeProfile$dayOverridesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeDayOverride
+   */
+  select?: Prisma.EmployeeDayOverrideSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeDayOverride
+   */
+  omit?: Prisma.EmployeeDayOverrideOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeDayOverrideInclude<ExtArgs> | null
+  where?: Prisma.EmployeeDayOverrideWhereInput
+  orderBy?: Prisma.EmployeeDayOverrideOrderByWithRelationInput | Prisma.EmployeeDayOverrideOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeDayOverrideWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeDayOverrideScalarFieldEnum | Prisma.EmployeeDayOverrideScalarFieldEnum[]
+}
+
+/**
+ * EmployeeProfile.shiftAssignments
+ */
+export type EmployeeProfile$shiftAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeShiftAssignment
+   */
+  select?: Prisma.EmployeeShiftAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeShiftAssignment
+   */
+  omit?: Prisma.EmployeeShiftAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeShiftAssignmentInclude<ExtArgs> | null
+  where?: Prisma.EmployeeShiftAssignmentWhereInput
+  orderBy?: Prisma.EmployeeShiftAssignmentOrderByWithRelationInput | Prisma.EmployeeShiftAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeShiftAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeShiftAssignmentScalarFieldEnum | Prisma.EmployeeShiftAssignmentScalarFieldEnum[]
+}
+
+/**
+ * EmployeeProfile.avatar
+ */
+export type EmployeeProfile$avatarArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeAvatar
+   */
+  select?: Prisma.EmployeeAvatarSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeAvatar
+   */
+  omit?: Prisma.EmployeeAvatarOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeAvatarInclude<ExtArgs> | null
+  where?: Prisma.EmployeeAvatarWhereInput
 }
 
 /**

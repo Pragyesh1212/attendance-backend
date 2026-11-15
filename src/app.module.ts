@@ -13,6 +13,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { AuditLogsModule } from './audit-logs/audit-logs.module';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { ReportsModule } from './reports/reports.module';
+import { DevicesModule } from './devices/devices.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { OrganizationsModule } from './organizations/organizations.module';
     DashboardModule,
     NotificationsModule,
     OrganizationsModule,
+    ReportsModule,
+    DevicesModule,
     AuditLogsModule,
   ],
 })

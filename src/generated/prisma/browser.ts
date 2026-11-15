@@ -82,3 +82,28 @@ export type AuditLog = Prisma.AuditLogModel
  * 
  */
 export type Organization = Prisma.OrganizationModel
+/**
+ * Model EmployeeShiftAssignment
+ * 
+ */
+export type EmployeeShiftAssignment = Prisma.EmployeeShiftAssignmentModel
+/**
+ * Model EmployeeAvatar
+ * 
+ */
+export type EmployeeAvatar = Prisma.EmployeeAvatarModel
+/**
+ * Model EmployeeDayOverride
+ * 
+ */
+export type EmployeeDayOverride = Prisma.EmployeeDayOverrideModel
+/**
+ * Model EmployeeDevice
+ * 
+ */
+export type EmployeeDevice = Prisma.EmployeeDeviceModel
+/**
+ * Model EmployeeDeviceChallenge
+ * 
+ */
+export type EmployeeDeviceChallenge = Prisma.EmployeeDeviceChallengeModel

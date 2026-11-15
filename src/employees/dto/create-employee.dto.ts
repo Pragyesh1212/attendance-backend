@@ -7,7 +7,7 @@ import {
   MaxLength,
   IsUUID,
   IsDateString,
-  IsUrl,
+  IsArray, ArrayMinSize, ArrayMaxSize, ArrayUnique,
 } from 'class-validator';
 
 export class CreateEmployeeDto {
@@ -52,7 +52,12 @@ export class CreateEmployeeDto {
   @IsDateString()
   joiningDate?: string;
 
+  // Optional for backwards-compatible clients; Angular Add Employee requires it.
   @IsOptional()
-  @IsUrl()
-  avatarUrl?: string;
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(24)
+  @ArrayUnique()
+  @IsUUID('4', { each: true })
+  shiftIds?: string[];
 }

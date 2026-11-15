@@ -531,6 +531,57 @@ export type EnumOrganizationStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumOrganizationStatusFilter<$PrismaModel>
 }
 
+export type BytesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesFilter<$PrismaModel> | runtime.Bytes
+}
+
+export type BytesWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesWithAggregatesFilter<$PrismaModel> | runtime.Bytes
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBytesFilter<$PrismaModel>
+  _max?: Prisma.NestedBytesFilter<$PrismaModel>
+}
+
+export type EnumEmployeeDayTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmployeeDayType | Prisma.EnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.EmployeeDayType[] | Prisma.ListEnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EmployeeDayType[] | Prisma.ListEnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEmployeeDayTypeFilter<$PrismaModel> | $Enums.EmployeeDayType
+}
+
+export type EnumEmployeeDayTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmployeeDayType | Prisma.EnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.EmployeeDayType[] | Prisma.ListEnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EmployeeDayType[] | Prisma.ListEnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEmployeeDayTypeWithAggregatesFilter<$PrismaModel> | $Enums.EmployeeDayType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEmployeeDayTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEmployeeDayTypeFilter<$PrismaModel>
+}
+
+export type EnumEmployeeDeviceStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmployeeDeviceStatus | Prisma.EnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.EmployeeDeviceStatus[] | Prisma.ListEnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EmployeeDeviceStatus[] | Prisma.ListEnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEmployeeDeviceStatusFilter<$PrismaModel> | $Enums.EmployeeDeviceStatus
+}
+
+export type EnumEmployeeDeviceStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmployeeDeviceStatus | Prisma.EnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.EmployeeDeviceStatus[] | Prisma.ListEnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EmployeeDeviceStatus[] | Prisma.ListEnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEmployeeDeviceStatusWithAggregatesFilter<$PrismaModel> | $Enums.EmployeeDeviceStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEmployeeDeviceStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEmployeeDeviceStatusFilter<$PrismaModel>
+}
+
 export type NestedUuidFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -1006,6 +1057,57 @@ export type NestedEnumOrganizationStatusWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumOrganizationStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumOrganizationStatusFilter<$PrismaModel>
+}
+
+export type NestedBytesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesFilter<$PrismaModel> | runtime.Bytes
+}
+
+export type NestedBytesWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesWithAggregatesFilter<$PrismaModel> | runtime.Bytes
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBytesFilter<$PrismaModel>
+  _max?: Prisma.NestedBytesFilter<$PrismaModel>
+}
+
+export type NestedEnumEmployeeDayTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmployeeDayType | Prisma.EnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.EmployeeDayType[] | Prisma.ListEnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EmployeeDayType[] | Prisma.ListEnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEmployeeDayTypeFilter<$PrismaModel> | $Enums.EmployeeDayType
+}
+
+export type NestedEnumEmployeeDayTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmployeeDayType | Prisma.EnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.EmployeeDayType[] | Prisma.ListEnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EmployeeDayType[] | Prisma.ListEnumEmployeeDayTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEmployeeDayTypeWithAggregatesFilter<$PrismaModel> | $Enums.EmployeeDayType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEmployeeDayTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEmployeeDayTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumEmployeeDeviceStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmployeeDeviceStatus | Prisma.EnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.EmployeeDeviceStatus[] | Prisma.ListEnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EmployeeDeviceStatus[] | Prisma.ListEnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEmployeeDeviceStatusFilter<$PrismaModel> | $Enums.EmployeeDeviceStatus
+}
+
+export type NestedEnumEmployeeDeviceStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmployeeDeviceStatus | Prisma.EnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.EmployeeDeviceStatus[] | Prisma.ListEnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EmployeeDeviceStatus[] | Prisma.ListEnumEmployeeDeviceStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEmployeeDeviceStatusWithAggregatesFilter<$PrismaModel> | $Enums.EmployeeDeviceStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEmployeeDeviceStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEmployeeDeviceStatusFilter<$PrismaModel>
 }
 
 

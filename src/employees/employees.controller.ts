@@ -10,9 +10,11 @@ import {
   UseGuards,
   ParseUUIDPipe,
   Req,
+  UploadedFile, UseInterceptors, Res,
 } from '@nestjs/common';
 
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import { EmployeesService } from './employees.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -49,6 +51,44 @@ export class EmployeesController {
       dto,
       request.user,
     );
+  }
+
+  // Photo upload is separate from employee creation so older JSON clients still work.
+  @Post('employees/:id/avatar')
+  @Roles('ADMIN')
+  @UseInterceptors(FileInterceptor('avatar', { limits: { fileSize: 1024 * 1024 } }))
+  uploadAvatar(
+    @Param('id', ParseUUIDPipe) id: string,
+    @UploadedFile() file: { buffer: Buffer; size: number; mimetype: string },
+    @Req() request: AuthenticatedRequest,
+  ) {
+    return this.employeesService.uploadEmployeeAvatar(id, request.user, file);
+  }
+
+  // An employee can securely view only their own private S3 photograph.
+  @Get('me/avatar')
+  @Roles('EMPLOYEE')
+  async getOwnAvatar(
+    @Req() request: AuthenticatedRequest,
+    @Res() response: Response,
+  ) {
+    const avatar = await this.employeesService.getOwnAvatar(request.user);
+    response.setHeader('Content-Type', avatar.mimeType);
+    response.setHeader('Cache-Control', 'private, no-store');
+    response.send(avatar.content);
+  }
+
+  @Get('employees/:id/avatar')
+  @Roles('ADMIN', 'SUPER_ADMIN')
+  async getAvatar(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Req() request: AuthenticatedRequest,
+    @Res() response: Response,
+  ) {
+    const avatar = await this.employeesService.getEmployeeAvatar(id, request.user);
+    response.setHeader('Content-Type', avatar.mimeType);
+    response.setHeader('Cache-Control', 'private, no-store');
+    response.send(avatar.content);
   }
 
   // Get employees - SUPER_ADMIN sees all; ADMIN sees own organization

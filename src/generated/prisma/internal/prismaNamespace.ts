@@ -409,7 +409,12 @@ export const ModelName = {
   AttendanceCorrectionRequest: 'AttendanceCorrectionRequest',
   Notification: 'Notification',
   AuditLog: 'AuditLog',
-  Organization: 'Organization'
+  Organization: 'Organization',
+  EmployeeShiftAssignment: 'EmployeeShiftAssignment',
+  EmployeeAvatar: 'EmployeeAvatar',
+  EmployeeDayOverride: 'EmployeeDayOverride',
+  EmployeeDevice: 'EmployeeDevice',
+  EmployeeDeviceChallenge: 'EmployeeDeviceChallenge'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -425,7 +430,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "employeeProfile" | "adminProfile" | "department" | "shift" | "attendanceRecord" | "attendanceSession" | "workLocation" | "locationAssignment" | "attendanceCorrectionRequest" | "notification" | "auditLog" | "organization"
+    modelProps: "user" | "employeeProfile" | "adminProfile" | "department" | "shift" | "attendanceRecord" | "attendanceSession" | "workLocation" | "locationAssignment" | "attendanceCorrectionRequest" | "notification" | "auditLog" | "organization" | "employeeShiftAssignment" | "employeeAvatar" | "employeeDayOverride" | "employeeDevice" | "employeeDeviceChallenge"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1391,6 +1396,376 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    EmployeeShiftAssignment: {
+      payload: Prisma.$EmployeeShiftAssignmentPayload<ExtArgs>
+      fields: Prisma.EmployeeShiftAssignmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmployeeShiftAssignmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeShiftAssignmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmployeeShiftAssignmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeShiftAssignmentPayload>
+        }
+        findFirst: {
+          args: Prisma.EmployeeShiftAssignmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeShiftAssignmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmployeeShiftAssignmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeShiftAssignmentPayload>
+        }
+        findMany: {
+          args: Prisma.EmployeeShiftAssignmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeShiftAssignmentPayload>[]
+        }
+        create: {
+          args: Prisma.EmployeeShiftAssignmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeShiftAssignmentPayload>
+        }
+        createMany: {
+          args: Prisma.EmployeeShiftAssignmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmployeeShiftAssignmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeShiftAssignmentPayload>[]
+        }
+        delete: {
+          args: Prisma.EmployeeShiftAssignmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeShiftAssignmentPayload>
+        }
+        update: {
+          args: Prisma.EmployeeShiftAssignmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeShiftAssignmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmployeeShiftAssignmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmployeeShiftAssignmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmployeeShiftAssignmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeShiftAssignmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmployeeShiftAssignmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeShiftAssignmentPayload>
+        }
+        aggregate: {
+          args: Prisma.EmployeeShiftAssignmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmployeeShiftAssignment>
+        }
+        groupBy: {
+          args: Prisma.EmployeeShiftAssignmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeShiftAssignmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmployeeShiftAssignmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeShiftAssignmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmployeeAvatar: {
+      payload: Prisma.$EmployeeAvatarPayload<ExtArgs>
+      fields: Prisma.EmployeeAvatarFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmployeeAvatarFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeAvatarPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmployeeAvatarFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeAvatarPayload>
+        }
+        findFirst: {
+          args: Prisma.EmployeeAvatarFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeAvatarPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmployeeAvatarFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeAvatarPayload>
+        }
+        findMany: {
+          args: Prisma.EmployeeAvatarFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeAvatarPayload>[]
+        }
+        create: {
+          args: Prisma.EmployeeAvatarCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeAvatarPayload>
+        }
+        createMany: {
+          args: Prisma.EmployeeAvatarCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmployeeAvatarCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeAvatarPayload>[]
+        }
+        delete: {
+          args: Prisma.EmployeeAvatarDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeAvatarPayload>
+        }
+        update: {
+          args: Prisma.EmployeeAvatarUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeAvatarPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmployeeAvatarDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmployeeAvatarUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmployeeAvatarUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeAvatarPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmployeeAvatarUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeAvatarPayload>
+        }
+        aggregate: {
+          args: Prisma.EmployeeAvatarAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmployeeAvatar>
+        }
+        groupBy: {
+          args: Prisma.EmployeeAvatarGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeAvatarGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmployeeAvatarCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeAvatarCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmployeeDayOverride: {
+      payload: Prisma.$EmployeeDayOverridePayload<ExtArgs>
+      fields: Prisma.EmployeeDayOverrideFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmployeeDayOverrideFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDayOverridePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmployeeDayOverrideFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDayOverridePayload>
+        }
+        findFirst: {
+          args: Prisma.EmployeeDayOverrideFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDayOverridePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmployeeDayOverrideFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDayOverridePayload>
+        }
+        findMany: {
+          args: Prisma.EmployeeDayOverrideFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDayOverridePayload>[]
+        }
+        create: {
+          args: Prisma.EmployeeDayOverrideCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDayOverridePayload>
+        }
+        createMany: {
+          args: Prisma.EmployeeDayOverrideCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmployeeDayOverrideCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDayOverridePayload>[]
+        }
+        delete: {
+          args: Prisma.EmployeeDayOverrideDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDayOverridePayload>
+        }
+        update: {
+          args: Prisma.EmployeeDayOverrideUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDayOverridePayload>
+        }
+        deleteMany: {
+          args: Prisma.EmployeeDayOverrideDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmployeeDayOverrideUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmployeeDayOverrideUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDayOverridePayload>[]
+        }
+        upsert: {
+          args: Prisma.EmployeeDayOverrideUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDayOverridePayload>
+        }
+        aggregate: {
+          args: Prisma.EmployeeDayOverrideAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmployeeDayOverride>
+        }
+        groupBy: {
+          args: Prisma.EmployeeDayOverrideGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeDayOverrideGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmployeeDayOverrideCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeDayOverrideCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmployeeDevice: {
+      payload: Prisma.$EmployeeDevicePayload<ExtArgs>
+      fields: Prisma.EmployeeDeviceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmployeeDeviceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDevicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmployeeDeviceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDevicePayload>
+        }
+        findFirst: {
+          args: Prisma.EmployeeDeviceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDevicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmployeeDeviceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDevicePayload>
+        }
+        findMany: {
+          args: Prisma.EmployeeDeviceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDevicePayload>[]
+        }
+        create: {
+          args: Prisma.EmployeeDeviceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDevicePayload>
+        }
+        createMany: {
+          args: Prisma.EmployeeDeviceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmployeeDeviceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDevicePayload>[]
+        }
+        delete: {
+          args: Prisma.EmployeeDeviceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDevicePayload>
+        }
+        update: {
+          args: Prisma.EmployeeDeviceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDevicePayload>
+        }
+        deleteMany: {
+          args: Prisma.EmployeeDeviceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmployeeDeviceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmployeeDeviceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDevicePayload>[]
+        }
+        upsert: {
+          args: Prisma.EmployeeDeviceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDevicePayload>
+        }
+        aggregate: {
+          args: Prisma.EmployeeDeviceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmployeeDevice>
+        }
+        groupBy: {
+          args: Prisma.EmployeeDeviceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeDeviceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmployeeDeviceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeDeviceCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmployeeDeviceChallenge: {
+      payload: Prisma.$EmployeeDeviceChallengePayload<ExtArgs>
+      fields: Prisma.EmployeeDeviceChallengeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmployeeDeviceChallengeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDeviceChallengePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmployeeDeviceChallengeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDeviceChallengePayload>
+        }
+        findFirst: {
+          args: Prisma.EmployeeDeviceChallengeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDeviceChallengePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmployeeDeviceChallengeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDeviceChallengePayload>
+        }
+        findMany: {
+          args: Prisma.EmployeeDeviceChallengeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDeviceChallengePayload>[]
+        }
+        create: {
+          args: Prisma.EmployeeDeviceChallengeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDeviceChallengePayload>
+        }
+        createMany: {
+          args: Prisma.EmployeeDeviceChallengeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmployeeDeviceChallengeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDeviceChallengePayload>[]
+        }
+        delete: {
+          args: Prisma.EmployeeDeviceChallengeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDeviceChallengePayload>
+        }
+        update: {
+          args: Prisma.EmployeeDeviceChallengeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDeviceChallengePayload>
+        }
+        deleteMany: {
+          args: Prisma.EmployeeDeviceChallengeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmployeeDeviceChallengeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmployeeDeviceChallengeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDeviceChallengePayload>[]
+        }
+        upsert: {
+          args: Prisma.EmployeeDeviceChallengeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeDeviceChallengePayload>
+        }
+        aggregate: {
+          args: Prisma.EmployeeDeviceChallengeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmployeeDeviceChallenge>
+        }
+        groupBy: {
+          args: Prisma.EmployeeDeviceChallengeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeDeviceChallengeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmployeeDeviceChallengeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeDeviceChallengeCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1517,6 +1892,7 @@ export const AttendanceRecordScalarFieldEnum = {
   workDate: 'workDate',
   status: 'status',
   totalWorkMinutes: 'totalWorkMinutes',
+  assignedShiftCount: 'assignedShiftCount',
   notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1536,7 +1912,14 @@ export const AttendanceSessionScalarFieldEnum = {
   punchOutLatitude: 'punchOutLatitude',
   punchOutLongitude: 'punchOutLongitude',
   punchOutAccuracy: 'punchOutAccuracy',
+  shiftOrder: 'shiftOrder',
+  shiftId: 'shiftId',
+  shiftName: 'shiftName',
+  shiftStartTime: 'shiftStartTime',
+  shiftEndTime: 'shiftEndTime',
   approvalStatus: 'approvalStatus',
+  punchInDeviceId: 'punchInDeviceId',
+  punchOutDeviceId: 'punchOutDeviceId',
   lateMinutes: 'lateMinutes',
   lateReason: 'lateReason',
   reviewedByUserId: 'reviewedByUserId',
@@ -1641,6 +2024,79 @@ export const OrganizationScalarFieldEnum = {
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
+
+
+export const EmployeeShiftAssignmentScalarFieldEnum = {
+  id: 'id',
+  employeeProfileId: 'employeeProfileId',
+  shiftId: 'shiftId',
+  sequence: 'sequence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeShiftAssignmentScalarFieldEnum = (typeof EmployeeShiftAssignmentScalarFieldEnum)[keyof typeof EmployeeShiftAssignmentScalarFieldEnum]
+
+
+export const EmployeeAvatarScalarFieldEnum = {
+  employeeProfileId: 'employeeProfileId',
+  content: 'content',
+  mimeType: 'mimeType',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeAvatarScalarFieldEnum = (typeof EmployeeAvatarScalarFieldEnum)[keyof typeof EmployeeAvatarScalarFieldEnum]
+
+
+export const EmployeeDayOverrideScalarFieldEnum = {
+  id: 'id',
+  employeeProfileId: 'employeeProfileId',
+  workDate: 'workDate',
+  dayType: 'dayType',
+  note: 'note',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeDayOverrideScalarFieldEnum = (typeof EmployeeDayOverrideScalarFieldEnum)[keyof typeof EmployeeDayOverrideScalarFieldEnum]
+
+
+export const EmployeeDeviceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  keyFingerprint: 'keyFingerprint',
+  publicKeySpki: 'publicKeySpki',
+  label: 'label',
+  deviceType: 'deviceType',
+  operatingSystem: 'operatingSystem',
+  browser: 'browser',
+  userAgent: 'userAgent',
+  status: 'status',
+  approvedByUserId: 'approvedByUserId',
+  approvedAt: 'approvedAt',
+  revokedAt: 'revokedAt',
+  lastSeenAt: 'lastSeenAt',
+  lastIp: 'lastIp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeDeviceScalarFieldEnum = (typeof EmployeeDeviceScalarFieldEnum)[keyof typeof EmployeeDeviceScalarFieldEnum]
+
+
+export const EmployeeDeviceChallengeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  deviceId: 'deviceId',
+  purpose: 'purpose',
+  challenge: 'challenge',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type EmployeeDeviceChallengeScalarFieldEnum = (typeof EmployeeDeviceChallengeScalarFieldEnum)[keyof typeof EmployeeDeviceChallengeScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1906,6 +2362,48 @@ export type EnumOrganizationStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
 export type ListEnumOrganizationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrganizationStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'Bytes'
+ */
+export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+    
+
+
+/**
+ * Reference to a field of type 'Bytes[]'
+ */
+export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EmployeeDayType'
+ */
+export type EnumEmployeeDayTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmployeeDayType'>
+    
+
+
+/**
+ * Reference to a field of type 'EmployeeDayType[]'
+ */
+export type ListEnumEmployeeDayTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmployeeDayType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EmployeeDeviceStatus'
+ */
+export type EnumEmployeeDeviceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmployeeDeviceStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'EmployeeDeviceStatus[]'
+ */
+export type ListEnumEmployeeDeviceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmployeeDeviceStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2070,6 +2568,11 @@ export type GlobalOmitConfig = {
   notification?: Prisma.NotificationOmit
   auditLog?: Prisma.AuditLogOmit
   organization?: Prisma.OrganizationOmit
+  employeeShiftAssignment?: Prisma.EmployeeShiftAssignmentOmit
+  employeeAvatar?: Prisma.EmployeeAvatarOmit
+  employeeDayOverride?: Prisma.EmployeeDayOverrideOmit
+  employeeDevice?: Prisma.EmployeeDeviceOmit
+  employeeDeviceChallenge?: Prisma.EmployeeDeviceChallengeOmit
 }
 
 /* Types for Logging */

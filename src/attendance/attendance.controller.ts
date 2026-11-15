@@ -12,6 +12,7 @@ import {
 import type { Request } from 'express';
 
 import { AttendanceService } from './attendance.service';
+import { DevicesService } from '../devices/devices.service';
 import { PunchInDto } from './dto/punch-in.dto';
 import { PunchOutDto } from './dto/punch-out.dto';
 import { GetAttendanceDto } from './dto/get-attendance.dto';
@@ -35,6 +36,7 @@ type ReviewAttendanceCorrectionDto = Parameters<
 export class AttendanceController {
   constructor(
     private readonly attendanceService: AttendanceService,
+    private readonly devices: DevicesService,
   ) {}
 
 // EMPLOYEE: PUNCH IN
@@ -45,10 +47,9 @@ async punchIn(
   @Body() dto: PunchInDto,
   @Req() request: Request,
 ) {
+  const deviceId = await this.devices.validatePunchProof(user.sub, request.header('x-device-proof'));
   return this.attendanceService.punchIn(
-    user.sub,
-    dto,
-    request.ip ?? request.socket.remoteAddress ?? ''
+    user.sub, dto, request.ip ?? request.socket.remoteAddress ?? '', deviceId
   );
 }
 
@@ -60,10 +61,9 @@ async punchOut(
   @Body() dto: PunchOutDto,
   @Req() request: Request,
 ) {
+  const deviceId = await this.devices.validatePunchProof(user.sub, request.header('x-device-proof'));
   return this.attendanceService.punchOut(
-    user.sub,
-    dto,
-    request.ip ?? request.socket.remoteAddress ?? ''
+    user.sub, dto, request.ip ?? request.socket.remoteAddress ?? '', deviceId
   );
 }
   // EMPLOYEE: Read shift cutoff for the Punch In button (server verified).
@@ -71,6 +71,13 @@ async punchOut(
   @Roles('EMPLOYEE')
   async getMyPunchInPolicy(@CurrentUser() user: { sub: string }) {
     return this.attendanceService.getMyPunchInPolicy(user.sub);
+  }
+
+  // EMPLOYEE: Own active session + assigned geofence for in-browser warning.
+  @Get('my/location-monitor')
+  @Roles('EMPLOYEE')
+  async getMyLocationMonitor(@CurrentUser() user: { sub: string }) {
+    return this.attendanceService.getMyLocationMonitor(user.sub);
   }
 
   // EMPLOYEE: OWN ATTENDANCE
