@@ -98,3 +98,20 @@ export const OrganizationStatus = {
 } as const
 
 export type OrganizationStatus = (typeof OrganizationStatus)[keyof typeof OrganizationStatus]
+
+
+export const EmployeeDayType = {
+  WEEKEND: 'WEEKEND',
+  HOLIDAY: 'HOLIDAY'
+} as const
+
+export type EmployeeDayType = (typeof EmployeeDayType)[keyof typeof EmployeeDayType]
+
+
+export const EmployeeDeviceStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REVOKED: 'REVOKED'
+} as const
+
+export type EmployeeDeviceStatus = (typeof EmployeeDeviceStatus)[keyof typeof EmployeeDeviceStatus]

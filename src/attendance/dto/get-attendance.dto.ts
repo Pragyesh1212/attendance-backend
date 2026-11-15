@@ -3,6 +3,8 @@ import {
   IsEnum,
   IsInt,
   IsOptional,
+  IsString,
+  MaxLength,
   IsUUID,
   Max,
   Min,
@@ -36,6 +38,12 @@ export class GetAttendanceDto {
   @IsOptional()
   @IsEnum(AttendanceStatus)
   status?: AttendanceStatus;
+
+  // Admin-only attendance search; employee attendance history ignores this filter.
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  employeeName?: string;
 
   @IsOptional()
   @IsUUID()

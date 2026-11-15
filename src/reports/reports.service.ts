@@ -2,6 +2,7 @@
 import {
   Injectable,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -17,7 +18,16 @@ interface AttendanceReportFilters {
 export class ReportsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAttendanceReport(filters: AttendanceReportFilters) {
+  async getAttendanceReport(filters: AttendanceReportFilters, actorUserId?: string) {
+    if (!actorUserId) throw new ForbiddenException('Authentication required');
+    const actor = await this.prisma.user.findUnique({
+      where: { id: actorUserId }, select: { role: true, organizationId: true, status: true },
+    });
+    if (!actor || actor.status !== 'ACTIVE' || !['ADMIN', 'SUPER_ADMIN'].includes(actor.role)) {
+      throw new ForbiddenException('Not authorized to export attendance');
+    }
+    if (actor.role === 'ADMIN' && !actor.organizationId) throw new ForbiddenException('Admin is not assigned to an organization');
+
     const { startDate, endDate, employeeId, departmentId, status } = filters;
 
     if (startDate && isNaN(Date.parse(startDate))) {
@@ -60,9 +70,10 @@ export class ReportsService {
           }
         : {}),
       ...(status ? { status } : {}),
-      ...(employeeId || departmentId
+      ...(employeeId || departmentId || actor.role === 'ADMIN'
         ? {
             employeeProfile: {
+              ...(actor.role === 'ADMIN' ? { user: { organizationId: actor.organizationId } } : {}),
               ...(employeeId ? { id: employeeId } : {}),
               ...(departmentId ? { departmentId } : {}),
             },
@@ -84,6 +95,8 @@ export class ReportsService {
             shift: {
               select: { name: true },
             },
+            shiftAssignments: { orderBy: { sequence: 'asc' },
+              select: { sequence: true, shift: { select: { name: true } } } },
           },
         },
         sessions: {
@@ -91,6 +104,8 @@ export class ReportsService {
           select: {
             punchInAt: true,
             punchOutAt: true,
+            shiftOrder: true,
+            shiftName: true,
           },
         },
       },
@@ -108,7 +123,10 @@ export class ReportsService {
         employeeCode: record.employeeProfile.employeeCode,
         employeeName: `${record.employeeProfile.firstName} ${record.employeeProfile.lastName}`,
         department: record.employeeProfile.department?.name ?? 'N/A',
-        shift: record.employeeProfile.shift?.name ?? 'N/A',
+        shift: record.sessions.some(session => !!session.shiftName)
+          ? [...new Set(record.sessions.map(session => session.shiftName).filter(Boolean))].join(' / ')
+          : record.employeeProfile.shift?.name ?? 'N/A',
+        shiftCount: record.assignedShiftCount,
         status: record.status,
         totalWorkMinutes: record.totalWorkMinutes,
         totalWorkHours: Number(
@@ -119,20 +137,19 @@ export class ReportsService {
     };
   }
 
-  async exportAttendanceCsv(filters: AttendanceReportFilters) {
-    const report = await this.getAttendanceReport(filters);
+  async exportAttendanceCsv(filters: AttendanceReportFilters, actorUserId?: string) {
+    const report = await this.getAttendanceReport(filters, actorUserId);
 
-    const headers = [
-      'Date',
-      'Employee Code',
-      'Employee Name',
-      'Department',
-      'Shift',
-      'Status',
-      'Punch In',
-      'Punch Out',
-      'Working Hours',
-    ];
+    // Individual employee export uses only the required number of shift columns;
+    // mixed-employee reports show columns up to the largest assignment count.
+    const maxShiftCount = Math.max(1, ...report.records.map(record =>
+      Math.max(record.shiftCount, ...record.sessions.map(session => session.shiftOrder ?? 1))));
+    const shiftHeaders = maxShiftCount === 1
+      ? ['Punch In', 'Punch Out']
+      : Array.from({ length: maxShiftCount }, (_, index) =>
+          [`Shift ${index + 1} Punch In`, `Shift ${index + 1} Punch Out`]).flat();
+    const headers = ['Date', 'Employee Code', 'Employee Name', 'Department',
+      'Shift', 'Status', ...shiftHeaders, 'Working Hours'];
 
     const escapeCsv = (value: unknown): string => {
       let text = value == null ? '' : String(value);
@@ -145,10 +162,17 @@ export class ReportsService {
       return `"${text.replace(/"/g, '""')}"`;
     };
 
-    const rows = report.records.map((record) => {
-      const firstSession = record.sessions[0];
-      const lastSession = record.sessions[record.sessions.length - 1];
-
+    const formatIndiaTime = (value: Date | null | undefined) => value
+      ? new Date(value).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata',
+          hour: '2-digit', minute: '2-digit', hour12: true })
+      : '';
+    const rows = report.records.map(record => {
+      const shiftCells: string[] = [];
+      for (let sequence = 1; sequence <= maxShiftCount; sequence++) {
+        const session = record.sessions.find(item => (item.shiftOrder ?? 1) === sequence);
+        shiftCells.push(formatIndiaTime(session?.punchInAt));
+        shiftCells.push(formatIndiaTime(session?.punchOutAt));
+      }
       return [
         new Date(record.workDate).toISOString().slice(0, 10),
         record.employeeCode,
@@ -156,8 +180,7 @@ export class ReportsService {
         record.department,
         record.shift,
         record.status,
-        firstSession?.punchInAt?.toISOString() ?? '',
-        lastSession?.punchOutAt?.toISOString() ?? '',
+        ...shiftCells,
         record.totalWorkHours,
       ].map(escapeCsv).join(',');
     });

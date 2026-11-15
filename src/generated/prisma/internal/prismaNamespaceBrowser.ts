@@ -63,7 +63,12 @@ export const ModelName = {
   AttendanceCorrectionRequest: 'AttendanceCorrectionRequest',
   Notification: 'Notification',
   AuditLog: 'AuditLog',
-  Organization: 'Organization'
+  Organization: 'Organization',
+  EmployeeShiftAssignment: 'EmployeeShiftAssignment',
+  EmployeeAvatar: 'EmployeeAvatar',
+  EmployeeDayOverride: 'EmployeeDayOverride',
+  EmployeeDevice: 'EmployeeDevice',
+  EmployeeDeviceChallenge: 'EmployeeDeviceChallenge'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -169,6 +174,7 @@ export const AttendanceRecordScalarFieldEnum = {
   workDate: 'workDate',
   status: 'status',
   totalWorkMinutes: 'totalWorkMinutes',
+  assignedShiftCount: 'assignedShiftCount',
   notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -188,7 +194,14 @@ export const AttendanceSessionScalarFieldEnum = {
   punchOutLatitude: 'punchOutLatitude',
   punchOutLongitude: 'punchOutLongitude',
   punchOutAccuracy: 'punchOutAccuracy',
+  shiftOrder: 'shiftOrder',
+  shiftId: 'shiftId',
+  shiftName: 'shiftName',
+  shiftStartTime: 'shiftStartTime',
+  shiftEndTime: 'shiftEndTime',
   approvalStatus: 'approvalStatus',
+  punchInDeviceId: 'punchInDeviceId',
+  punchOutDeviceId: 'punchOutDeviceId',
   lateMinutes: 'lateMinutes',
   lateReason: 'lateReason',
   reviewedByUserId: 'reviewedByUserId',
@@ -293,6 +306,79 @@ export const OrganizationScalarFieldEnum = {
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
+
+
+export const EmployeeShiftAssignmentScalarFieldEnum = {
+  id: 'id',
+  employeeProfileId: 'employeeProfileId',
+  shiftId: 'shiftId',
+  sequence: 'sequence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeShiftAssignmentScalarFieldEnum = (typeof EmployeeShiftAssignmentScalarFieldEnum)[keyof typeof EmployeeShiftAssignmentScalarFieldEnum]
+
+
+export const EmployeeAvatarScalarFieldEnum = {
+  employeeProfileId: 'employeeProfileId',
+  content: 'content',
+  mimeType: 'mimeType',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeAvatarScalarFieldEnum = (typeof EmployeeAvatarScalarFieldEnum)[keyof typeof EmployeeAvatarScalarFieldEnum]
+
+
+export const EmployeeDayOverrideScalarFieldEnum = {
+  id: 'id',
+  employeeProfileId: 'employeeProfileId',
+  workDate: 'workDate',
+  dayType: 'dayType',
+  note: 'note',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeDayOverrideScalarFieldEnum = (typeof EmployeeDayOverrideScalarFieldEnum)[keyof typeof EmployeeDayOverrideScalarFieldEnum]
+
+
+export const EmployeeDeviceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  keyFingerprint: 'keyFingerprint',
+  publicKeySpki: 'publicKeySpki',
+  label: 'label',
+  deviceType: 'deviceType',
+  operatingSystem: 'operatingSystem',
+  browser: 'browser',
+  userAgent: 'userAgent',
+  status: 'status',
+  approvedByUserId: 'approvedByUserId',
+  approvedAt: 'approvedAt',
+  revokedAt: 'revokedAt',
+  lastSeenAt: 'lastSeenAt',
+  lastIp: 'lastIp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeDeviceScalarFieldEnum = (typeof EmployeeDeviceScalarFieldEnum)[keyof typeof EmployeeDeviceScalarFieldEnum]
+
+
+export const EmployeeDeviceChallengeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  deviceId: 'deviceId',
+  purpose: 'purpose',
+  challenge: 'challenge',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type EmployeeDeviceChallengeScalarFieldEnum = (typeof EmployeeDeviceChallengeScalarFieldEnum)[keyof typeof EmployeeDeviceChallengeScalarFieldEnum]
 
 
 export const SortOrder = {

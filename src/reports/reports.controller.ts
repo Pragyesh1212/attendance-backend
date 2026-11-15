@@ -5,8 +5,9 @@ import {
   Query,
   Res,
   UseGuards,
+  Req,
 } from '@nestjs/common';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 
 import { ReportsService } from './reports.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard/jwt-auth.guard';
@@ -26,6 +27,7 @@ export class ReportsController {
     @Query('employeeId') employeeId?: string,
     @Query('departmentId') departmentId?: string,
     @Query('status') status?: string,
+    @Req() request?: Request & { user?: { sub: string } },
   ) {
     return this.reportsService.getAttendanceReport({
       startDate,
@@ -33,7 +35,7 @@ export class ReportsController {
       employeeId,
       departmentId,
       status,
-    });
+    }, request?.user?.sub);
   }
 
   @Get('attendance/export')
@@ -44,6 +46,7 @@ export class ReportsController {
     @Query('employeeId') employeeId?: string,
     @Query('departmentId') departmentId?: string,
     @Query('status') status?: string,
+    @Req() request?: Request & { user?: { sub: string } },
   ) {
     const csv = await this.reportsService.exportAttendanceCsv({
       startDate,
@@ -51,7 +54,7 @@ export class ReportsController {
       employeeId,
       departmentId,
       status,
-    });
+    }, request?.user?.sub);
 
     response.setHeader('Content-Type', 'text/csv; charset=utf-8');
     response.setHeader(

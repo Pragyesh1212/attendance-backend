@@ -5,8 +5,8 @@ import {
   IsNotEmpty,
   IsUUID,
   IsDateString,
-  IsUrl,
   MaxLength,
+  IsArray, ArrayMinSize, ArrayMaxSize, ArrayUnique,
 } from 'class-validator';
 
 export class UpdateEmployeeDto {
@@ -45,6 +45,10 @@ export class UpdateEmployeeDto {
   joiningDate?: string;
 
   @IsOptional()
-  @IsUrl()
-  avatarUrl?: string;
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(24)
+  @ArrayUnique()
+  @IsUUID('4', { each: true })
+  shiftIds?: string[];
 }

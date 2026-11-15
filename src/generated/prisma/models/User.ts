@@ -231,6 +231,10 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   employeeProfile?: Prisma.XOR<Prisma.EmployeeProfileNullableScalarRelationFilter, Prisma.EmployeeProfileWhereInput> | null
+  registeredDevices?: Prisma.EmployeeDeviceListRelationFilter
+  approvedDevices?: Prisma.EmployeeDeviceListRelationFilter
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeListRelationFilter
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideListRelationFilter
   adminProfile?: Prisma.XOR<Prisma.AdminProfileNullableScalarRelationFilter, Prisma.AdminProfileWhereInput> | null
   notifications?: Prisma.NotificationListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
@@ -254,6 +258,10 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   employeeProfile?: Prisma.EmployeeProfileOrderByWithRelationInput
+  registeredDevices?: Prisma.EmployeeDeviceOrderByRelationAggregateInput
+  approvedDevices?: Prisma.EmployeeDeviceOrderByRelationAggregateInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeOrderByRelationAggregateInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideOrderByRelationAggregateInput
   adminProfile?: Prisma.AdminProfileOrderByWithRelationInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
@@ -280,6 +288,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   employeeProfile?: Prisma.XOR<Prisma.EmployeeProfileNullableScalarRelationFilter, Prisma.EmployeeProfileWhereInput> | null
+  registeredDevices?: Prisma.EmployeeDeviceListRelationFilter
+  approvedDevices?: Prisma.EmployeeDeviceListRelationFilter
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeListRelationFilter
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideListRelationFilter
   adminProfile?: Prisma.XOR<Prisma.AdminProfileNullableScalarRelationFilter, Prisma.AdminProfileWhereInput> | null
   notifications?: Prisma.NotificationListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
@@ -336,6 +348,10 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
@@ -359,6 +375,10 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
@@ -380,6 +400,10 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
@@ -403,6 +427,10 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
@@ -699,6 +727,64 @@ export type UserUncheckedUpdateManyWithoutOrganizationNestedInput = {
   deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
+export type UserCreateNestedOneWithoutUpdatedDayOverridesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUpdatedDayOverridesInput, Prisma.UserUncheckedCreateWithoutUpdatedDayOverridesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUpdatedDayOverridesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutUpdatedDayOverridesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUpdatedDayOverridesInput, Prisma.UserUncheckedCreateWithoutUpdatedDayOverridesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUpdatedDayOverridesInput
+  upsert?: Prisma.UserUpsertWithoutUpdatedDayOverridesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUpdatedDayOverridesInput, Prisma.UserUpdateWithoutUpdatedDayOverridesInput>, Prisma.UserUncheckedUpdateWithoutUpdatedDayOverridesInput>
+}
+
+export type UserCreateNestedOneWithoutRegisteredDevicesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegisteredDevicesInput, Prisma.UserUncheckedCreateWithoutRegisteredDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegisteredDevicesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutApprovedDevicesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedDevicesInput, Prisma.UserUncheckedCreateWithoutApprovedDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedDevicesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRegisteredDevicesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegisteredDevicesInput, Prisma.UserUncheckedCreateWithoutRegisteredDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegisteredDevicesInput
+  upsert?: Prisma.UserUpsertWithoutRegisteredDevicesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRegisteredDevicesInput, Prisma.UserUpdateWithoutRegisteredDevicesInput>, Prisma.UserUncheckedUpdateWithoutRegisteredDevicesInput>
+}
+
+export type UserUpdateOneWithoutApprovedDevicesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedDevicesInput, Prisma.UserUncheckedCreateWithoutApprovedDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedDevicesInput
+  upsert?: Prisma.UserUpsertWithoutApprovedDevicesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApprovedDevicesInput, Prisma.UserUpdateWithoutApprovedDevicesInput>, Prisma.UserUncheckedUpdateWithoutApprovedDevicesInput>
+}
+
+export type UserCreateNestedOneWithoutDeviceChallengesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceChallengesInput, Prisma.UserUncheckedCreateWithoutDeviceChallengesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceChallengesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDeviceChallengesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceChallengesInput, Prisma.UserUncheckedCreateWithoutDeviceChallengesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceChallengesInput
+  upsert?: Prisma.UserUpsertWithoutDeviceChallengesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDeviceChallengesInput, Prisma.UserUpdateWithoutDeviceChallengesInput>, Prisma.UserUncheckedUpdateWithoutDeviceChallengesInput>
+}
+
 export type UserCreateWithoutEmployeeProfileInput = {
   id?: string
   email: string
@@ -710,6 +796,10 @@ export type UserCreateWithoutEmployeeProfileInput = {
   refreshTokenHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
@@ -732,6 +822,10 @@ export type UserUncheckedCreateWithoutEmployeeProfileInput = {
   organizationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
@@ -768,6 +862,10 @@ export type UserUpdateWithoutEmployeeProfileInput = {
   refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
@@ -790,6 +888,10 @@ export type UserUncheckedUpdateWithoutEmployeeProfileInput = {
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
@@ -811,6 +913,10 @@ export type UserCreateWithoutAdminProfileInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   createdLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutCreatedByInput
@@ -833,6 +939,10 @@ export type UserUncheckedCreateWithoutAdminProfileInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   createdLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -869,6 +979,10 @@ export type UserUpdateWithoutAdminProfileInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   createdLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutCreatedByNestedInput
@@ -891,6 +1005,10 @@ export type UserUncheckedUpdateWithoutAdminProfileInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   createdLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -911,6 +1029,10 @@ export type UserCreateWithoutReviewedAttendanceSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
@@ -933,6 +1055,10 @@ export type UserUncheckedCreateWithoutReviewedAttendanceSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
@@ -969,6 +1095,10 @@ export type UserUpdateWithoutReviewedAttendanceSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
@@ -991,6 +1121,10 @@ export type UserUncheckedUpdateWithoutReviewedAttendanceSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
@@ -1011,6 +1145,10 @@ export type UserCreateWithoutCreatedLocationAssignmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
@@ -1033,6 +1171,10 @@ export type UserUncheckedCreateWithoutCreatedLocationAssignmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
@@ -1069,6 +1211,10 @@ export type UserUpdateWithoutCreatedLocationAssignmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
@@ -1091,6 +1237,10 @@ export type UserUncheckedUpdateWithoutCreatedLocationAssignmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
@@ -1111,6 +1261,10 @@ export type UserCreateWithoutRequestedAttendanceCorrectionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
@@ -1133,6 +1287,10 @@ export type UserUncheckedCreateWithoutRequestedAttendanceCorrectionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
@@ -1158,6 +1316,10 @@ export type UserCreateWithoutReviewedAttendanceCorrectionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
@@ -1180,6 +1342,10 @@ export type UserUncheckedCreateWithoutReviewedAttendanceCorrectionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
@@ -1216,6 +1382,10 @@ export type UserUpdateWithoutRequestedAttendanceCorrectionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
@@ -1238,6 +1408,10 @@ export type UserUncheckedUpdateWithoutRequestedAttendanceCorrectionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
@@ -1269,6 +1443,10 @@ export type UserUpdateWithoutReviewedAttendanceCorrectionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
@@ -1291,6 +1469,10 @@ export type UserUncheckedUpdateWithoutReviewedAttendanceCorrectionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
@@ -1311,6 +1493,10 @@ export type UserCreateWithoutNotificationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   createdLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutCreatedByInput
@@ -1333,6 +1519,10 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   createdLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1369,6 +1559,10 @@ export type UserUpdateWithoutNotificationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   createdLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutCreatedByNestedInput
@@ -1391,6 +1585,10 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   createdLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1411,6 +1609,10 @@ export type UserCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   createdLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutCreatedByInput
@@ -1433,6 +1635,10 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   createdLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1469,6 +1675,10 @@ export type UserUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   createdLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutCreatedByNestedInput
@@ -1491,6 +1701,10 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   createdLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1511,6 +1725,10 @@ export type UserCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
@@ -1532,6 +1750,10 @@ export type UserUncheckedCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
   adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
@@ -1584,6 +1806,470 @@ export type UserScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
 
+export type UserCreateWithoutUpdatedDayOverridesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  refreshTokenHash?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutCreatedByInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutReviewedByInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutRequestedByInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutReviewedByInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+}
+
+export type UserUncheckedCreateWithoutUpdatedDayOverridesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  refreshTokenHash?: string | null
+  organizationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutCreatedByInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutReviewedByInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutReviewedByInput
+}
+
+export type UserCreateOrConnectWithoutUpdatedDayOverridesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUpdatedDayOverridesInput, Prisma.UserUncheckedCreateWithoutUpdatedDayOverridesInput>
+}
+
+export type UserUpsertWithoutUpdatedDayOverridesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUpdatedDayOverridesInput, Prisma.UserUncheckedUpdateWithoutUpdatedDayOverridesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUpdatedDayOverridesInput, Prisma.UserUncheckedCreateWithoutUpdatedDayOverridesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUpdatedDayOverridesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUpdatedDayOverridesInput, Prisma.UserUncheckedUpdateWithoutUpdatedDayOverridesInput>
+}
+
+export type UserUpdateWithoutUpdatedDayOverridesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutCreatedByNestedInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutReviewedByNestedInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutReviewedByNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutUsersNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUpdatedDayOverridesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutReviewedByNestedInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+}
+
+export type UserCreateWithoutRegisteredDevicesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  refreshTokenHash?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
+  adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutCreatedByInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutReviewedByInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutRequestedByInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutReviewedByInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+}
+
+export type UserUncheckedCreateWithoutRegisteredDevicesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  refreshTokenHash?: string | null
+  organizationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
+  adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutCreatedByInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutReviewedByInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutReviewedByInput
+}
+
+export type UserCreateOrConnectWithoutRegisteredDevicesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegisteredDevicesInput, Prisma.UserUncheckedCreateWithoutRegisteredDevicesInput>
+}
+
+export type UserCreateWithoutApprovedDevicesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  refreshTokenHash?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
+  adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutCreatedByInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutReviewedByInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutRequestedByInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutReviewedByInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+}
+
+export type UserUncheckedCreateWithoutApprovedDevicesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  refreshTokenHash?: string | null
+  organizationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedCreateNestedManyWithoutUserInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
+  adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutCreatedByInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutReviewedByInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutReviewedByInput
+}
+
+export type UserCreateOrConnectWithoutApprovedDevicesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovedDevicesInput, Prisma.UserUncheckedCreateWithoutApprovedDevicesInput>
+}
+
+export type UserUpsertWithoutRegisteredDevicesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRegisteredDevicesInput, Prisma.UserUncheckedUpdateWithoutRegisteredDevicesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegisteredDevicesInput, Prisma.UserUncheckedCreateWithoutRegisteredDevicesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRegisteredDevicesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRegisteredDevicesInput, Prisma.UserUncheckedUpdateWithoutRegisteredDevicesInput>
+}
+
+export type UserUpdateWithoutRegisteredDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
+  adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutCreatedByNestedInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutReviewedByNestedInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutReviewedByNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutUsersNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRegisteredDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
+  adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutReviewedByNestedInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+}
+
+export type UserUpsertWithoutApprovedDevicesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutApprovedDevicesInput, Prisma.UserUncheckedUpdateWithoutApprovedDevicesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovedDevicesInput, Prisma.UserUncheckedCreateWithoutApprovedDevicesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutApprovedDevicesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutApprovedDevicesInput, Prisma.UserUncheckedUpdateWithoutApprovedDevicesInput>
+}
+
+export type UserUpdateWithoutApprovedDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
+  adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutCreatedByNestedInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutReviewedByNestedInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutReviewedByNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutUsersNestedInput
+}
+
+export type UserUncheckedUpdateWithoutApprovedDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
+  adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutReviewedByNestedInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+}
+
+export type UserCreateWithoutDeviceChallengesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  refreshTokenHash?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceCreateNestedManyWithoutApprovedByInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideCreateNestedManyWithoutUpdatedByInput
+  adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  createdLocationAssignments?: Prisma.LocationAssignmentCreateNestedManyWithoutCreatedByInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutReviewedByInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutRequestedByInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutReviewedByInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+}
+
+export type UserUncheckedCreateWithoutDeviceChallengesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  refreshTokenHash?: string | null
+  organizationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutUserInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedCreateNestedManyWithoutApprovedByInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
+  adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUncheckedCreateNestedManyWithoutCreatedByInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutReviewedByInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutReviewedByInput
+}
+
+export type UserCreateOrConnectWithoutDeviceChallengesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceChallengesInput, Prisma.UserUncheckedCreateWithoutDeviceChallengesInput>
+}
+
+export type UserUpsertWithoutDeviceChallengesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDeviceChallengesInput, Prisma.UserUncheckedUpdateWithoutDeviceChallengesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceChallengesInput, Prisma.UserUncheckedCreateWithoutDeviceChallengesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDeviceChallengesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDeviceChallengesInput, Prisma.UserUncheckedUpdateWithoutDeviceChallengesInput>
+}
+
+export type UserUpdateWithoutDeviceChallengesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
+  adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUpdateManyWithoutCreatedByNestedInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutReviewedByNestedInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutReviewedByNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutUsersNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDeviceChallengesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
+  adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  createdLocationAssignments?: Prisma.LocationAssignmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  reviewedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutReviewedByNestedInput
+  requestedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedAttendanceCorrections?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+}
+
 export type UserCreateManyOrganizationInput = {
   id?: string
   email: string
@@ -1609,6 +2295,10 @@ export type UserUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
@@ -1630,6 +2320,10 @@ export type UserUncheckedUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
+  registeredDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutUserNestedInput
+  approvedDevices?: Prisma.EmployeeDeviceUncheckedUpdateManyWithoutApprovedByNestedInput
+  deviceChallenges?: Prisma.EmployeeDeviceChallengeUncheckedUpdateManyWithoutUserNestedInput
+  updatedDayOverrides?: Prisma.EmployeeDayOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
   adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
@@ -1658,6 +2352,10 @@ export type UserUncheckedUpdateManyWithoutOrganizationInput = {
  */
 
 export type UserCountOutputType = {
+  registeredDevices: number
+  approvedDevices: number
+  deviceChallenges: number
+  updatedDayOverrides: number
   notifications: number
   auditLogs: number
   createdLocationAssignments: number
@@ -1667,6 +2365,10 @@ export type UserCountOutputType = {
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  registeredDevices?: boolean | UserCountOutputTypeCountRegisteredDevicesArgs
+  approvedDevices?: boolean | UserCountOutputTypeCountApprovedDevicesArgs
+  deviceChallenges?: boolean | UserCountOutputTypeCountDeviceChallengesArgs
+  updatedDayOverrides?: boolean | UserCountOutputTypeCountUpdatedDayOverridesArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
   createdLocationAssignments?: boolean | UserCountOutputTypeCountCreatedLocationAssignmentsArgs
@@ -1683,6 +2385,34 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Select specific fields to fetch from the UserCountOutputType
    */
   select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRegisteredDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeDeviceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountApprovedDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeDeviceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDeviceChallengesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeDeviceChallengeWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUpdatedDayOverridesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeDayOverrideWhereInput
 }
 
 /**
@@ -1741,6 +2471,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   employeeProfile?: boolean | Prisma.User$employeeProfileArgs<ExtArgs>
+  registeredDevices?: boolean | Prisma.User$registeredDevicesArgs<ExtArgs>
+  approvedDevices?: boolean | Prisma.User$approvedDevicesArgs<ExtArgs>
+  deviceChallenges?: boolean | Prisma.User$deviceChallengesArgs<ExtArgs>
+  updatedDayOverrides?: boolean | Prisma.User$updatedDayOverridesArgs<ExtArgs>
   adminProfile?: boolean | Prisma.User$adminProfileArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
@@ -1799,6 +2533,10 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "role" | "status" | "emailVerifiedAt" | "lastLoginAt" | "refreshTokenHash" | "organizationId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employeeProfile?: boolean | Prisma.User$employeeProfileArgs<ExtArgs>
+  registeredDevices?: boolean | Prisma.User$registeredDevicesArgs<ExtArgs>
+  approvedDevices?: boolean | Prisma.User$approvedDevicesArgs<ExtArgs>
+  deviceChallenges?: boolean | Prisma.User$deviceChallengesArgs<ExtArgs>
+  updatedDayOverrides?: boolean | Prisma.User$updatedDayOverridesArgs<ExtArgs>
   adminProfile?: boolean | Prisma.User$adminProfileArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
@@ -1820,6 +2558,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     employeeProfile: Prisma.$EmployeeProfilePayload<ExtArgs> | null
+    registeredDevices: Prisma.$EmployeeDevicePayload<ExtArgs>[]
+    approvedDevices: Prisma.$EmployeeDevicePayload<ExtArgs>[]
+    deviceChallenges: Prisma.$EmployeeDeviceChallengePayload<ExtArgs>[]
+    updatedDayOverrides: Prisma.$EmployeeDayOverridePayload<ExtArgs>[]
     adminProfile: Prisma.$AdminProfilePayload<ExtArgs> | null
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
@@ -2236,6 +2978,10 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   employeeProfile<T extends Prisma.User$employeeProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$employeeProfileArgs<ExtArgs>>): Prisma.Prisma__EmployeeProfileClient<runtime.Types.Result.GetResult<Prisma.$EmployeeProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  registeredDevices<T extends Prisma.User$registeredDevicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$registeredDevicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approvedDevices<T extends Prisma.User$approvedDevicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedDevicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  deviceChallenges<T extends Prisma.User$deviceChallengesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deviceChallengesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeDeviceChallengePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  updatedDayOverrides<T extends Prisma.User$updatedDayOverridesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$updatedDayOverridesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeDayOverridePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   adminProfile<T extends Prisma.User$adminProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$adminProfileArgs<ExtArgs>>): Prisma.Prisma__AdminProfileClient<runtime.Types.Result.GetResult<Prisma.$AdminProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2701,6 +3447,102 @@ export type User$employeeProfileArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.EmployeeProfileInclude<ExtArgs> | null
   where?: Prisma.EmployeeProfileWhereInput
+}
+
+/**
+ * User.registeredDevices
+ */
+export type User$registeredDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeDevice
+   */
+  select?: Prisma.EmployeeDeviceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeDevice
+   */
+  omit?: Prisma.EmployeeDeviceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeDeviceInclude<ExtArgs> | null
+  where?: Prisma.EmployeeDeviceWhereInput
+  orderBy?: Prisma.EmployeeDeviceOrderByWithRelationInput | Prisma.EmployeeDeviceOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeDeviceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeDeviceScalarFieldEnum | Prisma.EmployeeDeviceScalarFieldEnum[]
+}
+
+/**
+ * User.approvedDevices
+ */
+export type User$approvedDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeDevice
+   */
+  select?: Prisma.EmployeeDeviceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeDevice
+   */
+  omit?: Prisma.EmployeeDeviceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeDeviceInclude<ExtArgs> | null
+  where?: Prisma.EmployeeDeviceWhereInput
+  orderBy?: Prisma.EmployeeDeviceOrderByWithRelationInput | Prisma.EmployeeDeviceOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeDeviceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeDeviceScalarFieldEnum | Prisma.EmployeeDeviceScalarFieldEnum[]
+}
+
+/**
+ * User.deviceChallenges
+ */
+export type User$deviceChallengesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeDeviceChallenge
+   */
+  select?: Prisma.EmployeeDeviceChallengeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeDeviceChallenge
+   */
+  omit?: Prisma.EmployeeDeviceChallengeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeDeviceChallengeInclude<ExtArgs> | null
+  where?: Prisma.EmployeeDeviceChallengeWhereInput
+  orderBy?: Prisma.EmployeeDeviceChallengeOrderByWithRelationInput | Prisma.EmployeeDeviceChallengeOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeDeviceChallengeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeDeviceChallengeScalarFieldEnum | Prisma.EmployeeDeviceChallengeScalarFieldEnum[]
+}
+
+/**
+ * User.updatedDayOverrides
+ */
+export type User$updatedDayOverridesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeDayOverride
+   */
+  select?: Prisma.EmployeeDayOverrideSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeDayOverride
+   */
+  omit?: Prisma.EmployeeDayOverrideOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeDayOverrideInclude<ExtArgs> | null
+  where?: Prisma.EmployeeDayOverrideWhereInput
+  orderBy?: Prisma.EmployeeDayOverrideOrderByWithRelationInput | Prisma.EmployeeDayOverrideOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeDayOverrideWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeDayOverrideScalarFieldEnum | Prisma.EmployeeDayOverrideScalarFieldEnum[]
 }
 
 /**

@@ -28,10 +28,12 @@ export type AggregateAttendanceRecord = {
 
 export type AttendanceRecordAvgAggregateOutputType = {
   totalWorkMinutes: number | null
+  assignedShiftCount: number | null
 }
 
 export type AttendanceRecordSumAggregateOutputType = {
   totalWorkMinutes: number | null
+  assignedShiftCount: number | null
 }
 
 export type AttendanceRecordMinAggregateOutputType = {
@@ -40,6 +42,7 @@ export type AttendanceRecordMinAggregateOutputType = {
   workDate: Date | null
   status: $Enums.AttendanceStatus | null
   totalWorkMinutes: number | null
+  assignedShiftCount: number | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -51,6 +54,7 @@ export type AttendanceRecordMaxAggregateOutputType = {
   workDate: Date | null
   status: $Enums.AttendanceStatus | null
   totalWorkMinutes: number | null
+  assignedShiftCount: number | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -62,6 +66,7 @@ export type AttendanceRecordCountAggregateOutputType = {
   workDate: number
   status: number
   totalWorkMinutes: number
+  assignedShiftCount: number
   notes: number
   createdAt: number
   updatedAt: number
@@ -71,10 +76,12 @@ export type AttendanceRecordCountAggregateOutputType = {
 
 export type AttendanceRecordAvgAggregateInputType = {
   totalWorkMinutes?: true
+  assignedShiftCount?: true
 }
 
 export type AttendanceRecordSumAggregateInputType = {
   totalWorkMinutes?: true
+  assignedShiftCount?: true
 }
 
 export type AttendanceRecordMinAggregateInputType = {
@@ -83,6 +90,7 @@ export type AttendanceRecordMinAggregateInputType = {
   workDate?: true
   status?: true
   totalWorkMinutes?: true
+  assignedShiftCount?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
@@ -94,6 +102,7 @@ export type AttendanceRecordMaxAggregateInputType = {
   workDate?: true
   status?: true
   totalWorkMinutes?: true
+  assignedShiftCount?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
@@ -105,6 +114,7 @@ export type AttendanceRecordCountAggregateInputType = {
   workDate?: true
   status?: true
   totalWorkMinutes?: true
+  assignedShiftCount?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
@@ -203,6 +213,7 @@ export type AttendanceRecordGroupByOutputType = {
   workDate: Date
   status: $Enums.AttendanceStatus
   totalWorkMinutes: number
+  assignedShiftCount: number
   notes: string | null
   createdAt: Date
   updatedAt: Date
@@ -237,6 +248,7 @@ export type AttendanceRecordWhereInput = {
   workDate?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
   status?: Prisma.EnumAttendanceStatusFilter<"AttendanceRecord"> | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFilter<"AttendanceRecord"> | number
+  assignedShiftCount?: Prisma.IntFilter<"AttendanceRecord"> | number
   notes?: Prisma.StringNullableFilter<"AttendanceRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
@@ -250,6 +262,7 @@ export type AttendanceRecordOrderByWithRelationInput = {
   workDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalWorkMinutes?: Prisma.SortOrder
+  assignedShiftCount?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -267,6 +280,7 @@ export type AttendanceRecordWhereUniqueInput = Prisma.AtLeast<{
   workDate?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
   status?: Prisma.EnumAttendanceStatusFilter<"AttendanceRecord"> | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFilter<"AttendanceRecord"> | number
+  assignedShiftCount?: Prisma.IntFilter<"AttendanceRecord"> | number
   notes?: Prisma.StringNullableFilter<"AttendanceRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
@@ -280,6 +294,7 @@ export type AttendanceRecordOrderByWithAggregationInput = {
   workDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalWorkMinutes?: Prisma.SortOrder
+  assignedShiftCount?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -299,6 +314,7 @@ export type AttendanceRecordScalarWhereWithAggregatesInput = {
   workDate?: Prisma.DateTimeWithAggregatesFilter<"AttendanceRecord"> | Date | string
   status?: Prisma.EnumAttendanceStatusWithAggregatesFilter<"AttendanceRecord"> | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntWithAggregatesFilter<"AttendanceRecord"> | number
+  assignedShiftCount?: Prisma.IntWithAggregatesFilter<"AttendanceRecord"> | number
   notes?: Prisma.StringNullableWithAggregatesFilter<"AttendanceRecord"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AttendanceRecord"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"AttendanceRecord"> | Date | string
@@ -309,6 +325,7 @@ export type AttendanceRecordCreateInput = {
   workDate: Date | string
   status?: $Enums.AttendanceStatus
   totalWorkMinutes?: number
+  assignedShiftCount?: number
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -322,6 +339,7 @@ export type AttendanceRecordUncheckedCreateInput = {
   workDate: Date | string
   status?: $Enums.AttendanceStatus
   totalWorkMinutes?: number
+  assignedShiftCount?: number
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -333,6 +351,7 @@ export type AttendanceRecordUpdateInput = {
   workDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedShiftCount?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -346,6 +365,7 @@ export type AttendanceRecordUncheckedUpdateInput = {
   workDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedShiftCount?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -358,6 +378,7 @@ export type AttendanceRecordCreateManyInput = {
   workDate: Date | string
   status?: $Enums.AttendanceStatus
   totalWorkMinutes?: number
+  assignedShiftCount?: number
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -368,6 +389,7 @@ export type AttendanceRecordUpdateManyMutationInput = {
   workDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedShiftCount?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -379,6 +401,7 @@ export type AttendanceRecordUncheckedUpdateManyInput = {
   workDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedShiftCount?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -405,6 +428,7 @@ export type AttendanceRecordCountOrderByAggregateInput = {
   workDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalWorkMinutes?: Prisma.SortOrder
+  assignedShiftCount?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -412,6 +436,7 @@ export type AttendanceRecordCountOrderByAggregateInput = {
 
 export type AttendanceRecordAvgOrderByAggregateInput = {
   totalWorkMinutes?: Prisma.SortOrder
+  assignedShiftCount?: Prisma.SortOrder
 }
 
 export type AttendanceRecordMaxOrderByAggregateInput = {
@@ -420,6 +445,7 @@ export type AttendanceRecordMaxOrderByAggregateInput = {
   workDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalWorkMinutes?: Prisma.SortOrder
+  assignedShiftCount?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -431,6 +457,7 @@ export type AttendanceRecordMinOrderByAggregateInput = {
   workDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalWorkMinutes?: Prisma.SortOrder
+  assignedShiftCount?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -438,6 +465,7 @@ export type AttendanceRecordMinOrderByAggregateInput = {
 
 export type AttendanceRecordSumOrderByAggregateInput = {
   totalWorkMinutes?: Prisma.SortOrder
+  assignedShiftCount?: Prisma.SortOrder
 }
 
 export type AttendanceRecordScalarRelationFilter = {
@@ -510,6 +538,7 @@ export type AttendanceRecordCreateWithoutEmployeeProfileInput = {
   workDate: Date | string
   status?: $Enums.AttendanceStatus
   totalWorkMinutes?: number
+  assignedShiftCount?: number
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -521,6 +550,7 @@ export type AttendanceRecordUncheckedCreateWithoutEmployeeProfileInput = {
   workDate: Date | string
   status?: $Enums.AttendanceStatus
   totalWorkMinutes?: number
+  assignedShiftCount?: number
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -562,6 +592,7 @@ export type AttendanceRecordScalarWhereInput = {
   workDate?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
   status?: Prisma.EnumAttendanceStatusFilter<"AttendanceRecord"> | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFilter<"AttendanceRecord"> | number
+  assignedShiftCount?: Prisma.IntFilter<"AttendanceRecord"> | number
   notes?: Prisma.StringNullableFilter<"AttendanceRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
@@ -572,6 +603,7 @@ export type AttendanceRecordCreateWithoutSessionsInput = {
   workDate: Date | string
   status?: $Enums.AttendanceStatus
   totalWorkMinutes?: number
+  assignedShiftCount?: number
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -584,6 +616,7 @@ export type AttendanceRecordUncheckedCreateWithoutSessionsInput = {
   workDate: Date | string
   status?: $Enums.AttendanceStatus
   totalWorkMinutes?: number
+  assignedShiftCount?: number
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -610,6 +643,7 @@ export type AttendanceRecordUpdateWithoutSessionsInput = {
   workDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedShiftCount?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -622,6 +656,7 @@ export type AttendanceRecordUncheckedUpdateWithoutSessionsInput = {
   workDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedShiftCount?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -632,6 +667,7 @@ export type AttendanceRecordCreateManyEmployeeProfileInput = {
   workDate: Date | string
   status?: $Enums.AttendanceStatus
   totalWorkMinutes?: number
+  assignedShiftCount?: number
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -642,6 +678,7 @@ export type AttendanceRecordUpdateWithoutEmployeeProfileInput = {
   workDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedShiftCount?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -653,6 +690,7 @@ export type AttendanceRecordUncheckedUpdateWithoutEmployeeProfileInput = {
   workDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedShiftCount?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -664,6 +702,7 @@ export type AttendanceRecordUncheckedUpdateManyWithoutEmployeeProfileInput = {
   workDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   totalWorkMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedShiftCount?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -706,6 +745,7 @@ export type AttendanceRecordSelect<ExtArgs extends runtime.Types.Extensions.Inte
   workDate?: boolean
   status?: boolean
   totalWorkMinutes?: boolean
+  assignedShiftCount?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -720,6 +760,7 @@ export type AttendanceRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   workDate?: boolean
   status?: boolean
   totalWorkMinutes?: boolean
+  assignedShiftCount?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -732,6 +773,7 @@ export type AttendanceRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   workDate?: boolean
   status?: boolean
   totalWorkMinutes?: boolean
+  assignedShiftCount?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -744,12 +786,13 @@ export type AttendanceRecordSelectScalar = {
   workDate?: boolean
   status?: boolean
   totalWorkMinutes?: boolean
+  assignedShiftCount?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AttendanceRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeProfileId" | "workDate" | "status" | "totalWorkMinutes" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["attendanceRecord"]>
+export type AttendanceRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeProfileId" | "workDate" | "status" | "totalWorkMinutes" | "assignedShiftCount" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["attendanceRecord"]>
 export type AttendanceRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employeeProfile?: boolean | Prisma.EmployeeProfileDefaultArgs<ExtArgs>
   sessions?: boolean | Prisma.AttendanceRecord$sessionsArgs<ExtArgs>
@@ -774,6 +817,7 @@ export type $AttendanceRecordPayload<ExtArgs extends runtime.Types.Extensions.In
     workDate: Date
     status: $Enums.AttendanceStatus
     totalWorkMinutes: number
+    assignedShiftCount: number
     notes: string | null
     createdAt: Date
     updatedAt: Date
@@ -1207,6 +1251,7 @@ export interface AttendanceRecordFieldRefs {
   readonly workDate: Prisma.FieldRef<"AttendanceRecord", 'DateTime'>
   readonly status: Prisma.FieldRef<"AttendanceRecord", 'AttendanceStatus'>
   readonly totalWorkMinutes: Prisma.FieldRef<"AttendanceRecord", 'Int'>
+  readonly assignedShiftCount: Prisma.FieldRef<"AttendanceRecord", 'Int'>
   readonly notes: Prisma.FieldRef<"AttendanceRecord", 'String'>
   readonly createdAt: Prisma.FieldRef<"AttendanceRecord", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"AttendanceRecord", 'DateTime'>
