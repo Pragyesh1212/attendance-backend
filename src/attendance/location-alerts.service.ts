@@ -24,6 +24,8 @@ export class LocationAlertsService {
   private lastReverseGeocodeAt = 0;
   private reverseGeocodeQueue: Promise<unknown> = Promise.resolve();
   private readonly resolvedNames = new Map<string, string | null>();
+  // Avoid repeatedly looking up the same historical alert on every Admin poll.
+  private readonly attemptedAddressBackfills = new Set<string>();
 
   private distanceMeters(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const toRad = (degrees: number) => (degrees * Math.PI) / 180;
@@ -80,6 +82,38 @@ export class LocationAlertsService {
     });
     this.reverseGeocodeQueue = task;
     return task;
+  }
+
+  /**
+   * Enrich a limited number of existing alerts which were saved before a
+   * geocoder was configured. Never delay an Admin page response for geocoding.
+   * After enrichment, the existing 30-second Admin refresh displays the name.
+   */
+  private queueMissingExitNames(alerts: Array<{
+    id: string; exitLatitude: number; exitLongitude: number;
+    exitLocationName: string | null;
+  }>): void {
+    if (!process.env.ATTENDANCE_REVERSE_GEOCODE_URL?.trim()) return;
+
+    const missing = alerts.filter(alert =>
+      !alert.exitLocationName && !this.attemptedAddressBackfills.has(alert.id)
+    ).slice(0, 2);
+
+    for (const alert of missing) {
+      this.attemptedAddressBackfills.add(alert.id);
+      void this.reverseGeocode(alert.exitLatitude, alert.exitLongitude)
+        .then(async name => {
+          if (!name) return;
+          // Don't overwrite an address set by a concurrent request.
+          await this.prisma.attendanceLocationAlert.updateMany({
+            where: { id: alert.id, exitLocationName: null },
+            data: { exitLocationName: name },
+          });
+        })
+        .catch(() => {
+          // Geocoder availability never blocks attendance or the Admin page.
+        });
+    }
   }
 
   private async getActiveEmployeeContext(userId: string, dto: LocationAlertEventDto) {
@@ -248,6 +282,22 @@ export class LocationAlertsService {
       } }),
     ]);
 
+    // WorkLocation.address is the address entered by the Admin; the alert
+    // retains workLocationName as a historical label for API compatibility.
+    const locationIds = [...new Set(data.map(alert => alert.workLocationId))];
+    const locationAddresses = locationIds.length
+      ? await this.prisma.workLocation.findMany({
+          where: { id: { in: locationIds } },
+          select: { id: true, address: true },
+        })
+      : [];
+    const addressByLocationId = new Map(locationAddresses.map(location => [
+      location.id, location.address?.trim() || null,
+    ]));
+
+    // Retry historical null names only after an operator configures a provider.
+    this.queueMissingExitNames(data);
+
     return {
       date,
       summary: { alertsToday, currentlyOutside: outsideNow, returnedToday },
@@ -257,6 +307,7 @@ export class LocationAlertsService {
         employeeCode: alert.attendanceSession.attendanceRecord.employeeProfile.employeeCode,
         workLocationId: alert.workLocationId,
         workLocationName: alert.workLocationName,
+        workLocationAddress: addressByLocationId.get(alert.workLocationId) ?? null,
         workLocationLatitude: alert.workLocationLatitude,
         workLocationLongitude: alert.workLocationLongitude,
         exitLocationName: alert.exitLocationName,
