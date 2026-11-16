@@ -57,7 +57,7 @@ export class LocationAlertsService {
         if (url.protocol !== 'https:') return null;
         url.searchParams.set('lat', String(lat));
         url.searchParams.set('lon', String(lon));
-        url.searchParams.set('format', 'jsonv2');
+        url.searchParams.set('format', 'json');
         url.searchParams.set('zoom', '16');
         url.searchParams.set('addressdetails', '0');
         const response = await fetch(url, {
