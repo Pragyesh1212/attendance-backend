@@ -405,6 +405,7 @@ export type AttendanceSessionWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestListRelationFilter
+  locationAlerts?: Prisma.AttendanceLocationAlertListRelationFilter
   punchInDevice?: Prisma.XOR<Prisma.EmployeeDeviceNullableScalarRelationFilter, Prisma.EmployeeDeviceWhereInput> | null
   punchOutDevice?: Prisma.XOR<Prisma.EmployeeDeviceNullableScalarRelationFilter, Prisma.EmployeeDeviceWhereInput> | null
   attendanceRecord?: Prisma.XOR<Prisma.AttendanceRecordScalarRelationFilter, Prisma.AttendanceRecordWhereInput>
@@ -439,6 +440,7 @@ export type AttendanceSessionOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   correctionRequests?: Prisma.AttendanceCorrectionRequestOrderByRelationAggregateInput
+  locationAlerts?: Prisma.AttendanceLocationAlertOrderByRelationAggregateInput
   punchInDevice?: Prisma.EmployeeDeviceOrderByWithRelationInput
   punchOutDevice?: Prisma.EmployeeDeviceOrderByWithRelationInput
   attendanceRecord?: Prisma.AttendanceRecordOrderByWithRelationInput
@@ -477,6 +479,7 @@ export type AttendanceSessionWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestListRelationFilter
+  locationAlerts?: Prisma.AttendanceLocationAlertListRelationFilter
   punchInDevice?: Prisma.XOR<Prisma.EmployeeDeviceNullableScalarRelationFilter, Prisma.EmployeeDeviceWhereInput> | null
   punchOutDevice?: Prisma.XOR<Prisma.EmployeeDeviceNullableScalarRelationFilter, Prisma.EmployeeDeviceWhereInput> | null
   attendanceRecord?: Prisma.XOR<Prisma.AttendanceRecordScalarRelationFilter, Prisma.AttendanceRecordWhereInput>
@@ -570,6 +573,7 @@ export type AttendanceSessionCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertCreateNestedManyWithoutAttendanceSessionInput
   punchInDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchInSessionsInput
   punchOutDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchOutSessionsInput
   attendanceRecord: Prisma.AttendanceRecordCreateNestedOneWithoutSessionsInput
@@ -604,6 +608,7 @@ export type AttendanceSessionUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedCreateNestedManyWithoutAttendanceSessionInput
 }
 
 export type AttendanceSessionUpdateInput = {
@@ -628,6 +633,7 @@ export type AttendanceSessionUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUpdateManyWithoutAttendanceSessionNestedInput
   punchInDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchInSessionsNestedInput
   punchOutDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchOutSessionsNestedInput
   attendanceRecord?: Prisma.AttendanceRecordUpdateOneRequiredWithoutSessionsNestedInput
@@ -662,6 +668,7 @@ export type AttendanceSessionUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedUpdateManyWithoutAttendanceSessionNestedInput
 }
 
 export type AttendanceSessionCreateManyInput = {
@@ -1105,6 +1112,20 @@ export type AttendanceSessionUncheckedUpdateManyWithoutPunchOutDeviceNestedInput
   deleteMany?: Prisma.AttendanceSessionScalarWhereInput | Prisma.AttendanceSessionScalarWhereInput[]
 }
 
+export type AttendanceSessionCreateNestedOneWithoutLocationAlertsInput = {
+  create?: Prisma.XOR<Prisma.AttendanceSessionCreateWithoutLocationAlertsInput, Prisma.AttendanceSessionUncheckedCreateWithoutLocationAlertsInput>
+  connectOrCreate?: Prisma.AttendanceSessionCreateOrConnectWithoutLocationAlertsInput
+  connect?: Prisma.AttendanceSessionWhereUniqueInput
+}
+
+export type AttendanceSessionUpdateOneRequiredWithoutLocationAlertsNestedInput = {
+  create?: Prisma.XOR<Prisma.AttendanceSessionCreateWithoutLocationAlertsInput, Prisma.AttendanceSessionUncheckedCreateWithoutLocationAlertsInput>
+  connectOrCreate?: Prisma.AttendanceSessionCreateOrConnectWithoutLocationAlertsInput
+  upsert?: Prisma.AttendanceSessionUpsertWithoutLocationAlertsInput
+  connect?: Prisma.AttendanceSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AttendanceSessionUpdateToOneWithWhereWithoutLocationAlertsInput, Prisma.AttendanceSessionUpdateWithoutLocationAlertsInput>, Prisma.AttendanceSessionUncheckedUpdateWithoutLocationAlertsInput>
+}
+
 export type AttendanceSessionCreateWithoutReviewedByInput = {
   id?: string
   punchInAt?: Date | string
@@ -1127,6 +1148,7 @@ export type AttendanceSessionCreateWithoutReviewedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertCreateNestedManyWithoutAttendanceSessionInput
   punchInDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchInSessionsInput
   punchOutDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchOutSessionsInput
   attendanceRecord: Prisma.AttendanceRecordCreateNestedOneWithoutSessionsInput
@@ -1159,6 +1181,7 @@ export type AttendanceSessionUncheckedCreateWithoutReviewedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedCreateNestedManyWithoutAttendanceSessionInput
 }
 
 export type AttendanceSessionCreateOrConnectWithoutReviewedByInput = {
@@ -1240,6 +1263,7 @@ export type AttendanceSessionCreateWithoutShiftInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertCreateNestedManyWithoutAttendanceSessionInput
   punchInDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchInSessionsInput
   punchOutDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchOutSessionsInput
   attendanceRecord: Prisma.AttendanceRecordCreateNestedOneWithoutSessionsInput
@@ -1272,6 +1296,7 @@ export type AttendanceSessionUncheckedCreateWithoutShiftInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedCreateNestedManyWithoutAttendanceSessionInput
 }
 
 export type AttendanceSessionCreateOrConnectWithoutShiftInput = {
@@ -1322,6 +1347,7 @@ export type AttendanceSessionCreateWithoutAttendanceRecordInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertCreateNestedManyWithoutAttendanceSessionInput
   punchInDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchInSessionsInput
   punchOutDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchOutSessionsInput
   shift?: Prisma.ShiftCreateNestedOneWithoutAttendanceSessionsInput
@@ -1354,6 +1380,7 @@ export type AttendanceSessionUncheckedCreateWithoutAttendanceRecordInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedCreateNestedManyWithoutAttendanceSessionInput
 }
 
 export type AttendanceSessionCreateOrConnectWithoutAttendanceRecordInput = {
@@ -1403,6 +1430,7 @@ export type AttendanceSessionCreateWithoutCorrectionRequestsInput = {
   rejectionReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  locationAlerts?: Prisma.AttendanceLocationAlertCreateNestedManyWithoutAttendanceSessionInput
   punchInDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchInSessionsInput
   punchOutDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchOutSessionsInput
   attendanceRecord: Prisma.AttendanceRecordCreateNestedOneWithoutSessionsInput
@@ -1436,6 +1464,7 @@ export type AttendanceSessionUncheckedCreateWithoutCorrectionRequestsInput = {
   rejectionReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedCreateNestedManyWithoutAttendanceSessionInput
 }
 
 export type AttendanceSessionCreateOrConnectWithoutCorrectionRequestsInput = {
@@ -1475,6 +1504,7 @@ export type AttendanceSessionUpdateWithoutCorrectionRequestsInput = {
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locationAlerts?: Prisma.AttendanceLocationAlertUpdateManyWithoutAttendanceSessionNestedInput
   punchInDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchInSessionsNestedInput
   punchOutDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchOutSessionsNestedInput
   attendanceRecord?: Prisma.AttendanceRecordUpdateOneRequiredWithoutSessionsNestedInput
@@ -1508,6 +1538,7 @@ export type AttendanceSessionUncheckedUpdateWithoutCorrectionRequestsInput = {
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedUpdateManyWithoutAttendanceSessionNestedInput
 }
 
 export type AttendanceSessionCreateWithoutPunchInDeviceInput = {
@@ -1532,6 +1563,7 @@ export type AttendanceSessionCreateWithoutPunchInDeviceInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertCreateNestedManyWithoutAttendanceSessionInput
   punchOutDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchOutSessionsInput
   attendanceRecord: Prisma.AttendanceRecordCreateNestedOneWithoutSessionsInput
   shift?: Prisma.ShiftCreateNestedOneWithoutAttendanceSessionsInput
@@ -1564,6 +1596,7 @@ export type AttendanceSessionUncheckedCreateWithoutPunchInDeviceInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedCreateNestedManyWithoutAttendanceSessionInput
 }
 
 export type AttendanceSessionCreateOrConnectWithoutPunchInDeviceInput = {
@@ -1598,6 +1631,7 @@ export type AttendanceSessionCreateWithoutPunchOutDeviceInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertCreateNestedManyWithoutAttendanceSessionInput
   punchInDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchInSessionsInput
   attendanceRecord: Prisma.AttendanceRecordCreateNestedOneWithoutSessionsInput
   shift?: Prisma.ShiftCreateNestedOneWithoutAttendanceSessionsInput
@@ -1630,6 +1664,7 @@ export type AttendanceSessionUncheckedCreateWithoutPunchOutDeviceInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutAttendanceSessionInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedCreateNestedManyWithoutAttendanceSessionInput
 }
 
 export type AttendanceSessionCreateOrConnectWithoutPunchOutDeviceInput = {
@@ -1672,6 +1707,138 @@ export type AttendanceSessionUpdateWithWhereUniqueWithoutPunchOutDeviceInput = {
 export type AttendanceSessionUpdateManyWithWhereWithoutPunchOutDeviceInput = {
   where: Prisma.AttendanceSessionScalarWhereInput
   data: Prisma.XOR<Prisma.AttendanceSessionUpdateManyMutationInput, Prisma.AttendanceSessionUncheckedUpdateManyWithoutPunchOutDeviceInput>
+}
+
+export type AttendanceSessionCreateWithoutLocationAlertsInput = {
+  id?: string
+  punchInAt?: Date | string
+  punchOutAt?: Date | string | null
+  punchInLatitude?: number | null
+  punchInLongitude?: number | null
+  punchInAccuracy?: number | null
+  punchOutLatitude?: number | null
+  punchOutLongitude?: number | null
+  punchOutAccuracy?: number | null
+  shiftOrder?: number | null
+  shiftName?: string | null
+  shiftStartTime?: string | null
+  shiftEndTime?: string | null
+  approvalStatus?: $Enums.AttendanceApprovalStatus
+  lateMinutes?: number
+  lateReason?: string | null
+  reviewedAt?: Date | string | null
+  rejectionReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  correctionRequests?: Prisma.AttendanceCorrectionRequestCreateNestedManyWithoutAttendanceSessionInput
+  punchInDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchInSessionsInput
+  punchOutDevice?: Prisma.EmployeeDeviceCreateNestedOneWithoutPunchOutSessionsInput
+  attendanceRecord: Prisma.AttendanceRecordCreateNestedOneWithoutSessionsInput
+  shift?: Prisma.ShiftCreateNestedOneWithoutAttendanceSessionsInput
+  reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedAttendanceSessionsInput
+}
+
+export type AttendanceSessionUncheckedCreateWithoutLocationAlertsInput = {
+  id?: string
+  attendanceRecordId: string
+  punchInAt?: Date | string
+  punchOutAt?: Date | string | null
+  punchInLatitude?: number | null
+  punchInLongitude?: number | null
+  punchInAccuracy?: number | null
+  punchOutLatitude?: number | null
+  punchOutLongitude?: number | null
+  punchOutAccuracy?: number | null
+  shiftOrder?: number | null
+  shiftId?: string | null
+  shiftName?: string | null
+  shiftStartTime?: string | null
+  shiftEndTime?: string | null
+  approvalStatus?: $Enums.AttendanceApprovalStatus
+  punchInDeviceId?: string | null
+  punchOutDeviceId?: string | null
+  lateMinutes?: number
+  lateReason?: string | null
+  reviewedByUserId?: string | null
+  reviewedAt?: Date | string | null
+  rejectionReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedCreateNestedManyWithoutAttendanceSessionInput
+}
+
+export type AttendanceSessionCreateOrConnectWithoutLocationAlertsInput = {
+  where: Prisma.AttendanceSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.AttendanceSessionCreateWithoutLocationAlertsInput, Prisma.AttendanceSessionUncheckedCreateWithoutLocationAlertsInput>
+}
+
+export type AttendanceSessionUpsertWithoutLocationAlertsInput = {
+  update: Prisma.XOR<Prisma.AttendanceSessionUpdateWithoutLocationAlertsInput, Prisma.AttendanceSessionUncheckedUpdateWithoutLocationAlertsInput>
+  create: Prisma.XOR<Prisma.AttendanceSessionCreateWithoutLocationAlertsInput, Prisma.AttendanceSessionUncheckedCreateWithoutLocationAlertsInput>
+  where?: Prisma.AttendanceSessionWhereInput
+}
+
+export type AttendanceSessionUpdateToOneWithWhereWithoutLocationAlertsInput = {
+  where?: Prisma.AttendanceSessionWhereInput
+  data: Prisma.XOR<Prisma.AttendanceSessionUpdateWithoutLocationAlertsInput, Prisma.AttendanceSessionUncheckedUpdateWithoutLocationAlertsInput>
+}
+
+export type AttendanceSessionUpdateWithoutLocationAlertsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  punchInAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  punchOutAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  punchInLatitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  punchInLongitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  punchInAccuracy?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  punchOutLatitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  punchOutLongitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  punchOutAccuracy?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shiftOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shiftName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumAttendanceApprovalStatusFieldUpdateOperationsInput | $Enums.AttendanceApprovalStatus
+  lateMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  lateReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  correctionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutAttendanceSessionNestedInput
+  punchInDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchInSessionsNestedInput
+  punchOutDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchOutSessionsNestedInput
+  attendanceRecord?: Prisma.AttendanceRecordUpdateOneRequiredWithoutSessionsNestedInput
+  shift?: Prisma.ShiftUpdateOneWithoutAttendanceSessionsNestedInput
+  reviewedBy?: Prisma.UserUpdateOneWithoutReviewedAttendanceSessionsNestedInput
+}
+
+export type AttendanceSessionUncheckedUpdateWithoutLocationAlertsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  attendanceRecordId?: Prisma.StringFieldUpdateOperationsInput | string
+  punchInAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  punchOutAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  punchInLatitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  punchInLongitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  punchInAccuracy?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  punchOutLatitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  punchOutLongitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  punchOutAccuracy?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shiftOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumAttendanceApprovalStatusFieldUpdateOperationsInput | $Enums.AttendanceApprovalStatus
+  punchInDeviceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  punchOutDeviceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lateMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  lateReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutAttendanceSessionNestedInput
 }
 
 export type AttendanceSessionCreateManyReviewedByInput = {
@@ -1723,6 +1890,7 @@ export type AttendanceSessionUpdateWithoutReviewedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUpdateManyWithoutAttendanceSessionNestedInput
   punchInDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchInSessionsNestedInput
   punchOutDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchOutSessionsNestedInput
   attendanceRecord?: Prisma.AttendanceRecordUpdateOneRequiredWithoutSessionsNestedInput
@@ -1755,6 +1923,7 @@ export type AttendanceSessionUncheckedUpdateWithoutReviewedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedUpdateManyWithoutAttendanceSessionNestedInput
 }
 
 export type AttendanceSessionUncheckedUpdateManyWithoutReviewedByInput = {
@@ -1833,6 +2002,7 @@ export type AttendanceSessionUpdateWithoutShiftInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUpdateManyWithoutAttendanceSessionNestedInput
   punchInDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchInSessionsNestedInput
   punchOutDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchOutSessionsNestedInput
   attendanceRecord?: Prisma.AttendanceRecordUpdateOneRequiredWithoutSessionsNestedInput
@@ -1865,6 +2035,7 @@ export type AttendanceSessionUncheckedUpdateWithoutShiftInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedUpdateManyWithoutAttendanceSessionNestedInput
 }
 
 export type AttendanceSessionUncheckedUpdateManyWithoutShiftInput = {
@@ -1943,6 +2114,7 @@ export type AttendanceSessionUpdateWithoutAttendanceRecordInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUpdateManyWithoutAttendanceSessionNestedInput
   punchInDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchInSessionsNestedInput
   punchOutDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchOutSessionsNestedInput
   shift?: Prisma.ShiftUpdateOneWithoutAttendanceSessionsNestedInput
@@ -1975,6 +2147,7 @@ export type AttendanceSessionUncheckedUpdateWithoutAttendanceRecordInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedUpdateManyWithoutAttendanceSessionNestedInput
 }
 
 export type AttendanceSessionUncheckedUpdateManyWithoutAttendanceRecordInput = {
@@ -2080,6 +2253,7 @@ export type AttendanceSessionUpdateWithoutPunchInDeviceInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUpdateManyWithoutAttendanceSessionNestedInput
   punchOutDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchOutSessionsNestedInput
   attendanceRecord?: Prisma.AttendanceRecordUpdateOneRequiredWithoutSessionsNestedInput
   shift?: Prisma.ShiftUpdateOneWithoutAttendanceSessionsNestedInput
@@ -2112,6 +2286,7 @@ export type AttendanceSessionUncheckedUpdateWithoutPunchInDeviceInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedUpdateManyWithoutAttendanceSessionNestedInput
 }
 
 export type AttendanceSessionUncheckedUpdateManyWithoutPunchInDeviceInput = {
@@ -2163,6 +2338,7 @@ export type AttendanceSessionUpdateWithoutPunchOutDeviceInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUpdateManyWithoutAttendanceSessionNestedInput
   punchInDevice?: Prisma.EmployeeDeviceUpdateOneWithoutPunchInSessionsNestedInput
   attendanceRecord?: Prisma.AttendanceRecordUpdateOneRequiredWithoutSessionsNestedInput
   shift?: Prisma.ShiftUpdateOneWithoutAttendanceSessionsNestedInput
@@ -2195,6 +2371,7 @@ export type AttendanceSessionUncheckedUpdateWithoutPunchOutDeviceInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   correctionRequests?: Prisma.AttendanceCorrectionRequestUncheckedUpdateManyWithoutAttendanceSessionNestedInput
+  locationAlerts?: Prisma.AttendanceLocationAlertUncheckedUpdateManyWithoutAttendanceSessionNestedInput
 }
 
 export type AttendanceSessionUncheckedUpdateManyWithoutPunchOutDeviceInput = {
@@ -2231,10 +2408,12 @@ export type AttendanceSessionUncheckedUpdateManyWithoutPunchOutDeviceInput = {
 
 export type AttendanceSessionCountOutputType = {
   correctionRequests: number
+  locationAlerts: number
 }
 
 export type AttendanceSessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   correctionRequests?: boolean | AttendanceSessionCountOutputTypeCountCorrectionRequestsArgs
+  locationAlerts?: boolean | AttendanceSessionCountOutputTypeCountLocationAlertsArgs
 }
 
 /**
@@ -2252,6 +2431,13 @@ export type AttendanceSessionCountOutputTypeDefaultArgs<ExtArgs extends runtime.
  */
 export type AttendanceSessionCountOutputTypeCountCorrectionRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AttendanceCorrectionRequestWhereInput
+}
+
+/**
+ * AttendanceSessionCountOutputType without action
+ */
+export type AttendanceSessionCountOutputTypeCountLocationAlertsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttendanceLocationAlertWhereInput
 }
 
 
@@ -2282,6 +2468,7 @@ export type AttendanceSessionSelect<ExtArgs extends runtime.Types.Extensions.Int
   createdAt?: boolean
   updatedAt?: boolean
   correctionRequests?: boolean | Prisma.AttendanceSession$correctionRequestsArgs<ExtArgs>
+  locationAlerts?: boolean | Prisma.AttendanceSession$locationAlertsArgs<ExtArgs>
   punchInDevice?: boolean | Prisma.AttendanceSession$punchInDeviceArgs<ExtArgs>
   punchOutDevice?: boolean | Prisma.AttendanceSession$punchOutDeviceArgs<ExtArgs>
   attendanceRecord?: boolean | Prisma.AttendanceRecordDefaultArgs<ExtArgs>
@@ -2387,6 +2574,7 @@ export type AttendanceSessionSelectScalar = {
 export type AttendanceSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "attendanceRecordId" | "punchInAt" | "punchOutAt" | "punchInLatitude" | "punchInLongitude" | "punchInAccuracy" | "punchOutLatitude" | "punchOutLongitude" | "punchOutAccuracy" | "shiftOrder" | "shiftId" | "shiftName" | "shiftStartTime" | "shiftEndTime" | "approvalStatus" | "punchInDeviceId" | "punchOutDeviceId" | "lateMinutes" | "lateReason" | "reviewedByUserId" | "reviewedAt" | "rejectionReason" | "createdAt" | "updatedAt", ExtArgs["result"]["attendanceSession"]>
 export type AttendanceSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   correctionRequests?: boolean | Prisma.AttendanceSession$correctionRequestsArgs<ExtArgs>
+  locationAlerts?: boolean | Prisma.AttendanceSession$locationAlertsArgs<ExtArgs>
   punchInDevice?: boolean | Prisma.AttendanceSession$punchInDeviceArgs<ExtArgs>
   punchOutDevice?: boolean | Prisma.AttendanceSession$punchOutDeviceArgs<ExtArgs>
   attendanceRecord?: boolean | Prisma.AttendanceRecordDefaultArgs<ExtArgs>
@@ -2413,6 +2601,7 @@ export type $AttendanceSessionPayload<ExtArgs extends runtime.Types.Extensions.I
   name: "AttendanceSession"
   objects: {
     correctionRequests: Prisma.$AttendanceCorrectionRequestPayload<ExtArgs>[]
+    locationAlerts: Prisma.$AttendanceLocationAlertPayload<ExtArgs>[]
     punchInDevice: Prisma.$EmployeeDevicePayload<ExtArgs> | null
     punchOutDevice: Prisma.$EmployeeDevicePayload<ExtArgs> | null
     attendanceRecord: Prisma.$AttendanceRecordPayload<ExtArgs>
@@ -2840,6 +3029,7 @@ readonly fields: AttendanceSessionFieldRefs;
 export interface Prisma__AttendanceSessionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   correctionRequests<T extends Prisma.AttendanceSession$correctionRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttendanceSession$correctionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceCorrectionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  locationAlerts<T extends Prisma.AttendanceSession$locationAlertsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttendanceSession$locationAlertsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceLocationAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   punchInDevice<T extends Prisma.AttendanceSession$punchInDeviceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttendanceSession$punchInDeviceArgs<ExtArgs>>): Prisma.Prisma__EmployeeDeviceClient<runtime.Types.Result.GetResult<Prisma.$EmployeeDevicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   punchOutDevice<T extends Prisma.AttendanceSession$punchOutDeviceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttendanceSession$punchOutDeviceArgs<ExtArgs>>): Prisma.Prisma__EmployeeDeviceClient<runtime.Types.Result.GetResult<Prisma.$EmployeeDevicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   attendanceRecord<T extends Prisma.AttendanceRecordDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttendanceRecordDefaultArgs<ExtArgs>>): Prisma.Prisma__AttendanceRecordClient<runtime.Types.Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -3321,6 +3511,30 @@ export type AttendanceSession$correctionRequestsArgs<ExtArgs extends runtime.Typ
   take?: number
   skip?: number
   distinct?: Prisma.AttendanceCorrectionRequestScalarFieldEnum | Prisma.AttendanceCorrectionRequestScalarFieldEnum[]
+}
+
+/**
+ * AttendanceSession.locationAlerts
+ */
+export type AttendanceSession$locationAlertsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttendanceLocationAlert
+   */
+  select?: Prisma.AttendanceLocationAlertSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AttendanceLocationAlert
+   */
+  omit?: Prisma.AttendanceLocationAlertOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttendanceLocationAlertInclude<ExtArgs> | null
+  where?: Prisma.AttendanceLocationAlertWhereInput
+  orderBy?: Prisma.AttendanceLocationAlertOrderByWithRelationInput | Prisma.AttendanceLocationAlertOrderByWithRelationInput[]
+  cursor?: Prisma.AttendanceLocationAlertWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttendanceLocationAlertScalarFieldEnum | Prisma.AttendanceLocationAlertScalarFieldEnum[]
 }
 
 /**

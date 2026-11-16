@@ -245,6 +245,7 @@ model AttendanceSession {
   approvalStatus AttendanceApprovalStatus @default(NOT_REQUIRED)
 
   correctionRequests AttendanceCorrectionRequest[]
+  locationAlerts AttendanceLocationAlert[]
   punchInDeviceId String? @db.Uuid
   punchOutDeviceId String? @db.Uuid
   punchInDevice EmployeeDevice? @relation("PunchInDevice", fields: [punchInDeviceId], references: [id], onDelete: SetNull)
@@ -525,4 +526,32 @@ model EmployeeDeviceChallenge {
 
   @@index([userId, expiresAt])
   @@map("employee_device_challenges")
+}
+
+// One record per confirmed exit / re-entry episode during an approved punch-in.
+// Coordinates are employee-browser reported, NOT tamper-proof physical evidence.
+model AttendanceLocationAlert {
+  id String @id @default(uuid()) @map("attendanceLocationAlertId") @db.Uuid
+  attendanceSessionId String @db.Uuid
+  organizationId String @db.Uuid
+  workLocationId String @db.Uuid
+  workLocationName String @db.VarChar(150)
+  workLocationLatitude Float
+  workLocationLongitude Float
+  radiusMeters Int
+  exitLatitude Float
+  exitLongitude Float
+  exitAccuracy Float
+  exitLocationName String? @db.VarChar(300)
+  leftAt DateTime @default(now())
+  returnedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attendanceSession AttendanceSession @relation(fields: [attendanceSessionId], references: [id], onDelete: Cascade)
+
+  @@index([attendanceSessionId, returnedAt])
+  @@index([organizationId, leftAt])
+  @@index([workLocationId, leftAt])
+  @@map("attendance_location_alerts")
 }

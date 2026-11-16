@@ -107,3 +107,8 @@ export type EmployeeDevice = Prisma.EmployeeDeviceModel
  * 
  */
 export type EmployeeDeviceChallenge = Prisma.EmployeeDeviceChallengeModel
+/**
+ * Model AttendanceLocationAlert
+ * 
+ */
+export type AttendanceLocationAlert = Prisma.AttendanceLocationAlertModel

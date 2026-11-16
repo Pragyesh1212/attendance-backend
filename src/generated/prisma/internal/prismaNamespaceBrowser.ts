@@ -68,7 +68,8 @@ export const ModelName = {
   EmployeeAvatar: 'EmployeeAvatar',
   EmployeeDayOverride: 'EmployeeDayOverride',
   EmployeeDevice: 'EmployeeDevice',
-  EmployeeDeviceChallenge: 'EmployeeDeviceChallenge'
+  EmployeeDeviceChallenge: 'EmployeeDeviceChallenge',
+  AttendanceLocationAlert: 'AttendanceLocationAlert'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -379,6 +380,28 @@ export const EmployeeDeviceChallengeScalarFieldEnum = {
 } as const
 
 export type EmployeeDeviceChallengeScalarFieldEnum = (typeof EmployeeDeviceChallengeScalarFieldEnum)[keyof typeof EmployeeDeviceChallengeScalarFieldEnum]
+
+
+export const AttendanceLocationAlertScalarFieldEnum = {
+  id: 'id',
+  attendanceSessionId: 'attendanceSessionId',
+  organizationId: 'organizationId',
+  workLocationId: 'workLocationId',
+  workLocationName: 'workLocationName',
+  workLocationLatitude: 'workLocationLatitude',
+  workLocationLongitude: 'workLocationLongitude',
+  radiusMeters: 'radiusMeters',
+  exitLatitude: 'exitLatitude',
+  exitLongitude: 'exitLongitude',
+  exitAccuracy: 'exitAccuracy',
+  exitLocationName: 'exitLocationName',
+  leftAt: 'leftAt',
+  returnedAt: 'returnedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AttendanceLocationAlertScalarFieldEnum = (typeof AttendanceLocationAlertScalarFieldEnum)[keyof typeof AttendanceLocationAlertScalarFieldEnum]
 
 
 export const SortOrder = {

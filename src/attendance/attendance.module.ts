@@ -9,10 +9,13 @@ import { AuthModule } from '../auth/auth.module';
 import { WorkLocationsModule } from '../work-locations/work-locations.module';
 import { AuditLogsModule } from '../audit-logs/audit-logs.module';
 import { DevicesModule } from '../devices/devices.module';
+import { LocationAlertsController } from './location-alerts.controller';
+import { LocationAlertsService } from './location-alerts.service';
 
 @Module({
   imports: [AuthModule, WorkLocationsModule, AuditLogsModule, DevicesModule],
-  controllers: [AttendanceController, EmployeeMonthlyController],
-  providers: [AttendanceService, EmployeeMonthlyService, EmployeeMonthlyExportService],
+  // Register the specific /attendance/location-alerts route before /attendance/:id.
+  controllers: [LocationAlertsController, AttendanceController, EmployeeMonthlyController],
+  providers: [AttendanceService, EmployeeMonthlyService, EmployeeMonthlyExportService, LocationAlertsService],
 })
 export class AttendanceModule {}

@@ -414,7 +414,8 @@ export const ModelName = {
   EmployeeAvatar: 'EmployeeAvatar',
   EmployeeDayOverride: 'EmployeeDayOverride',
   EmployeeDevice: 'EmployeeDevice',
-  EmployeeDeviceChallenge: 'EmployeeDeviceChallenge'
+  EmployeeDeviceChallenge: 'EmployeeDeviceChallenge',
+  AttendanceLocationAlert: 'AttendanceLocationAlert'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -430,7 +431,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "employeeProfile" | "adminProfile" | "department" | "shift" | "attendanceRecord" | "attendanceSession" | "workLocation" | "locationAssignment" | "attendanceCorrectionRequest" | "notification" | "auditLog" | "organization" | "employeeShiftAssignment" | "employeeAvatar" | "employeeDayOverride" | "employeeDevice" | "employeeDeviceChallenge"
+    modelProps: "user" | "employeeProfile" | "adminProfile" | "department" | "shift" | "attendanceRecord" | "attendanceSession" | "workLocation" | "locationAssignment" | "attendanceCorrectionRequest" | "notification" | "auditLog" | "organization" | "employeeShiftAssignment" | "employeeAvatar" | "employeeDayOverride" | "employeeDevice" | "employeeDeviceChallenge" | "attendanceLocationAlert"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1766,6 +1767,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AttendanceLocationAlert: {
+      payload: Prisma.$AttendanceLocationAlertPayload<ExtArgs>
+      fields: Prisma.AttendanceLocationAlertFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AttendanceLocationAlertFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttendanceLocationAlertPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AttendanceLocationAlertFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttendanceLocationAlertPayload>
+        }
+        findFirst: {
+          args: Prisma.AttendanceLocationAlertFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttendanceLocationAlertPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AttendanceLocationAlertFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttendanceLocationAlertPayload>
+        }
+        findMany: {
+          args: Prisma.AttendanceLocationAlertFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttendanceLocationAlertPayload>[]
+        }
+        create: {
+          args: Prisma.AttendanceLocationAlertCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttendanceLocationAlertPayload>
+        }
+        createMany: {
+          args: Prisma.AttendanceLocationAlertCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AttendanceLocationAlertCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttendanceLocationAlertPayload>[]
+        }
+        delete: {
+          args: Prisma.AttendanceLocationAlertDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttendanceLocationAlertPayload>
+        }
+        update: {
+          args: Prisma.AttendanceLocationAlertUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttendanceLocationAlertPayload>
+        }
+        deleteMany: {
+          args: Prisma.AttendanceLocationAlertDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AttendanceLocationAlertUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AttendanceLocationAlertUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttendanceLocationAlertPayload>[]
+        }
+        upsert: {
+          args: Prisma.AttendanceLocationAlertUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttendanceLocationAlertPayload>
+        }
+        aggregate: {
+          args: Prisma.AttendanceLocationAlertAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAttendanceLocationAlert>
+        }
+        groupBy: {
+          args: Prisma.AttendanceLocationAlertGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AttendanceLocationAlertGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AttendanceLocationAlertCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AttendanceLocationAlertCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2097,6 +2172,28 @@ export const EmployeeDeviceChallengeScalarFieldEnum = {
 } as const
 
 export type EmployeeDeviceChallengeScalarFieldEnum = (typeof EmployeeDeviceChallengeScalarFieldEnum)[keyof typeof EmployeeDeviceChallengeScalarFieldEnum]
+
+
+export const AttendanceLocationAlertScalarFieldEnum = {
+  id: 'id',
+  attendanceSessionId: 'attendanceSessionId',
+  organizationId: 'organizationId',
+  workLocationId: 'workLocationId',
+  workLocationName: 'workLocationName',
+  workLocationLatitude: 'workLocationLatitude',
+  workLocationLongitude: 'workLocationLongitude',
+  radiusMeters: 'radiusMeters',
+  exitLatitude: 'exitLatitude',
+  exitLongitude: 'exitLongitude',
+  exitAccuracy: 'exitAccuracy',
+  exitLocationName: 'exitLocationName',
+  leftAt: 'leftAt',
+  returnedAt: 'returnedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AttendanceLocationAlertScalarFieldEnum = (typeof AttendanceLocationAlertScalarFieldEnum)[keyof typeof AttendanceLocationAlertScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2573,6 +2670,7 @@ export type GlobalOmitConfig = {
   employeeDayOverride?: Prisma.EmployeeDayOverrideOmit
   employeeDevice?: Prisma.EmployeeDeviceOmit
   employeeDeviceChallenge?: Prisma.EmployeeDeviceChallengeOmit
+  attendanceLocationAlert?: Prisma.AttendanceLocationAlertOmit
 }
 
 /* Types for Logging */
