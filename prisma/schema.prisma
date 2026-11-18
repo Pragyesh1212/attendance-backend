@@ -92,7 +92,7 @@ model User {
   organizationId String?       @db.Uuid
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Restrict)
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   @@index([organizationId])
@@ -109,7 +109,7 @@ model EmployeeProfile {
   lastName     String    @db.VarChar(100)
   phone        String?   @unique @db.VarChar(20)
   designation  String?   @db.VarChar(100)
-  joiningDate  DateTime?
+  joiningDate  DateTime? @db.Date
   avatarUrl    String?
 
   departmentId   String? @db.Uuid
@@ -130,7 +130,7 @@ model EmployeeProfile {
   shiftAssignments EmployeeShiftAssignment[]
   avatar EmployeeAvatar?
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   @@index([departmentId])
@@ -150,7 +150,7 @@ model AdminProfile {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   @@map("admin_profiles")
@@ -165,7 +165,7 @@ model Department {
 
   employees EmployeeProfile[]
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   @@unique([organizationId, name])
@@ -191,7 +191,7 @@ model Shift {
   employeeShiftAssignments EmployeeShiftAssignment[]
   attendanceSessions AttendanceSession[]
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   @@unique([organizationId, name])
@@ -211,7 +211,7 @@ model AttendanceRecord {
   employeeProfile EmployeeProfile     @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
   sessions        AttendanceSession[]
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   @@unique([employeeProfileId, workDate])
@@ -224,7 +224,7 @@ model AttendanceSession {
   id                 String @id @default(uuid()) @map("attendanceSessionId") @db.Uuid
   attendanceRecordId String @db.Uuid
 
-  punchInAt  DateTime  @default(now())
+  punchInAt  DateTime  @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   punchOutAt DateTime?
 
   punchInLatitude  Float?
@@ -262,7 +262,7 @@ model AttendanceSession {
   shift Shift? @relation(fields: [shiftId], references: [id], onDelete: SetNull)
   reviewedBy       User?            @relation("AttendanceSessionReviewer", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   @@index([attendanceRecordId])
@@ -291,7 +291,7 @@ model WorkLocation {
   permanentEmployees   EmployeeProfile[]    @relation("PermanentEmployeeLocation")
   temporaryAssignments LocationAssignment[]
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   @@index([status])
@@ -313,7 +313,7 @@ model LocationAssignment {
   workLocation    WorkLocation    @relation(fields: [workLocationId], references: [id], onDelete: Restrict)
   createdBy       User            @relation("LocationAssignmentCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
 
   @@index([employeeProfileId, startAt, endAt])
   @@index([workLocationId])
@@ -348,7 +348,7 @@ model AttendanceCorrectionRequest {
   requestedBy User  @relation("CorrectionRequester", fields: [requestedByUserId], references: [id])
   reviewedBy  User? @relation("CorrectionReviewer", fields: [reviewedByUserId], references: [id])
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   @@index([employeeProfileId])
@@ -368,7 +368,7 @@ model Notification {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
 
   @@index([userId, isRead, createdAt])
   @@map("notifications")
@@ -388,7 +388,7 @@ model AuditLog {
   userAgent String? @db.VarChar(500)
 
   actor     User?    @relation("AuditLogActor", fields: [actorUserId], references: [id], onDelete: SetNull)
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
 
   @@index([actorUserId])
   @@index([action])
@@ -412,7 +412,7 @@ model Organization {
   shifts Shift[]
   workLocations WorkLocation[]
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   @@index([status])
@@ -431,7 +431,7 @@ model EmployeeShiftAssignment {
   employeeProfile EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
   shift Shift @relation(fields: [shiftId], references: [id], onDelete: Restrict)
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   @@unique([employeeProfileId, sequence])
@@ -468,7 +468,7 @@ model EmployeeDayOverride {
   updatedByUserId   String @db.Uuid
   employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
   updatedBy         User @relation("DayOverrideEditor", fields: [updatedByUserId], references: [id], onDelete: Restrict)
-  createdAt         DateTime @default(now())
+  createdAt         DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt         DateTime @updatedAt
 
   @@unique([employeeProfileId, workDate])
@@ -499,7 +499,7 @@ model EmployeeDevice {
   revokedAt DateTime?
   lastSeenAt DateTime?
   lastIp String? @db.VarChar(45)
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   user User @relation("EmployeeDeviceOwner", fields: [userId], references: [id], onDelete: Cascade)
@@ -520,7 +520,7 @@ model EmployeeDeviceChallenge {
   challenge String @db.VarChar(128)
   expiresAt DateTime
   usedAt DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   device EmployeeDevice? @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 
@@ -543,9 +543,9 @@ model AttendanceLocationAlert {
   exitLongitude Float
   exitAccuracy Float
   exitLocationName String? @db.VarChar(300)
-  leftAt DateTime @default(now())
+  leftAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   returnedAt DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')"))
   updatedAt DateTime @updatedAt
 
   attendanceSession AttendanceSession @relation(fields: [attendanceSessionId], references: [id], onDelete: Cascade)
